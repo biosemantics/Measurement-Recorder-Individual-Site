@@ -1,7 +1,20 @@
 <template>
     <div>
+        <div>
+            <tabs>
+                <tab name="First tab">
+                    First tab content
+                </tab>
+                <tab name="Second tab">
+                    Second tab content
+                </tab>
+                <tab name="Third tab">
+                    Third tab content
+                </tab>
+            </tabs>
+        </div>
         <div class="form-group">
-            <router-link :to="{name: 'createCompany'}" class="btn btn-success">Create new company</router-link>
+            <router-link :to="{name: 'createCompany'}" class="btn btn-success">Create new measurement</router-link>
         </div>
 
         <div class="panel panel-default">

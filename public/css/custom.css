@@ -1,0 +1,260 @@
+/***
+Bootstrap Line Tabs by @keenthemes
+A component of Metronic Theme - #1 Selling Bootstrap 3 Admin Theme in Themeforest: http://j.mp/metronictheme
+Licensed under MIT
+***/
+
+/* Tabs panel */
+.tabbable-panel {
+    border:1px solid #eee;
+    padding: 10px;
+}
+
+/* Default mode */
+.tabbable-line > .nav-tabs {
+    border: none;
+    margin: 0px;
+}
+.tabbable-line > .nav-tabs > li {
+    margin-right: 2px;
+}
+.tabbable-line > .nav-tabs > li > a {
+    border: 0;
+    margin-right: 0;
+    color: #737373;
+}
+.tabbable-line > .nav-tabs > li > a > i {
+    color: #a6a6a6;
+}
+.tabbable-line > .nav-tabs > li.open, .tabbable-line > .nav-tabs > li:hover {
+    border-bottom: 4px solid #fbcdcf;
+}
+.tabbable-line > .nav-tabs > li.open > a, .tabbable-line > .nav-tabs > li:hover > a {
+    border: 0;
+    background: none !important;
+    color: #333333;
+}
+.tabbable-line > .nav-tabs > li.open > a > i, .tabbable-line > .nav-tabs > li:hover > a > i {
+    color: #a6a6a6;
+}
+.tabbable-line > .nav-tabs > li.open .dropdown-menu, .tabbable-line > .nav-tabs > li:hover .dropdown-menu {
+    margin-top: 0px;
+}
+.tabbable-line > .nav-tabs > li.active {
+    border-bottom: 4px solid #f3565d;
+    position: relative;
+}
+.tabbable-line > .nav-tabs > li.active > a {
+    border: 0;
+    color: #333333;
+}
+.tabbable-line > .nav-tabs > li.active > a > i {
+    color: #404040;
+}
+.tabbable-line > .tab-content {
+    margin-top: -3px;
+    background-color: #fff;
+    border: 0;
+    border-top: 1px solid #eee;
+    padding: 15px 0;
+}
+.portlet .tabbable-line > .tab-content {
+    padding-bottom: 0;
+}
+
+/* Below tabs mode */
+
+.tabbable-line.tabs-below > .nav-tabs > li {
+    border-top: 4px solid transparent;
+}
+.tabbable-line.tabs-below > .nav-tabs > li > a {
+    margin-top: 0;
+}
+.tabbable-line.tabs-below > .nav-tabs > li:hover {
+    border-bottom: 0;
+    border-top: 4px solid #fbcdcf;
+}
+.tabbable-line.tabs-below > .nav-tabs > li.active {
+    margin-bottom: -2px;
+    border-bottom: 0;
+    border-top: 4px solid #f3565d;
+}
+.tabbable-line.tabs-below > .tab-content {
+    margin-top: -10px;
+    border-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.annotate{
+    font-style: italic;
+    color: #366ED4;
+}
+
+.listbox-area {
+    padding: 20px;
+    background: #eee;
+    border: 1px solid #aaa;
+    font-size: 0px;
+}
+
+.left-area, .right-area {
+    box-sizing: border-box;
+    display: inline-block;
+    font-size: 14px;
+    vertical-align: top;
+    width: 50%;
+}
+
+.left-area {
+    padding-right: 10px;
+}
+
+.right-area {
+    padding-left: 10px;
+}
+
+[role="listbox"] {
+    min-height: 18em;
+    padding: 0px;
+    background: white;
+    border: 1px solid #aaa;
+}
+
+[role="option"] {
+    display: block;
+    padding: 0 1em;
+    position: relative;
+    line-height: 1.8em;
+}
+
+[role="option"].focused {
+    background: #bde4ff;
+}
+
+[role="option"][aria-selected] {
+    padding-left: 1.5em;
+}
+
+[role="option"][aria-selected="true"]::before {
+    content: 'âœ“';
+    position: absolute;
+    left: 0.5em;
+}
+
+button {
+    font-size: 16px;
+}
+
+button[aria-disabled="true"] {
+    opacity: 0.5;
+}
+
+.move-right-btn {
+    padding-right: 20px;
+    position: relative;
+}
+
+.move-right-btn::after {
+    content: ' ';
+    height: 10px;
+    width: 12px;
+    background-image: url('../imgs/Arrows-Right-icon.png');
+    background-position: center right;
+    position: absolute;
+    right: 2px;
+    top: 6px;
+}
+
+.move-left-btn {
+    padding-left: 20px;
+    position: relative;
+}
+
+.move-left-btn::after {
+    content: ' ';
+    height: 10px;
+    width: 12px;
+    background-image: url('../imgs/Arrows-Left-icon.png');
+    background-position: center left;
+    position: absolute;
+    left: 2px;
+    top: 6px;
+}
+
+.listbox-ul {
+    max-height: 18em;
+    overflow-y: auto;
+    position: relative;
+}
+
+#exp_button {
+    border-radius: 0;
+    font-size: 16px;
+    text-align: left;
+    padding: 5px 10px;
+    width: 150px;
+    position: relative;
+}
+
+#exp_button::after {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #aaa;
+    content: " ";
+    position: absolute;
+    right: 5px;
+    top: 10px;
+}
+
+#exp_button[aria-expanded="true"]::after {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 0;
+    border-bottom: 8px solid #aaa;
+    content: " ";
+    position: absolute;
+    right: 5px;
+    top: 10px;
+}
+
+#exp_elem_list {
+    border-top: 0;
+    max-height: 10em;
+    overflow-y: auto;
+    position: absolute;
+    margin: 0;
+    width: 148px;
+}
+
+.hidden {
+    display: none;
+}
+
+.toolbar {
+    font-size: 0;
+}
+
+.toolbar-item {
+    border: 1px solid #aaa;
+    background: #ccc;
+}
+
+.toolbar-item[aria-disabled="false"]:focus {
+    background-color: #eee;
+}
+
+.offscreen {
+    clip: rect(1px 1px 1px 1px);
+    clip: rect(1px, 1px, 1px, 1px);
+    font-size: 14px;
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}

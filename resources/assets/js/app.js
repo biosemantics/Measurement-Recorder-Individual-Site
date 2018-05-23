@@ -7,26 +7,30 @@
 
 require('./bootstrap');
 
-window.Vue = require('vue');
+import Vue from 'vue';
 import VueRouter from 'vue-router';
+import Tabs from 'vue-tabs-component';
+import routes from './routes';
+import Navigation from './components/Navigation/navigation.vue';
+import Layout from './components/Layout/layout.vue';
+import store from './store.js';
 
-window.Vue.use(VueRouter);
+Vue.use(Tabs);
+Vue.use(VueRouter);
 
-import CompaniesIndex from './components/companies/CompaniesIndex.vue';
-import CompaniesCreate from './components/companies/CompaniesCreate.vue';
-import CompaniesEdit from './components/companies/CompaniesEdit.vue';
+export default Vue;
 
-const routes = [
-    {
-        path: '/',
-        components: {
-            companiesIndex: CompaniesIndex
-        }
-    },
-    {path: '/admin/companies/create', component: CompaniesCreate, name: 'createCompany'},
-    {path: '/admin/companies/edit/:id', component: CompaniesEdit, name: 'editCompany'},
-]
 
-const router = new VueRouter({ routes })
+export var router = new VueRouter({
+    mode: 'history',
+    routes: routes
+});
 
-const app = new Vue({ router }).$mount('#app')
+Vue.component('layout', Layout);
+Vue.component('page-navigation', Navigation);
+
+new Vue({
+    el: '#app',
+    router: router,
+    store: store,
+});
