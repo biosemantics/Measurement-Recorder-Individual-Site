@@ -35,4 +35,8 @@ new Vue({
     el: '#app',
     router: router,
     store: store,
+    data: {
+        // declare message with an empty value
+        userName: ''
+    },
 });

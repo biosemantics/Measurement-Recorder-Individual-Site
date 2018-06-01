@@ -10,7 +10,7 @@
                     <div class="panel-body table-responsive">
 
                         {{--<router-view name="measurementsIndex"></router-view>--}}
-                        <router-view :user-id={{ Auth::user()->id }}></router-view>
+                        <router-view :user="{{ Auth::user()->toJson() }}"></router-view>
                     </div>
                 </div>
             </div>

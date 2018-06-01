@@ -13,7 +13,8 @@ use Auth;
 
 class HomeController extends Controller
 {
-    public function getValuesByCharacter() {
+    public function getValuesByCharacter()
+    {
         $all = Character::all();
         $characters = [];
         foreach ($all as $each) {
@@ -24,18 +25,40 @@ class HomeController extends Controller
         return $characters;
     }
 
+    public function getCharacter(Request $request, $id)
+    {
+        $character = Character::where('id', '=', $id)->first();
+
+        return $character;
+    }
+
     public function store(Request $request)
     {
-        $character = Character::create([
-            'name' => $request->input('text')
-        ]);
-        $headers = Header::all();
-        foreach ($headers as $header) {
-            Value::create([
-                'character_id' => $character->id,
-                'header_id' => $header->id,
-                'value' => ''
+        if ($request->has('id')) {
+            $character = Character::where('id', '=', $request->input('id'))->first();
+            $character->name = $request->input('name');
+            $character->method = $request->input('method');
+            $character->unit = $request->input('unit');
+            $character->semantics = $request->input('semantics');
+            $character->creator = $request->input('creator');
+            $character->save();
+
+        } else {
+            $character = Character::create([
+                'name' => $request->input('name'),
+                'method' => $request->input('method'),
+                'unit' => $request->input('unit'),
+                'semantics' => $request->input('semantics'),
+                'creator' => $request->input('creator'),
             ]);
+            $headers = Header::all();
+            foreach ($headers as $header) {
+                Value::create([
+                    'character_id' => $character->id,
+                    'header_id' => $header->id,
+                    'value' => ''
+                ]);
+            }
         }
 
         // update character header in Value Model
@@ -51,6 +74,38 @@ class HomeController extends Controller
         ];
 
         return $data;
+    }
+
+    public function history(Request $request, $characterId)
+    {
+        $history = ActionLog::select('created_at')
+            ->where('model_id', '=', $characterId)
+            ->where('action_type', '=', 'create')
+            ->orWhere('action_type', '=', 'update')
+            ->get();
+
+        return $history;
+    }
+
+    public function usage(Request $request, $characterId)
+    {
+        $values = Value::where('character_id', '=', $characterId)
+            ->where('header_id', '>', 3)
+            ->where('value', '<>', '')
+            ->get();
+
+        $usage = [];
+
+        if (count($values) > 0) {
+            foreach ($values as $each) {
+                $tpUsage = Header::select('header')
+                    ->where('id', '=', $each->header_id)
+                    ->first();
+                $usage []= $tpUsage;
+            }
+        }
+
+        return $usage;
     }
 
     public function log(Request $request)
@@ -101,42 +156,6 @@ class HomeController extends Controller
         $value->save();
 
         return $value;
-
-//        $arrayValues = Value::where('character_id', '=', $request->input('character_id'))->get();
-//
-//        $valueSum = 0;
-//        $index = 0;
-//
-//        foreach ($arrayValues as $item) {
-//            if ($item['header_id'] > 3) {
-//                $valueSum += (float)$item['value'];
-//                $index++;
-//            }
-//        }
-//
-//        if ($index > 0) {
-//            $average = $valueSum / $index;
-//
-//            $averageValue = Value::where('character_id', '=', $request->input('character_id'))->where('header_id', '=', 2)->get();
-//            $averageValue->value = sprintf("%.3f", $average);
-//            $averageValue->save();
-//
-//            return $averageValue;
-//        } else {
-//
-//
-//            $headers = Header::all();
-//            $characters = $this->getValuesByCharacter();
-//
-//            $data = [
-//                'headers'       => $headers,
-//                'characters'    => $characters
-//            ];
-//
-//            return $data;
-//
-//
-//        }
     }
 
     public function delete(Request $request) {

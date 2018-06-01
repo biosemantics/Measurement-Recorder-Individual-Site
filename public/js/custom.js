@@ -9,3 +9,7 @@ piemenu.clockwise = false;
 piemenu.wheelRadius = piemenu.wheelRadius * 0.99;
 // piemenu.length = 10;
 // piemenu.createWheel();
+
+var testFunction = function (id) {
+    alert(id);
+};
