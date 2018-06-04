@@ -399,6 +399,9 @@
 //                        $('.measure-table thead tr th:last-child').before("<th><input class='th-input' value='" + resp.data.header + "' /></th>");
                         app.headers = resp.data.headers;
                         app.characters = resp.data.characters;
+                        for (var i = 0; i < app.characters.length; i++) {
+                            app.characters[i][0].unit = resp.data.arrayCharacters[i].unit;
+                        }
                         $('th.actions > .display-block').removeClass('display-block').addClass('display-none');
                         $('th.actions > .btn-add.display-none').removeClass('display-none').addClass('display-block');
                         app.actionLog.action_type = "create_header";

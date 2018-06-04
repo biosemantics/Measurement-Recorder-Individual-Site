@@ -151,10 +151,12 @@ class HomeController extends Controller
 
         $headers = Header::all();
         $characters = $this->getValuesByCharacter();
+        $arrayCharacters = Character::all();
 
         $data = [
             'headers'       => $headers,
-            'characters'    => $characters
+            'characters'    => $characters,
+            'arrayCharacters'       => $arrayCharacters
         ];
 
         return $data;
