@@ -445,6 +445,9 @@ p a {
 }
 .radial-menu li:nth-child(9) a{background-image:-webkit-radial-gradient(50% 50%,circle closest-side, rgba(0,0,0,0) 58%, #8fe24d 58%, #8fe24d 99%, rgba(0,0,0,0) 99%); }
 
+.back-median-green a {
+    background-image: -webkit-radial-gradient(50% 50%,circle closest-side, rgba(0,0,0,0) 58%, #4f8d66 58%, #4f8d66 99%, rgba(0,0,0,0) 99%) !important;
+}
 
 .radial-menu li a{
     -webkit-transform: skew(-50deg) rotate(-70deg) scale(1);

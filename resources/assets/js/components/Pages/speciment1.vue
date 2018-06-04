@@ -194,6 +194,7 @@
             handleFcAfterDateBack (event) {
                 this.updatedFlag = true;
                 $('.center').addClass('back-yellow');
+                $('.' + this.metadataFlag).addClass('back-median-green');
                 switch (this.metadataFlag) {
                     case 'method':
                         this.character.method_from = event[0];
