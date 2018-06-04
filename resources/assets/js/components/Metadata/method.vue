@@ -4,7 +4,10 @@
             Method
         </div>
         <div class="col-md-12">
-            <input class="child-model" style="width: 100%;" v-model="childData" v-on:change="handleDataFc()"/>
+            From: <input class="child-model" style="width: 100%;" v-model="childData[0]" v-on:change="handleDataFc()"/>
+        </div>
+        <div class="col-md-12">
+            To: <input class="child-model" style="width: 100%;" v-model="childData[1]" v-on:change="handleDataFc()"/>
         </div>
     </div>
 </template>
@@ -14,12 +17,12 @@
     export default {
         data: function () {
             return {
-                childData: ''
+                childData: []
             }
         },
         props: {
             parentData: {
-                type: String,
+                type: Array,
                 default () {
                     return ''
                 }

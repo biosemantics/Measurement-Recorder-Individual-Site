@@ -37,7 +37,8 @@ class HomeController extends Controller
         if ($request->has('id')) {
             $character = Character::where('id', '=', $request->input('id'))->first();
             $character->name = $request->input('name');
-            $character->method = $request->input('method');
+            $character->method_from = $request->input('method_from');
+            $character->method_to = $request->input('method_to');
             $character->unit = $request->input('unit');
             $character->semantics = $request->input('semantics');
             $character->creator = $request->input('creator');
@@ -46,7 +47,8 @@ class HomeController extends Controller
         } else {
             $character = Character::create([
                 'name' => $request->input('name'),
-                'method' => $request->input('method'),
+                'method_from' => $request->input('method_from'),
+                'method_to' => $request->input('method_to'),
                 'unit' => $request->input('unit'),
                 'semantics' => $request->input('semantics'),
                 'creator' => $request->input('creator'),
@@ -80,11 +82,17 @@ class HomeController extends Controller
     {
         $history = ActionLog::select('created_at')
             ->where('model_id', '=', $characterId)
-            ->where('action_type', '=', 'create')
-            ->orWhere('action_type', '=', 'update')
+            ->whereIn('action_type', ['update', 'create'])
             ->get();
 
         return $history;
+    }
+
+    public function getName(Request $request)
+    {
+        $characterName = Character::select('name')->get();
+
+        return $characterName;
     }
 
     public function usage(Request $request, $characterId)
@@ -119,10 +127,12 @@ class HomeController extends Controller
     {
         $headers = Header::all();
         $characters = $this->getValuesByCharacter();
+        $arrayCharacters = Character::all();
 
         $data = [
-            'headers'       => $headers,
-            'characters'    => $characters
+            'headers'               => $headers,
+            'characters'            => $characters,
+            'arrayCharacters'       => $arrayCharacters
         ];
 
         return $data;

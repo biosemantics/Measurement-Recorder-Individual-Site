@@ -31,10 +31,11 @@ export var router = new VueRouter({
 Vue.component('layout', Layout);
 Vue.component('page-navigation', Navigation);
 
+
 new Vue({
     el: '#app',
-    router: router,
     store: store,
+    router: router,
     data: {
         // declare message with an empty value
         userName: ''

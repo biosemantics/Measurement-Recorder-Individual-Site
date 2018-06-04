@@ -19,6 +19,7 @@ Route::group([
         'as' => 'character.'
     ], function () {
         Route::get('all',                       ['as' => 'all',                         'uses' => 'HomeController@all']);
+        Route::get('name',                      ['as' => 'name',                        'uses' => 'HomeController@getName']);
         Route::get('history/{characterId}',     ['as' => 'history',                     'uses' => 'HomeController@history']);
         Route::get('usage/{characterId}',       ['as' => 'usage',                       'uses' => 'HomeController@usage']);
         Route::get('/{id}',                     ['as' => 'get-character',               'uses' => 'HomeController@getCharacter']);

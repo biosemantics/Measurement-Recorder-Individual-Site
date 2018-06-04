@@ -31,62 +31,129 @@
                             <tbody>
                                 <tr v-for="eachCharacter in characters">
                                     <td v-for="item in eachCharacter">
-                                        <div class="text-center" v-if="item.header_id < 4">
+                                        <div class="text-center" v-if="item.header_id == 1">
+                                            {{ item.value }} ({{ item.unit }})
+                                        </div>
+                                        <div class="text-center" v-if="item.header_id > 1 && item.header_id < 4">
                                             {{ item.value }}
                                         </div>
                                         <input v-if="item.header_id >= 4" class="td-input" v-model="item.value" v-on:blur="saveItem(item)"/>
                                     </td>
                                     <td class="actions text-center">
-                                        <a class="btn" v-on:click="deleteCharacter(eachCharacter[0].character_id)">Delete</a>
                                         <a class="btn" v-on:click="editCharacter(eachCharacter[0])"><span class="glyphicon glyphicon-edit"></span></a>
+                                        <a class="btn" v-on:click="deleteCharacter(eachCharacter[0].character_id)"><span class="glyphicon glyphicon-trash"></span></a>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                     <div v-if="detailsFlag == true">
-                        <div class="col-md-7 radial-menu">
-                            <ul style="margin-left: auto; margin-right: auto;">
-                                <li><a v-on:click="showDetails('method')">Method</a></li>
-                                <li><a v-on:click="showDetails('unit')">Unit</a></li>
-                                <li><a v-on:click="showDetails('semantics')">Semantics</a></li>
-                                <li><a v-on:click="showDetails('creator')">Creator</a></li>
-                                <li><a v-on:click="showDetails('usage')">Usage</a></li>
-                                <li><a v-on:click="showDetails('history')">History</a></li>
-                                <li><a v-on:click="showDetails('')">Future<br>Function</a></li>
-                                <li><a v-on:click="showDetails('')">Future<br>Function</a></li>
-                                <li><a v-on:click="showDetails('')">Future<br>Function</a></li>
-                            </ul>
-                            <div class="center">
-                                <a>Details</a>
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div id="metadataPlace">
-                                <div :is="currentMetadata" :parentData="parentData"
-                                     @interface="handleFcAfterDateBack">
+                        <!--<div class="col-md-7 radial-menu">-->
+                            <!--<ul style="margin-left: auto; margin-right: auto;">-->
+                                <!--<li><a v-on:click="showDetails('method')">Method</a></li>-->
+                                <!--<li><a v-on:click="showDetails('unit')">Unit</a></li>-->
+                                <!--<li><a v-on:click="showDetails('semantics')">Semantics</a></li>-->
+                                <!--<li><a v-on:click="showDetails('creator')">Creator</a></li>-->
+                                <!--<li><a v-on:click="showDetails('usage')">Usage</a></li>-->
+                                <!--<li><a v-on:click="showDetails('history')">History</a></li>-->
+                                <!--<li><a v-on:click="showDetails('')">Future<br>Function</a></li>-->
+                                <!--<li><a v-on:click="showDetails('')">Future<br>Function</a></li>-->
+                                <!--<li><a v-on:click="showDetails('')">Future<br>Function</a></li>-->
+                            <!--</ul>-->
+                            <!--<div class="center">-->
+                                <!--<a>Details</a>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="col-md-5">-->
+                            <!--<div id="metadataPlace">-->
+                                <!--<div :is="currentMetadata" :parentData="parentData"-->
+                                     <!--@interface="handleFcAfterDateBack">-->
 
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="col-md-12 text-right">-->
+                            <!--<a v-on:click="saveCharacter()" class="btn btn-primary">Save</a>-->
+                            <!--<a v-on:click="cancelCharacter()" class="btn btn-danger">Cancel</a>-->
+                        <!--</div>-->
+                    </div>
+                    <div v-if="detailsFlag" @close="detailsFlag = false">
+                        <transition name="modal">
+                            <div class="modal-mask">
+                                <div class="modal-wrapper">
+                                    <div class="modal-container">
+
+                                        <div class="modal-header">
+                                            <h3>Metadata Details</h3>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-7 radial-menu">
+                                                    <ul style="margin-left: auto; margin-right: auto;">
+                                                        <li class="method"><a v-on:click="showDetails('method')">Method</a></li>
+                                                        <li class="unit"><a v-on:click="showDetails('unit')">Unit</a></li>
+                                                        <li class="semantics"><a v-on:click="showDetails('semantics')">Semantics</a></li>
+                                                        <li class="creator"><a v-on:click="showDetails('creator')">Creator</a></li>
+                                                        <li><a v-on:click="showDetails('usage')">Usage</a></li>
+                                                        <li><a v-on:click="showDetails('history')">History</a></li>
+                                                        <li><a v-on:click="showDetails('')">Future<br>Function</a></li>
+                                                        <li><a v-on:click="showDetails('')">Future<br>Function</a></li>
+                                                        <li><a v-on:click="showDetails('')">Future<br>Function</a></li>
+                                                    </ul>
+                                                    <div class="center">
+                                                        <a>Details</a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <div id="metadataPlace">
+                                                        <div :is="currentMetadata" :parentData="parentData"
+                                                             @interface="handleFcAfterDateBack">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <div class="row">
+                                                <div class="col-md-12 text-right">
+                                                    <a v-on:click="saveCharacter()" class="btn btn-primary">Save</a>
+                                                    <a v-on:click="cancelCharacter()" class="btn btn-danger">Cancel</a>
+                                                </div>
+                                            </div>
+                                            <!--<slot name="footer">-->
+                                                <!--default footer-->
+                                                <!--<button class="modal-default-button" @click="$emit('close')">-->
+                                                    <!--OK-->
+                                                <!--</button>-->
+                                            <!--</slot>-->
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-12 text-right">
-                            <a v-on:click="saveCharacter()" class="btn btn-primary">Save</a>
-                            <a v-on:click="cancelCharacter()" class="btn btn-danger">Cancel</a>
-                        </div>
+                        </transition>
                     </div>
 
                 </form>
             </div>
         </div>
+
     </layout>
 </template>
+
 <script>
+    import Vue from 'vue';
     import method from '../../components/Metadata/method.vue';
     import unit from '../../components/Metadata/unit.vue';
     import semantics from '../../components/Metadata/semantics.vue';
     import creator from '../../components/Metadata/creator.vue';
     import usage from '../../components/Metadata/usage.vue';
     import history from '../../components/Metadata/history.vue';
+    import modal from '../../components/Pages/modal.vue';
+
+    Vue.component('modal', modal);
 
     export default {
         props: [
@@ -96,7 +163,8 @@
             return {
                 character: {
                     name: null,
-                    method: null,
+                    method_from: null,
+                    method_to: null,
                     unit: null,
                     semantics: null,
                     creator: this.user.name,
@@ -117,19 +185,21 @@
                 parentData: '',
                 metadataFlag: '',
                 detailsFlag: false,
-                updatedFlag: false
+                updatedFlag: false,
+                showModal: false
             }
         },
 
         methods: {
             handleFcAfterDateBack (event) {
                 this.updatedFlag = true;
-                console.log('metaFlag', this.metadataFlag);
                 $('.center').addClass('back-yellow');
                 switch (this.metadataFlag) {
                     case 'method':
-                        this.character.method = event;
+                        this.character.method_from = event[0];
+                        this.character.method_to = event[1];
                         this.parentData = event;
+                        console.log("method return", event);
                         break;
                     case 'unit':
                         this.character.unit = event;
@@ -158,7 +228,9 @@
                         console.log("get Character", resp);
                         app.metadataFlag = 'method';
                         app.character = resp.data;
-                        app.parentData = app.character.method;
+                        app.parentData = [];
+                        app.parentData.push(app.character.method_from);
+                        app.parentData.push(app.character.method_to);
                         app.currentMetadata = method;
                         axios.get("/api/v1/character/history/" + character.character_id)
                             .then(function (resp) {
@@ -197,7 +269,9 @@
                 this.metadataFlag = metadata;
                 switch (metadata) {
                     case 'method':
-                        this.parentData = this.character.method;
+                        this.parentData = [];
+                        this.parentData.push(this.character.method_from);
+                        this.parentData.push(this.character.method_to);
                         this.currentMetadata = method;
                         break;
                     case 'unit':
@@ -227,37 +301,85 @@
             },
             saveCharacter () {
                 console.log('save character', this.character);
-                this.detailsFlag = false;
-                this.updatedFlag = false;
 
+
+                var checkFields = true;
+
+                for (var key in this.character) {
+                    if (key != 'semantics' && key != 'usage' && key != 'history' && (this.character[key] == null || this.character[key] == '')) {
+                        checkFields = false;
+                    }
+                }
                 var app = this;
 
-                axios.post('/api/v1/character/create', this.character)
-                    .then(function (resp) {
-                        console.log("resp", resp);
-                        app.characters = resp.data.characters;
-                        if (app.character.id) {
-                            app.actionLog.action_type = "update";
-                            app.actionLog.model_id = app.character.id;
-                        } else {
-                            app.actionLog.action_type = "create";
-                            app.actionLog.model_id = resp.data.characters[resp.data.characters.length - 1][0].character_id;
-                        }
-                        app.actionLog.model_name = "character";
-                        axios.post('/api/v1/log', app.actionLog)
-                            .then(function (resp) {
-                                console.log("successful log character !!!");
-                            })
-                            .catch(function (resp) {
-                                console.log(resp);
-                                alert("Error Occured !");
-                            });
-                        console.log("successful saving character !!!");
-                    })
-                    .catch(function (resp) {
-                        console.log(resp);
-                        alert("Error Occured !");
-                    });
+                if (checkFields) {
+                    this.detailsFlag = false;
+                    this.updatedFlag = false;
+                    axios.get('/api/v1/character/name')
+                        .then(function (resp) {
+                            console.log('get name resp', resp);
+                            var checkName = true;
+
+                            for (var i = 0; i < resp.data.length; i ++) {
+                                if (app.character.name == resp.data[i].name) {
+                                    checkName = false;
+                                }
+                            }
+
+                            if (checkName) {
+                                axios.post('/api/v1/character/create', app.character)
+                                    .then(function (resp) {
+                                        console.log("resp", resp);
+                                        app.characters = resp.data.characters;
+                                        if (app.character.id) {
+                                            app.actionLog.action_type = "update";
+                                            app.actionLog.model_id = app.character.id;
+                                        } else {
+                                            app.actionLog.action_type = "create";
+                                            app.actionLog.model_id = resp.data.characters[resp.data.characters.length - 1][0].character_id;
+                                        }
+                                        app.actionLog.model_name = "character";
+                                        axios.post('/api/v1/log', app.actionLog)
+                                            .then(function (resp) {
+                                                console.log("successful log character !!!");
+                                                axios.get('/api/v1/character/all')
+                                                    .then(function (resp) {
+                                                        console.log(resp);
+                                                        app.headers = resp.data.headers;
+                                                        app.characters = resp.data.characters;
+
+                                                        for (var i = 0; i < app.characters.length; i++) {
+                                                            app.characters[i][0].unit = resp.data.arrayCharacters[i].unit;
+                                                        }
+                                                    })
+                                                    .catch(function (resp) {
+                                                        console.log(resp);
+                                                    });
+                                            })
+                                            .catch(function (resp) {
+                                                console.log(resp);
+                                                alert("Error Occured !");
+                                            });
+                                        console.log("successful saving character !!!");
+                                    })
+                                    .catch(function (resp) {
+                                        console.log(resp);
+                                        alert("Error Occured !");
+                                    });
+                            } else {
+                                alert("You can not create new character with the same name of existing character !");
+                            }
+                        })
+                        .catch(function (resp) {
+                            console.log(resp);
+                        });
+//
+
+                } else {
+                    alert("You need to fill the all metadata !");
+                }
+
+
             },
             cancelCharacter () {
                 this.detailsFlag = false;
@@ -437,6 +559,10 @@
                     console.log(resp);
                     app.headers = resp.data.headers;
                     app.characters = resp.data.characters;
+
+                    for (var i = 0; i < app.characters.length; i++) {
+                        app.characters[i][0].unit = resp.data.arrayCharacters[i].unit;
+                    }
                 })
                 .catch(function (resp) {
                     console.log(resp);

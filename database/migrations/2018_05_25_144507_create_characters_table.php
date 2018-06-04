@@ -16,10 +16,12 @@ class CreateCharactersTable extends Migration
         Schema::create('characters', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('method')->nullable();
+            $table->string('method_from')->nullable();
+            $table->string('method_to')->nullable();
             $table->string('unit')->nullable();
             $table->string('semantics')->nullable();
             $table->string('creator')->nullable();
+            $table->boolean('confirmed')->default(false);
             $table->timestamps();
         });
     }
