@@ -186,7 +186,8 @@
                 metadataFlag: '',
                 detailsFlag: false,
                 updatedFlag: false,
-                showModal: false
+                showModal: false,
+                editFlag: false
             }
         },
 
@@ -221,8 +222,8 @@
             },
             editCharacter (character) {
                 this.updatedFlag = false;
+                this.editFlag = true;
                 console.log("character", character);
-                this.detailsFlag = true;
                 var app = this;
                 axios.get("/api/v1/character/" + character.character_id)
                     .then(function (resp) {
@@ -233,6 +234,7 @@
                         app.parentData.push(app.character.method_from);
                         app.parentData.push(app.character.method_to);
                         app.currentMetadata = method;
+                        app.detailsFlag = true;
                         axios.get("/api/v1/character/history/" + character.character_id)
                             .then(function (resp) {
                                 console.log("history resp", resp);
@@ -327,7 +329,7 @@
                                 }
                             }
 
-                            if (checkName) {
+                            if (checkName || app.editFlag) {
                                 axios.post('/api/v1/character/create', app.character)
                                     .then(function (resp) {
                                         console.log("resp", resp);
@@ -385,6 +387,8 @@
             cancelCharacter () {
                 this.detailsFlag = false;
                 this.updatedFlag = false;
+                this.parentData = null;
+                this.character.name = '';
             },
             addHeader: function() {
 //                $('.measure-table > thead > tr > th:last-child').before('<th></th>')
@@ -430,8 +434,12 @@
             },
             storeCharacter() {
                 console.log("detailsFlag", this.detailsFlag);
+                this.parentData = [];
+                this.parentData[0] = "";
+                this.parentData[1] = "";
+                this.currentMetadata = method;
                 this.detailsFlag = true;
-
+                this.editFlag = false;
             },
             detailComponent: function(componentId) {
                 console.log("componentId", componentId);
