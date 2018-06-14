@@ -7,6 +7,7 @@ use App\Header;
 use App\Character;
 use App\Value;
 use App\ActionLog;
+use App\ActivityLog;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
@@ -180,5 +181,12 @@ class HomeController extends Controller
         ];
 
         return $data;
+    }
+
+    public function activity_log(Request $request) {
+        
+        $actLog = ActivityLog::create($request->all());
+
+        return $actLog;
     }
 }

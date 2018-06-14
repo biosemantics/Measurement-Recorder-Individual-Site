@@ -3,6 +3,7 @@
 Route::group([
         'prefix' => '/v1',
         'namespace' => 'Api\V1',
+        'middleware' => ['cors'],
         'as' => 'api.'
     ], function () {
     Route::resource('companies', 'CompaniesController', ['except' => ['create', 'edit']]);
@@ -11,9 +12,11 @@ Route::group([
 Route::group([
         'prefix' => '/v1',
         'namespace' => 'Api\V1',
+        'middleware' => ['cors'],
         'as' => 'api.'
     ], function () {
     Route::post('log',                          ['as' => 'log',                         'uses' => 'HomeController@log']);
+    Route::get('activity_log',                 ['as' => 'activity_log',                'uses' => 'HomeController@activity_log']);
     Route::group([
         'prefix' => '/character',
         'as' => 'character.'
