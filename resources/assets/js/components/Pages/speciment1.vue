@@ -179,8 +179,8 @@
                     method_from: null,
                     method_to: null,
                     unit: null,
-                    measureSemantic: null,
-                    entitySemantic: null,
+                    measure_semantic: null,
+                    entity_semantic: null,
                     semantics: null,
                     creator: this.user.name,
                     usage: [],
@@ -224,8 +224,8 @@
                         this.parentData = event;
                         break;
                     case 'semantics':
-                        this.character.measureSemantic = event[0];
-                        this.character.entitySemantic = event[1];
+                        this.character.measure_semantic = event[0];
+                        this.character.entity_semantic = event[1];
 //                        this.character.semantics = event;
                         console.log("semantics", event);
                         this.parentData = event;
@@ -306,8 +306,8 @@
                         this.character.semantics = this.character.name.split(" of ");
                         this.parentData = this.character.semantics;
                         if (this.editFlag) {
-                            this.parentData.push(this.character.measureSemantic);
-                            this.parentData.push(this.character.entitySemantic);
+                            this.parentData.push(this.character.measure_semantic);
+                            this.parentData.push(this.character.entity_semantic);
                         }
                         this.currentMetadata = semantics;
                         break;
@@ -334,7 +334,7 @@
                 var checkFields = true;
 
                 for (var key in this.character) {
-                    if (key != 'measureSemantic' && key != 'entitySemantic' && key != 'usage' && key != 'history' && (this.character[key] == null || this.character[key] == '')) {
+                    if (key != 'measure_semantic' && key != 'entity_semantic' && key != 'usage' && key != 'history' && (this.character[key] == null || this.character[key] == '')) {
                         checkFields = false;
                     }
                 }
