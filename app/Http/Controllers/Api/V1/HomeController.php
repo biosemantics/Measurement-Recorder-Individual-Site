@@ -41,8 +41,8 @@ class HomeController extends Controller
             $character->method_from = $request->input('method_from');
             $character->method_to = $request->input('method_to');
             $character->unit = $request->input('unit');
-            $character->measureSemantic = $request->input('measureSemantic');
-            $character->entitySemantic = $request->input('entitySemantic');
+            $character->measure_semantic = $request->input('measureSemantic');
+            $character->entity_semantic = $request->input('entitySemantic');
             $character->creator = $request->input('creator');
             $character->save();
 
@@ -52,8 +52,8 @@ class HomeController extends Controller
                 'method_from' => $request->input('method_from'),
                 'method_to' => $request->input('method_to'),
                 'unit' => $request->input('unit'),
-                'measureSemantic' => $request->input('measureSemantic'),
-                'entitySemantic' => $request->input('entitySemantic'),
+                'measure_semantic' => $request->input('measureSemantic'),
+                'entity_semantic' => $request->input('entitySemantic'),
                 'creator' => $request->input('creator'),
             ]);
             $headers = Header::all();

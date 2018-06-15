@@ -19,8 +19,8 @@ class CreateCharactersTable extends Migration
             $table->string('method_from')->nullable();
             $table->string('method_to')->nullable();
             $table->string('unit')->nullable();
-            $table->string('measureSemantic')->nullable();
-            $table->string('entitySemantic')->nullable();
+            $table->string('measure_semantic')->nullable();
+            $table->string('entity_semantic')->nullable();
             $table->string('creator')->nullable();
             $table->boolean('confirmed')->default(false);
             $table->timestamps();
