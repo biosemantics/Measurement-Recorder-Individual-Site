@@ -23,4 +23,5 @@ Route::get('/specimen-3', 'HomeController@specimenThree')->name('specimen-3');
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('companies', 'CompaniesController@index')->name('companies.index');
+    Route::get('activity_log', 'ActivityLogController@index')->name('activity.index');
 });
