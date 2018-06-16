@@ -29,7 +29,7 @@
             }
         },
         methods: {
-            // maybe onchagne may onclick whatever..
+            // maybe onchange may onclick whatever..
             handleDataFc: function () {
                 this.$emit('interface', this.childData); // handle data and give it back to parent by interface
             }
