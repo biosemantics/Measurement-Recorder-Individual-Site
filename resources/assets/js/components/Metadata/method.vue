@@ -1,7 +1,13 @@
 <template>
     <div class="row">
         <div class="col-md-12" style="font-size: 20px;">
-            Method
+            {{ character_name }} is measure ...
+        </div>
+        <div class="col-md-12">
+            As: <input class="child-model" style="width: 100%;" v-model="childData[2]" v-on:change="handleDataFc()"/>
+        </div>
+        <div class="col-md-12 text-center">
+            Or
         </div>
         <div class="col-md-12">
             From: <input class="child-model" style="width: 100%;" v-model="childData[0]" v-on:change="handleDataFc()"/>
@@ -17,7 +23,8 @@
     export default {
         data: function () {
             return {
-                childData: []
+                childData: [],
+                character_name: null
             }
         },
         props: {
@@ -35,6 +42,8 @@
             }
         },
         beforeMount () {
+            this.character_name = sessionStorage.getItem("characterName");
+            console.log("parentData", this.parentData);
             this.childData = this.parentData; // save props data to itself's data and deal with it
 
         },

@@ -342,10 +342,12 @@ input.display-block {
     transform: rotate(0);
     width: 100%;
     height: 100%;
-    padding: 35% 0 0 26%;
-    font-size: 35px;
+    padding: 40% 0 0 0%;
+    font-size: 30px;
+    line-height: 30px;
     color: #ffffff;
     box-sizing: border-box;
+    text-align: center;
 }
 
 .center a:hover {

@@ -7,10 +7,11 @@
                         New Character
                     </div>
                     <div class="col-md-4">
-                        <input style="width: 100%;" v-model="character.name" name="text"/>
+                        <input placeholder="length of leaf" style="width: 100%;" v-model="character.name" name="text"/>
                     </div>
                     <div class="col-md-4">
-                        <a v-on:click="storeCharacter()" class="btn btn-primary" style="height: 28px; line-height: 28px; font-size: 50px; padding: 0 5px;">+</a>
+                        <a v-on:click="storeCharacter()" class="btn btn-primary"
+                           style="height: 28px; line-height: 28px; font-size: 50px; padding: 0 5px;">+</a>
                     </div>
                     <div class="col-md-12" style="margin-top: 10px;">
                         Character List
@@ -47,36 +48,6 @@
                             </tbody>
                         </table>
                     </div>
-                    <div v-if="detailsFlag == true">
-                        <!--<div class="col-md-7 radial-menu">-->
-                            <!--<ul style="margin-left: auto; margin-right: auto;">-->
-                                <!--<li><a v-on:click="showDetails('method')">Method</a></li>-->
-                                <!--<li><a v-on:click="showDetails('unit')">Unit</a></li>-->
-                                <!--<li><a v-on:click="showDetails('semantics')">Semantics</a></li>-->
-                                <!--<li><a v-on:click="showDetails('creator')">Creator</a></li>-->
-                                <!--<li><a v-on:click="showDetails('usage')">Usage</a></li>-->
-                                <!--<li><a v-on:click="showDetails('history')">History</a></li>-->
-                                <!--<li><a v-on:click="showDetails('')">Future<br>Function</a></li>-->
-                                <!--<li><a v-on:click="showDetails('')">Future<br>Function</a></li>-->
-                                <!--<li><a v-on:click="showDetails('')">Future<br>Function</a></li>-->
-                            <!--</ul>-->
-                            <!--<div class="center">-->
-                                <!--<a>Details</a>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="col-md-5">-->
-                            <!--<div id="metadataPlace">-->
-                                <!--<div :is="currentMetadata" :parentData="parentData"-->
-                                     <!--@interface="handleFcAfterDateBack">-->
-
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="col-md-12 text-right">-->
-                            <!--<a v-on:click="saveCharacter()" class="btn btn-primary">Save</a>-->
-                            <!--<a v-on:click="cancelCharacter()" class="btn btn-danger">Cancel</a>-->
-                        <!--</div>-->
-                    </div>
                     <div v-if="detailsFlag" @close="detailsFlag = false">
                         <transition name="modal">
                             <div class="modal-mask">
@@ -84,7 +55,7 @@
                                     <div class="modal-container">
 
                                         <div class="modal-header">
-                                            <h3>Metadata Details</h3>
+                                            <h3>Meta Details for {{ character.name }}</h3>
                                         </div>
 
                                         <div class="modal-body">
@@ -102,7 +73,7 @@
                                                         <li><a v-on:click="showDetails('')">Future<br>Function</a></li>
                                                     </ul>
                                                     <div class="center">
-                                                        <a>Details</a>
+                                                        <a>{{ character.name }}</a>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-5">
@@ -114,21 +85,16 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div class="modal-footer">
                                             <div class="row">
                                                 <div class="col-md-12 text-right">
                                                     <a v-on:click="saveCharacter()" class="btn btn-primary">Save</a>
                                                     <a v-on:click="cancelCharacter()" class="btn btn-danger">Cancel</a>
                                                 </div>
                                             </div>
-                                            <!--<slot name="footer">-->
-                                                <!--default footer-->
-                                                <!--<button class="modal-default-button" @click="$emit('close')">-->
-                                                    <!--OK-->
-                                                <!--</button>-->
-                                            <!--</slot>-->
+                                        </div>
+
+                                        <div class="modal-footer">
+
                                         </div>
                                     </div>
                                 </div>
@@ -165,7 +131,10 @@
                     name: null,
                     method_from: null,
                     method_to: null,
+                    method_as: null,
                     unit: null,
+                    measure_semantic: null,
+                    entity_semantic: null,
                     semantics: null,
                     creator: this.user.name,
                     usage: [],
@@ -200,6 +169,7 @@
                     case 'method':
                         this.character.method_from = event[0];
                         this.character.method_to = event[1];
+                        this.character.method_as = event[2];
                         this.parentData = event;
                         console.log("method return", event);
                         break;
@@ -208,7 +178,8 @@
                         this.parentData = event;
                         break;
                     case 'semantics':
-                        this.character.semantics = event;
+                        this.character.measure_semantic = event[0];
+                        this.character.entity_semantic = event[1];
                         this.parentData = event;
                         break;
                     case 'creator':
@@ -224,6 +195,7 @@
                 this.updatedFlag = false;
                 this.editFlag = true;
                 console.log("character", character);
+                sessionStorage.setItem("characterName", character.value);
                 var app = this;
                 axios.get("/api/v1/character/" + character.character_id)
                     .then(function (resp) {
@@ -233,6 +205,7 @@
                         app.parentData = [];
                         app.parentData.push(app.character.method_from);
                         app.parentData.push(app.character.method_to);
+                        app.parentData[2] = app.character.method_as;
                         app.currentMetadata = method;
                         app.detailsFlag = true;
                         axios.get("/api/v1/character/history/" + character.character_id)
@@ -275,6 +248,7 @@
                         this.parentData = [];
                         this.parentData.push(this.character.method_from);
                         this.parentData.push(this.character.method_to);
+                        this.parentData[2] = this.character.method_as;
                         this.currentMetadata = method;
                         break;
                     case 'unit':
@@ -282,8 +256,13 @@
                         this.currentMetadata = unit;
                         break;
                     case 'semantics':
-                        console.log("semantics");
+                        this.parentData = [];
+                        this.character.semantics = this.character.name.split(" of ");
                         this.parentData = this.character.semantics;
+                        if (this.editFlag) {
+                            this.parentData.push(this.character.measure_semantic);
+                            this.parentData.push(this.character.entity_semantic);
+                        }
                         this.currentMetadata = semantics;
                         break;
                     case 'creator':
@@ -309,9 +288,17 @@
                 var checkFields = true;
 
                 for (var key in this.character) {
-                    if (key != 'semantics' && key != 'usage' && key != 'history' && (this.character[key] == null || this.character[key] == '')) {
+                    if (key != 'confirmed' && key != 'method_as' && key != 'method_from' && key != 'method_to' && key != 'measure_semantic' && key != 'entity_semantic' && key != 'usage' && key != 'history' && (this.character[key] == null || this.character[key] == '')) {
+                        console.log(key);
+                        console.log(1);
                         checkFields = false;
                     }
+                }
+                if ((this.character['method_as'] == null || this.character['method_as'] == '') &&
+                    ((this.character['method_from'] == null || this.character['method_from'] == '') ||
+                    (this.character['method_to'] == null || this.character['method_to'] == ''))) {
+                    console.log(2);
+                    checkFields = false;
                 }
                 var app = this;
 
@@ -323,7 +310,7 @@
                             console.log('get name resp', resp);
                             var checkName = true;
 
-                            for (var i = 0; i < resp.data.length; i ++) {
+                            for (var i = 0; i < resp.data.length; i++) {
                                 if (app.character.name == resp.data[i].name) {
                                     checkName = false;
                                 }
@@ -433,13 +420,27 @@
                 this.currentComponent = component;
             },
             storeCharacter() {
-                console.log("detailsFlag", this.detailsFlag);
-                this.parentData = [];
-                this.parentData[0] = "";
-                this.parentData[1] = "";
-                this.currentMetadata = method;
-                this.detailsFlag = true;
-                this.editFlag = false;
+                var tpArray = this.character.name.split(' ');
+                var tpFlag = false;
+                for (var i = 0; i < tpArray.length; i++) {
+                    if (tpArray[i] == 'of') {
+                        tpFlag = true;
+                    }
+                }
+                if (tpFlag) {
+                    sessionStorage.setItem("characterName", this.character.name);
+                    console.log("detailsFlag", this.detailsFlag);
+                    this.parentData = [];
+                    this.parentData[0] = "";
+                    this.parentData[1] = "";
+                    this.currentMetadata = method;
+                    this.detailsFlag = true;
+                    this.editFlag = false;
+                    this.metadataFlag = "method";
+                } else {
+                    alert("The character name should contain 'of' word. Please see the example name!");
+                }
+
             },
             detailComponent: function(componentId) {
                 console.log("componentId", componentId);
@@ -507,14 +508,14 @@
                         var deviationValue = 0;
 
                         if (headerCount > 1) {
-                            for (var i = 3; i < (headerCount + 3); i ++) {
+                            for (var i = 3; i < (headerCount + 3); i++) {
                                 if (isNaN(parseFloat(app.characters[characterIndex][i].value)) == false) {
                                     deviationSum = deviationSum + Math.pow((parseFloat(app.characters[characterIndex][i].value) - averageValue), 2);
                                 }
                             }
                             deviationValue = Math.pow((deviationSum / (headerCount - 1)), 0.5).toFixed(2);
                         } else if (headerCount == 1) {
-                            for (var i = 3; i < (app.characters[characterIndex].length); i ++) {
+                            for (var i = 3; i < (app.characters[characterIndex].length); i++) {
                                 if (isNaN(parseFloat(app.characters[characterIndex][i].value)) == false) {
                                     deviationValue = parseFloat(app.characters[characterIndex][i].value).toFixed(2);
                                 }

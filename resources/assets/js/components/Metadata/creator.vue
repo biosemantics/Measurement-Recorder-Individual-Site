@@ -1,10 +1,11 @@
 <template>
     <div class="row">
         <div class="col-md-12" style="font-size: 20px;">
-            Creator
+            {{ character_name }} was created by
         </div>
         <div class="col-md-12">
             <input style="width: 100%;" v-model="childData" @change="handleDataFc()"/>
+            at {{ timestamp }}
         </div>
     </div>
 </template>
@@ -14,7 +15,9 @@
     export default {
         data: function () {
             return {
-                childData: ''
+                childData: '',
+                character_name: null,
+                timestamp: null,
             }
         },
         props: {
@@ -29,9 +32,20 @@
             // maybe onchagne may onclick whatever..
             handleDataFc: function () {
                 this.$emit('interface', this.childData); // handle data and give it back to parent by interface
+            },
+            updateTime: function() {
+                this.timestamp = new Date();
+                this.timestamp = this.timestamp.getFullYear() + '/' + this.timestamp.getMonth() + '/' + this.timestamp.getDate() + ' ' + this.timestamp.getHours() + ':' + this.timestamp.getMinutes() + ':' + this.timestamp.getSeconds();
             }
         },
+        mounted() {
+            setInterval(this.updateTime, 1000);
+        },
         beforeMount () {
+            this.timestamp = new Date();
+            this.timestamp = this.timestamp.getFullYear() + '/' + this.timestamp.getMonth() + '/' + this.timestamp.getDate() + ' ' + this.timestamp.getHours() + ':' + this.timestamp.getMinutes() + ':' + this.timestamp.getSeconds();
+
+            this.character_name = sessionStorage.getItem("characterName");
             this.childData = this.parentData; // save props data to itself's data and deal with it
         }
     }
