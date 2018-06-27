@@ -34,6 +34,7 @@
                                     <td v-for="item in eachCharacter">
                                         <div class="text-center" v-if="item.header_id == 1">
                                             {{ item.value }} ({{ item.unit }})
+                                            <a class="btn" v-on:click="editCharacter(eachCharacter[0])"><span class="glyphicon glyphicon-edit"></span></a>
                                         </div>
                                         <div class="text-center" v-if="item.header_id > 1 && item.header_id < 4">
                                             {{ item.value }}
@@ -41,7 +42,6 @@
                                         <input v-if="item.header_id >= 4" class="td-input" v-model="item.value" v-on:blur="saveItem(item)"/>
                                     </td>
                                     <td class="actions text-center">
-                                        <a class="btn" v-on:click="editCharacter(eachCharacter[0])"><span class="glyphicon glyphicon-edit"></span></a>
                                         <a class="btn" v-on:click="deleteCharacter(eachCharacter[0].character_id)"><span class="glyphicon glyphicon-trash"></span></a>
                                     </td>
                                 </tr>
@@ -86,8 +86,8 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-md-12 text-right">
-                                                    <a v-on:click="saveCharacter()" class="btn btn-primary">Save</a>
+                                                <div class="col-md-12 text-right" style="margin-top: 15px;">
+                                                    <a :disabled="saveDisabled == true" v-on:click="saveCharacter()" class="btn btn-primary">Save</a>
                                                     <a v-on:click="cancelCharacter()" class="btn btn-danger">Cancel</a>
                                                 </div>
                                             </div>
@@ -127,6 +127,7 @@
         ],
         data: function () {
             return {
+                saveDisabled: true,
                 character: {
                     name: null,
                     method_from: null,
@@ -189,9 +190,22 @@
                     default:
                         break;
                 }
+                if ((((this.character.method_from != null && this.character.method_from != '') &&
+                    (this.character.method_to != null && this.character.method_to != '')) ||
+                    (this.character.method_as != null && this.character.method_as != '')) &&
+                    ((this.character.measure_semantic != null && this.character.measure_semantic != '') &&
+                    (this.character.entity_semantic != null && this.character.entity_semantic != '')) &&
+                    (this.character.unit != null && this.character.unit != '')) {
+                    this.saveDisabled = false;
+                    console.log("enabled");
+                } else {
+                    this.saveDisabled = true;
+                    console.log("disabled");
+                }
                 console.log('data after child handle: ', event); // get the data after child dealing
             },
             editCharacter (character) {
+                this.saveDisabled = false;
                 this.updatedFlag = false;
                 this.editFlag = true;
                 console.log("character", character);
@@ -257,12 +271,12 @@
                         break;
                     case 'semantics':
                         this.parentData = [];
-                        this.character.semantics = this.character.name.split(" of ");
-                        this.parentData = this.character.semantics;
+                        this.character.semantics = [];
                         if (this.editFlag) {
-                            this.parentData.push(this.character.measure_semantic);
-                            this.parentData.push(this.character.entity_semantic);
+                            this.character.semantics.push(this.character.measure_semantic);
+                            this.character.semantics.push(this.character.entity_semantic);
                         }
+                        this.parentData = this.character.semantics;
                         this.currentMetadata = semantics;
                         break;
                     case 'creator':
@@ -290,14 +304,12 @@
                 for (var key in this.character) {
                     if (key != 'confirmed' && key != 'method_as' && key != 'method_from' && key != 'method_to' && key != 'measure_semantic' && key != 'entity_semantic' && key != 'usage' && key != 'history' && (this.character[key] == null || this.character[key] == '')) {
                         console.log(key);
-                        console.log(1);
                         checkFields = false;
                     }
                 }
                 if ((this.character['method_as'] == null || this.character['method_as'] == '') &&
                     ((this.character['method_from'] == null || this.character['method_from'] == '') ||
                     (this.character['method_to'] == null || this.character['method_to'] == ''))) {
-                    console.log(2);
                     checkFields = false;
                 }
                 var app = this;
@@ -384,32 +396,51 @@
             },
             saveHeader: function() {
                 var app = this;
-                axios.post('/api/v1/character/add-header', this.newHeader)
-                    .then(function (resp) {
-                        console.log("createHeader resp", resp);
-//                        $('.measure-table thead tr th:last-child').before("<th><input class='th-input' value='" + resp.data.header + "' /></th>");
-                        app.headers = resp.data.headers;
-                        app.characters = resp.data.characters;
-                        for (var i = 0; i < app.characters.length; i++) {
-                            app.characters[i][0].unit = resp.data.arrayCharacters[i].unit;
+                axios.get('/api/v1/character/all')
+                    .then(function(resp) {
+                        var headerData = resp.data.headers;
+                        var tpFlag = true;
+                        for (var i = 0; i < headerData.length; i ++) {
+                            if (app.newHeader.header == headerData[i].header) {
+                                tpFlag = false;
+                            }
                         }
-                        $('th.actions > .display-block').removeClass('display-block').addClass('display-none');
-                        $('th.actions > .btn-add.display-none').removeClass('display-none').addClass('display-block');
-                        app.actionLog.action_type = "create_header";
-                        app.actionLog.model_id = resp.data.characters[0][resp.data.characters[0].length - 1].header_id;
-                        app.actionLog.model_name = "header";
-                        axios.post('/api/v1/log', app.actionLog)
-                            .then(function (resp) {
-                                console.log("successful log character !!!");
-                            })
-                            .catch(function (resp) {
-                                console.log(resp);
-                                alert("Error Occured !");
-                            });
+
+                        if (tpFlag) {
+                            axios.post('/api/v1/character/add-header', app.newHeader)
+                                .then(function (resp) {
+                                    console.log("createHeader resp", resp);
+//                        $('.measure-table thead tr th:last-child').before("<th><input class='th-input' value='" + resp.data.header + "' /></th>");
+                                    app.headers = resp.data.headers;
+                                    app.characters = resp.data.characters;
+                                    for (var i = 0; i < app.characters.length; i++) {
+                                        app.characters[i][0].unit = resp.data.arrayCharacters[i].unit;
+                                    }
+                                    $('th.actions > .display-block').removeClass('display-block').addClass('display-none');
+                                    $('th.actions > .btn-add.display-none').removeClass('display-none').addClass('display-block');
+                                    app.actionLog.action_type = "create_header";
+                                    app.actionLog.model_id = resp.data.characters[0][resp.data.characters[0].length - 1].header_id;
+                                    app.actionLog.model_name = "header";
+                                    axios.post('/api/v1/log', app.actionLog)
+                                        .then(function (resp) {
+                                            console.log("successful log character !!!");
+                                        })
+                                        .catch(function (resp) {
+                                            console.log(resp);
+                                            alert("Error Occured !");
+                                        });
+                                })
+                                .catch(function (resp) {
+                                    console.log(resp);
+                                });
+                        } else {
+                            alert("The header is already exist. Please check the header name.");
+                        }
                     })
-                    .catch(function (resp) {
-                        console.log(resp);
+                    .catch(function(resp) {
+                        console.log("resp", resp);
                     });
+
             },
             cancelHeader: function() {
                 $('th.actions > .display-block').removeClass('display-block').addClass('display-none');
@@ -420,7 +451,18 @@
                 this.currentComponent = component;
             },
             storeCharacter() {
+                var app = this;
                 var tpArray = this.character.name.split(' ');
+                this.character.method_from = null;
+                this.character.method_to = null;
+                this.character.method_as = null;
+                this.character.unit = null;
+                this.character.measure_semantic = null;
+                this.character.entity_semantic = null;
+                this.character.creator = this.user.name;
+                this.character.usage = [];
+                this.character.history = [];
+
                 var tpFlag = false;
                 for (var i = 0; i < tpArray.length; i++) {
                     if (tpArray[i] == 'of') {
@@ -430,15 +472,15 @@
                 if (tpFlag) {
                     sessionStorage.setItem("characterName", this.character.name);
                     console.log("detailsFlag", this.detailsFlag);
-                    this.parentData = [];
-                    this.parentData[0] = "";
-                    this.parentData[1] = "";
-                    this.currentMetadata = method;
-                    this.detailsFlag = true;
-                    this.editFlag = false;
-                    this.metadataFlag = "method";
+                    app.parentData = [];
+                    app.parentData[0] = "";
+                    app.parentData[1] = "";
+                    app.currentMetadata = method;
+                    app.detailsFlag = true;
+                    app.editFlag = false;
+                    app.metadataFlag = "method";
                 } else {
-                    alert("The character name should contain 'of' word. Please see the example name!");
+                    alert("The header name should contain 'of' word.");
                 }
 
             },
