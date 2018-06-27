@@ -7,7 +7,7 @@
                         New Character
                     </div>
                     <div class="col-md-4">
-                        <input placeholder="length of leaf" style="width: 100%;" v-model="character.name" name="text"/>
+                        <input placeholder="Measure of Entity (e.g: length of leaf)" style="width: 100%;" v-model="character.name" name="text"/>
                     </div>
                     <div class="col-md-4">
                         <a v-on:click="storeCharacter()" class="btn btn-primary"
