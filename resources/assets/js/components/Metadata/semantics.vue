@@ -4,76 +4,85 @@
             Semantics
         </div>
         <div class="col-md-12">
-            Semantic for Measure {{ character_name[0] }}:
-            <select style="width: 100%;" v-model="measureSemantic" @change="handleDataFc(0)">
-                <option v-for="item in measureArray" :value="item">{{item}}</option>
-            </select>
-            <div v-if="measureDetails != null">
-                Label: {{ measureDetails.term }}<br>
-                Matching Score: {{ measureDetails.score }}<br>
-                Direct Superclass: {{ measureDetails.parentTerm }}<br>
-                Object Properties:<br>
-                <div v-if="objectProperty != null" v-for="entry in objectProperty">
-                    <div v-for="item in entry.resultAnnotations" v-if="item.property == 'http://purl.obolibrary.org/obo/BFO_0000051' && item.value !=''">
-                        &nbsp;&nbsp;&nbsp;Has Part: {{ item.value }}
+            <b>Semantic for Measure {{ character_name[0] }}:</b>
+            <div v-if="measureArray.length > 0">
+                <select style="width: 100%;" v-model="measureSemantic" @change="handleDataFc(0)">
+                    <option v-for="item in measureArray" :value="item">{{item}}</option>
+                </select>
+                <div v-if="measureDetails != null">
+                    Label: {{ measureDetails.term }}<br>
+                    Matching Score: {{ measureDetails.score }}<br>
+                    Direct Superclass: {{ measureDetails.parentTerm }}<br>
+                    Object Properties:<br>
+                    <div v-if="objectProperty != null" v-for="entry in objectProperty">
+                        <div v-for="item in entry.resultAnnotations" v-if="item.property == 'http://purl.obolibrary.org/obo/BFO_0000051' && item.value !=''">
+                            &nbsp;&nbsp;&nbsp;Has Part: {{ item.value }}
+                        </div>
+                        <div v-for="item in entry.resultAnnotations" v-if="item.property == 'http://purl.obolibrary.org/obo/BFO_0000050' && item.value !=''">
+                            &nbsp;&nbsp;&nbsp;Part Of: {{ item.value }}
+                        </div>
                     </div>
-                    <div v-for="item in entry.resultAnnotations" v-if="item.property == 'http://purl.obolibrary.org/obo/BFO_0000050' && item.value !=''">
-                        &nbsp;&nbsp;&nbsp;Part Of: {{ item.value }}
+                    Annotation Properties:<br>
+                    <div v-for="item in measureDetails.resultAnnotations" v-if="item.property == 'http://purl.obolibrary.org/obo/IAO_0000115' && item.property.value != ''">
+                        &nbsp;&nbsp;&nbsp;Definition: {{ item.value }}
                     </div>
-                </div>
-                Annotation Properties:<br>
-                <div v-for="item in measureDetails.resultAnnotations" v-if="item.property == 'http://purl.obolibrary.org/obo/IAO_0000115' && item.property.value != ''">
-                    &nbsp;&nbsp;&nbsp;Definition: {{ item.value }}
-                </div>
-                <div v-for="item in measureDetails.resultAnnotations" v-if="item.property == 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym' && item.property.value != ''">
-                    &nbsp;&nbsp;&nbsp;Exact Synonym: {{ item.value }}
-                </div>
-                <div v-for="item in measureDetails.resultAnnotations" v-if="item.property == 'http://www.geneontology.org/formats/oboInOwl#hasNarrowSynonym' && item.property.value != ''">
-                    &nbsp;&nbsp;&nbsp;Narrow Synonym: {{ item.value }}
-                </div>
-                <div v-for="item in measureDetails.resultAnnotations" v-if="item.property == 'http://www.geneontology.org/formats/oboInOwl#hasRelatedSynonym' && item.property.value != ''">
-                    &nbsp;&nbsp;&nbsp;Related Synonym: {{ item.value }}
-                </div>
-                <div v-for="item in measureDetails.resultAnnotations" v-if="item.property == 'http://www.geneontology.org/formats/oboInOwl#hasBroaderSynonym' && item.property.value != ''">
-                    &nbsp;&nbsp;&nbsp;Broader Synonym: {{ item.value }}
+                    <div v-for="item in measureDetails.resultAnnotations" v-if="item.property == 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym' && item.property.value != ''">
+                        &nbsp;&nbsp;&nbsp;Exact Synonym: {{ item.value }}
+                    </div>
+                    <div v-for="item in measureDetails.resultAnnotations" v-if="item.property == 'http://www.geneontology.org/formats/oboInOwl#hasNarrowSynonym' && item.property.value != ''">
+                        &nbsp;&nbsp;&nbsp;Narrow Synonym: {{ item.value }}
+                    </div>
+                    <div v-for="item in measureDetails.resultAnnotations" v-if="item.property == 'http://www.geneontology.org/formats/oboInOwl#hasRelatedSynonym' && item.property.value != ''">
+                        &nbsp;&nbsp;&nbsp;Related Synonym: {{ item.value }}
+                    </div>
+                    <div v-for="item in measureDetails.resultAnnotations" v-if="item.property == 'http://www.geneontology.org/formats/oboInOwl#hasBroaderSynonym' && item.property.value != ''">
+                        &nbsp;&nbsp;&nbsp;Broader Synonym: {{ item.value }}
+                    </div>
                 </div>
             </div>
-
+            <div v-if="measureArray.length == 0">
+                <input class="child-model" style="width: 100%;" v-model="measureSemantic" v-on:change="handleDataFc(0)"/>
+            </div>
         </div>
         <div class="col-md-12">
-            Semantic for Entity {{ character_name[1] }}:
-            <select style="width: 100%;" v-model="entitySemantic" @change="handleDataFc(1)">
-                <option v-for="item in entityArray" :value="item">{{item}}</option>
-            </select>
-            <div v-if="entityDetails != null">
-                Label: {{ entityDetails.term }}<br>
-                Matching Score: {{ entityDetails.score }}<br>
-                Direct Superclass Score: {{ entityDetails.parentTerm }}<br>
-                Object Properties:<br>
-                <div v-if="objectProperty != null" v-for="entry in objectProperty">
-                    <div v-for="item in entry.resultAnnotations" v-if="item.property == 'http://purl.obolibrary.org/obo/BFO_0000051' && item.value !=''">
-                        &nbsp;&nbsp;&nbsp;Has Part: {{ item.value }}
+            <b>Semantic for Entity {{ character_name[1] }}:</b>
+            <div v-if="entityArray.length > 0">
+                <select style="width: 100%;" v-model="entitySemantic" @change="handleDataFc(1)">
+                    <option v-for="item in entityArray" :value="item">{{item}}</option>
+                </select>
+                <div v-if="entityDetails != null">
+                    Label: {{ entityDetails.term }}<br>
+                    Matching Score: {{ entityDetails.score }}<br>
+                    Direct Superclass Score: {{ entityDetails.parentTerm }}<br>
+                    Object Properties:<br>
+                    <div v-if="objectProperty != null" v-for="entry in objectProperty">
+                        <div v-for="item in entry.resultAnnotations" v-if="item.property == 'http://purl.obolibrary.org/obo/BFO_0000051' && item.value !=''">
+                            &nbsp;&nbsp;&nbsp;Has Part: {{ item.value }}
+                        </div>
+                        <div v-for="item in entry.resultAnnotations" v-if="item.property == 'http://purl.obolibrary.org/obo/BFO_0000050' && item.value !=''">
+                            &nbsp;&nbsp;&nbsp;Part Of: {{ item.value }}
+                        </div>
                     </div>
-                    <div v-for="item in entry.resultAnnotations" v-if="item.property == 'http://purl.obolibrary.org/obo/BFO_0000050' && item.value !=''">
-                        &nbsp;&nbsp;&nbsp;Part Of: {{ item.value }}
+                    Annotation Properties:<br>
+                    <div v-for="item in entityDetails.resultAnnotations" v-if="item.property == 'http://purl.obolibrary.org/obo/IAO_0000115' && item.property.value != ''">
+                        &nbsp;&nbsp;&nbsp;Definition: {{ item.value }}
+                    </div>
+                    <div v-for="item in entityDetails.resultAnnotations" v-if="item.property == 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym' && item.property.value != ''">
+                        &nbsp;&nbsp;&nbsp;Exact Synonym: {{ item.value }}
+                    </div>
+                    <div v-for="item in entityDetails.resultAnnotations" v-if="item.property == 'http://www.geneontology.org/formats/oboInOwl#hasNarrowSynonym' && item.property.value != ''">
+                        &nbsp;&nbsp;&nbsp;Narrow Synonym: {{ item.value }}
+                    </div>
+                    <div v-for="item in entityDetails.resultAnnotations" v-if="item.property == 'http://www.geneontology.org/formats/oboInOwl#hasRelatedSynonym' && item.property.value != ''">
+                        &nbsp;&nbsp;&nbsp;Related Synonym: {{ item.value }}
+                    </div>
+                    <div v-for="item in entityDetails.resultAnnotations" v-if="item.property == 'http://www.geneontology.org/formats/oboInOwl#hasBroaderSynonym' && item.property.value != ''">
+                        &nbsp;&nbsp;&nbsp;Broader Synonym: {{ item.value }}
                     </div>
                 </div>
-                Annotation Properties:<br>
-                <div v-for="item in entityDetails.resultAnnotations" v-if="item.property == 'http://purl.obolibrary.org/obo/IAO_0000115' && item.property.value != ''">
-                    &nbsp;&nbsp;&nbsp;Definition: {{ item.value }}
-                </div>
-                <div v-for="item in entityDetails.resultAnnotations" v-if="item.property == 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym' && item.property.value != ''">
-                    &nbsp;&nbsp;&nbsp;Exact Synonym: {{ item.value }}
-                </div>
-                <div v-for="item in entityDetails.resultAnnotations" v-if="item.property == 'http://www.geneontology.org/formats/oboInOwl#hasNarrowSynonym' && item.property.value != ''">
-                    &nbsp;&nbsp;&nbsp;Narrow Synonym: {{ item.value }}
-                </div>
-                <div v-for="item in entityDetails.resultAnnotations" v-if="item.property == 'http://www.geneontology.org/formats/oboInOwl#hasRelatedSynonym' && item.property.value != ''">
-                    &nbsp;&nbsp;&nbsp;Related Synonym: {{ item.value }}
-                </div>
-                <div v-for="item in entityDetails.resultAnnotations" v-if="item.property == 'http://www.geneontology.org/formats/oboInOwl#hasBroaderSynonym' && item.property.value != ''">
-                    &nbsp;&nbsp;&nbsp;Broader Synonym: {{ item.value }}
-                </div>
+            </div>
+            <div v-if="entityArray.length == 0">
+                <input class="child-model" style="width: 100%;" v-model="entitySemantic" v-on:change="handleDataFc(1)"/>
             </div>
 
         </div>

@@ -16,7 +16,11 @@ Route::group([
         'as' => 'api.'
     ], function () {
     Route::post('log',                          ['as' => 'log',                         'uses' => 'HomeController@log']);
-    Route::get('activity_log',                 ['as' => 'activity_log',                'uses' => 'HomeController@activity_log']);
+    Route::get('activity_log',                  ['as' => 'activity_log',                'uses' => 'HomeController@activity_log']);
+
+
+    Route::post('meta-log',                ['as' => 'meta_log',                    'uses' => 'HomeController@saveMetaLog']);
+    Route::get('meta-log/{characterId}',    ['as' => 'activity_log',                'uses' => 'HomeController@getMetaLog']);
     Route::group([
         'prefix' => '/character',
         'as' => 'character.'
@@ -30,5 +34,6 @@ Route::group([
         Route::post('add-header',               ['as' => 'add-header',                  'uses' => 'HomeController@addHeader']);
         Route::post('update',                   ['as' => 'update',                      'uses' => 'HomeController@update']);
         Route::post('delete',                   ['as' => 'delete',                      'uses' => 'HomeController@delete']);
+
     });
 });

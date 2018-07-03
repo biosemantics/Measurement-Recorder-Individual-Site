@@ -8,6 +8,7 @@ use App\Character;
 use App\Value;
 use App\ActionLog;
 use App\ActivityLog;
+use App\MetaLog;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
@@ -19,7 +20,7 @@ class HomeController extends Controller
         $all = Character::all();
         $characters = [];
         foreach ($all as $each) {
-            $tpValues = Value::where('character_id', '=', $each->id)->orderBy('header_id')->get();
+            $tpValues = Value::where('character_id', '=', $each->id)->orderBy('header_id', 'dec')->get();
             $characters []= $tpValues;
         }
 
@@ -58,6 +59,7 @@ class HomeController extends Controller
                 'entity_semantic' => $request->input('entity_semantic'),
                 'creator' => $request->input('creator'),
             ]);
+//            $headers = Header::orderBy('created_at', 'dec')->get();
             $headers = Header::all();
             foreach ($headers as $header) {
                 Value::create([
@@ -74,10 +76,12 @@ class HomeController extends Controller
         $value->save();
 
         $characters = $this->getValuesByCharacter();
-
+        $arrayCharacters = Character::all();
         $data = [
+            'character'  => $character,
             'value'       => $value,
-            'characters'    => $characters
+            'characters'    => $characters,
+            'arrayCharacters' => $arrayCharacters
         ];
 
         return $data;
@@ -130,7 +134,8 @@ class HomeController extends Controller
 
     public function all(Request $request)
     {
-        $headers = Header::all();
+        $headers = Header::orderBy('created_at', 'dec')->get();
+//        $headers = Header::all();
         $characters = $this->getValuesByCharacter();
         $arrayCharacters = Character::all();
 
@@ -154,7 +159,8 @@ class HomeController extends Controller
             ]);
         }
 
-        $headers = Header::all();
+        $headers = Header::orderBy('created_at', 'dec')->get();
+//        $headers = Header::all();
         $characters = $this->getValuesByCharacter();
         $arrayCharacters = Character::all();
 
@@ -192,5 +198,28 @@ class HomeController extends Controller
         $actLog = ActivityLog::create($request->all());
 
         return $actLog;
+    }
+
+    public function saveMetaLog(Request $request) {
+        $metaLog = MetaLog::create($request->all());
+
+        return $metaLog;
+    }
+
+    public function getMetaLog(Request $request, $characterId) {
+        $metaLogs = MetaLog::where('character_id', '=', $characterId)->orderBy('created_at', 'asc')->get();
+
+
+        $metaHistory = [];
+        foreach ($metaLogs as $eachLog) {
+            $tpValue = $eachLog->created_at . ' ' . $eachLog->username . ' ' . $eachLog->description;
+            $metaHistory []= $tpValue;
+        }
+
+        $data = [
+            'metaHistory'   =>  $metaHistory
+        ];
+
+        return $data;
     }
 }
