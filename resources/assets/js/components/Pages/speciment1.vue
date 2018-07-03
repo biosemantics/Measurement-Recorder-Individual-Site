@@ -24,7 +24,7 @@
                                     <!--<th style="min-width: 150px;"><input class="th-input" v-bind:value="headers[headers.length - 3].header" /></th>-->
                                     <!--<th style="min-width: 150px;"><input class="th-input" v-bind:value="headers[headers.length - 2].header" /></th>-->
                                     <!--<th style="min-width: 150px;"><input class="th-input" v-bind:value="headers[headers.length - 1].header" /></th>-->
-                                    <th style="min-width: 150px;"><input class="th-input" value="Character" /></th>
+                                    <th style="min-width: 190px;"><input class="th-input" value="Character" /></th>
                                     <th style="min-width: 150px;"><input class="th-input" value="Average" /></th>
                                     <th style="min-width: 150px;"><input class="th-input" value="Deviation" /></th>
                                     <th v-if="header.id > 3" v-for="header in headers" style="min-width: 150px;"><input class="th-input" v-bind:value="header.header" /></th>
