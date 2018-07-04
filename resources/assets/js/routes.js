@@ -7,7 +7,7 @@ import Specimen3 from './components/Pages/speciment3.vue';
 
 const routes = [
     {
-        path: '/home',
+        path: '/Measurement-Recorder/public/home',
         component: Specimen1,
         name: 'specimen-1'
     },
