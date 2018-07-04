@@ -247,7 +247,7 @@
                 console.log("character", character);
                 sessionStorage.setItem("characterName", character.value);
                 var app = this;
-                axios.get("/api/v1/character/" + character.character_id)
+                axios.get("/mr/shared/public/api/v1/character/" + character.character_id)
                     .then(function (resp) {
                         console.log("get Character", resp);
                         app.metadataFlag = 'method';
@@ -258,7 +258,7 @@
                         app.parentData[2] = app.character.method_as;
                         app.currentMetadata = method;
                         app.detailsFlag = true;
-                        axios.get("/api/v1/meta-log/" + character.character_id)
+                        axios.get("/mr/shared/public/api/v1/meta-log/" + character.character_id)
                             .then(function (resp) {
                                 console.log("history resp", resp);
                                 app.character.history = [];
@@ -267,7 +267,7 @@
                                 }
                                 console.log("history", app.character.history);
 
-                                axios.get("/api/v1/character/usage/" + app.character.id)
+                                axios.get("/mr/shared/public/api/v1/character/usage/" + app.character.id)
                                     .then(function (resp) {
                                         console.log("usage resp", resp);
                                         app.character.usage = [];
@@ -354,7 +354,7 @@
                 if (checkFields) {
                     this.detailsFlag = false;
                     this.updatedFlag = false;
-                    axios.get('/api/v1/character/name')
+                    axios.get('/mr/shared/public/api/v1/character/name')
                         .then(function (resp) {
                             console.log('get name resp', resp);
                             var checkName = true;
@@ -372,7 +372,7 @@
                             }
 
                             if (checkName || app.editFlag) {
-                                axios.post('/api/v1/character/create', app.character)
+                                axios.post('/mr/shared/public/api/v1/character/create', app.character)
                                     .then(function (resp) {
                                         console.log("resp", resp);
                                         app.characters = resp.data.characters;
@@ -389,7 +389,7 @@
                                                 jsonRequest.character_id = app.character.id;
                                                 jsonRequest.username = app.user.name;
                                                 jsonRequest.description = 'updated method';
-                                                axios.post('/api/v1/meta-log', jsonRequest)
+                                                axios.post('/mr/shared/public/api/v1/meta-log', jsonRequest)
                                                     .then(function(resp) {
                                                         console.log("update metalog", resp);
                                                         if (app.unitUpdateFlag) {
@@ -399,7 +399,7 @@
                                                             jsonRequest.character_id = app.character.id;
                                                             jsonRequest.username = app.user.name;
                                                             jsonRequest.description = 'updated unit';
-                                                            axios.post('/api/v1/meta-log', jsonRequest)
+                                                            axios.post('/mr/shared/public/api/v1/meta-log', jsonRequest)
                                                                 .then(function(resp) {
                                                                     console.log("update metalog", resp);
                                                                     if (app.semanticsUpdateFlag) {
@@ -409,7 +409,7 @@
                                                                         jsonRequest.character_id = app.character.id;
                                                                         jsonRequest.username = app.user.name;
                                                                         jsonRequest.description = 'updated semantics';
-                                                                        axios.post('/api/v1/meta-log', jsonRequest)
+                                                                        axios.post('/mr/shared/public/api/v1/meta-log', jsonRequest)
                                                                             .then(function(resp) {
                                                                                 console.log("update metalog", resp);
                                                                                 if (app.creatorUpdateFlag) {
@@ -419,7 +419,7 @@
                                                                                     jsonRequest.character_id = app.character.id;
                                                                                     jsonRequest.username = app.user.name;
                                                                                     jsonRequest.description = 'updated creator';
-                                                                                    axios.post('/api/v1/meta-log', jsonRequest)
+                                                                                    axios.post('/mr/shared/public/api/v1/meta-log', jsonRequest)
                                                                                         .then(function(resp) {
                                                                                             console.log("update metalog", resp);
                                                                                         })
@@ -452,7 +452,7 @@
                                                 jsonRequest.character_id = app.character.id;
                                                 jsonRequest.username = app.user.name;
                                                 jsonRequest.description = 'updated unit';
-                                                axios.post('/api/v1/meta-log', jsonRequest)
+                                                axios.post('/mr/shared/public/api/v1/meta-log', jsonRequest)
                                                     .then(function(resp) {
                                                         console.log("update metalog", resp);
                                                         if (app.semanticsUpdateFlag) {
@@ -462,7 +462,7 @@
                                                             jsonRequest.character_id = app.character.id;
                                                             jsonRequest.username = app.user.name;
                                                             jsonRequest.description = 'updated semantics';
-                                                            axios.post('/api/v1/meta-log', jsonRequest)
+                                                            axios.post('/mr/shared/public/api/v1/meta-log', jsonRequest)
                                                                 .then(function(resp) {
                                                                     console.log("update metalog", resp);
                                                                     if (app.creatorUpdateFlag) {
@@ -472,7 +472,7 @@
                                                                         jsonRequest.character_id = app.character.id;
                                                                         jsonRequest.username = app.user.name;
                                                                         jsonRequest.description = 'updated creator';
-                                                                        axios.post('/api/v1/meta-log', jsonRequest)
+                                                                        axios.post('/mr/shared/public/api/v1/meta-log', jsonRequest)
                                                                             .then(function(resp) {
                                                                                 console.log("update metalog", resp);
                                                                             })
@@ -499,7 +499,7 @@
                                                 jsonRequest.character_id = app.character.id;
                                                 jsonRequest.username = app.user.name;
                                                 jsonRequest.description = 'updated semantics';
-                                                axios.post('/api/v1/meta-log', jsonRequest)
+                                                axios.post('/mr/shared/public/api/v1/meta-log', jsonRequest)
                                                     .then(function(resp) {
                                                         console.log("update metalog", resp);
                                                         if (app.creatorUpdateFlag) {
@@ -509,7 +509,7 @@
                                                             jsonRequest.character_id = app.character.id;
                                                             jsonRequest.username = app.user.name;
                                                             jsonRequest.description = 'updated creator';
-                                                            axios.post('/api/v1/meta-log', jsonRequest)
+                                                            axios.post('/mr/shared/public/api/v1/meta-log', jsonRequest)
                                                                 .then(function(resp) {
                                                                     console.log("update metalog", resp);
                                                                 })
@@ -530,7 +530,7 @@
                                                 jsonRequest.character_id = app.character.id;
                                                 jsonRequest.username = app.user.name;
                                                 jsonRequest.description = 'updated creator';
-                                                axios.post('/api/v1/meta-log', jsonRequest)
+                                                axios.post('/mr/shared/public/api/v1/meta-log', jsonRequest)
                                                     .then(function(resp) {
                                                         console.log("update metalog", resp);
                                                     })
@@ -546,7 +546,7 @@
                                             jsonRequest.character_id = app.character.id;
                                             jsonRequest.username = app.user.name;
                                             jsonRequest.description = 'created';
-                                            axios.post('/api/v1/meta-log', jsonRequest)
+                                            axios.post('/mr/shared/public/api/v1/meta-log', jsonRequest)
                                                 .then(function(resp) {
                                                     console.log("create metalog", resp);
                                                 })
@@ -589,7 +589,7 @@
             },
             saveHeader: function() {
                 var app = this;
-                axios.get('/api/v1/character/all')
+                axios.get('/mr/shared/public/api/v1/character/all')
                     .then(function(resp) {
                         var headerData = resp.data.headers;
                         var tpFlag = true;
@@ -600,7 +600,7 @@
                         }
 
                         if (tpFlag) {
-                            axios.post('/api/v1/character/add-header', app.newHeader)
+                            axios.post('/mr/shared/public/api/v1/character/add-header', app.newHeader)
                                 .then(function (resp) {
                                     console.log("createHeader resp", resp);
 //                        $('.measure-table thead tr th:last-child').before("<th><input class='th-input' value='" + resp.data.header + "' /></th>");
@@ -614,7 +614,7 @@
                                     app.actionLog.action_type = "create_header";
                                     app.actionLog.model_id = resp.data.characters[0][resp.data.characters[0].length - 1].header_id;
                                     app.actionLog.model_name = "header";
-                                    axios.post('/api/v1/log', app.actionLog)
+                                    axios.post('/mr/shared/public/api/v1/log', app.actionLog)
                                         .then(function (resp) {
                                             console.log("successful log character !!!");
                                         })
@@ -692,7 +692,7 @@
                     alert("Value should be only positive value.");
                     item.value = '';
                 } else {
-                    axios.post('/api/v1/character/update', item)
+                    axios.post('/mr/shared/public/api/v1/character/update', item)
                         .then(function (resp) {
                             console.log("update item", resp.data);
                             var updatedCharacter = resp.data;
@@ -700,7 +700,7 @@
                             app.actionLog.action_type = "update";
                             app.actionLog.model_id = resp.data.character_id;
                             app.actionLog.model_name = "value";
-                            axios.post('/api/v1/log', app.actionLog)
+                            axios.post('/mr/shared/public/api/v1/log', app.actionLog)
                                 .then(function (resp) {
                                     console.log("successful log character !!!");
                                 })
@@ -740,7 +740,7 @@
                                 app.characters[characterIndex][app.characters[characterIndex].length - 2].value = (totalSum / headerCount).toFixed(2);
                             }
 
-                            axios.post('/api/v1/character/update', app.characters[characterIndex][app.characters[characterIndex].length - 2])
+                            axios.post('/mr/shared/public/api/v1/character/update', app.characters[characterIndex][app.characters[characterIndex].length - 2])
                                 .then(function (resp) {
                                     console.log('update average', resp);
                                 })
@@ -771,7 +771,7 @@
 
                             app.characters[characterIndex][app.characters[characterIndex].length - 3].value = deviationValue;
 
-                            axios.post('/api/v1/character/update', app.characters[characterIndex][app.characters[characterIndex].length - 3])
+                            axios.post('/mr/shared/public/api/v1/character/update', app.characters[characterIndex][app.characters[characterIndex].length - 3])
                                 .then(function (resp) {
                                     console.log('update deviation', resp);
                                 })
@@ -791,14 +791,14 @@
                 var tpData = {
                     character_id: character_id
                 };
-                axios.post('/api/v1/character/delete', tpData)
+                axios.post('/mr/shared/public/api/v1/character/delete', tpData)
                     .then(function (resp) {
                         console.log("resp", resp);
                         app.characters = resp.data.characters;
                         app.actionLog.action_type = "delete";
                         app.actionLog.model_id = tpData.character_id;
                         app.actionLog.model_name = "character";
-                        axios.post('/api/v1/log', app.actionLog)
+                        axios.post('/mr/shared/public/api/v1/log', app.actionLog)
                             .then(function (resp) {
                                 console.log("successful log character !!!");
                             })
@@ -815,7 +815,7 @@
         },
         created() {
             var app = this;
-            axios.get('/api/v1/character/all')
+            axios.get('/mr/shared/public/api/v1/character/all')
                 .then(function (resp) {
                     console.log(resp);
                     app.headers = resp.data.headers;
