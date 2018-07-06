@@ -185,9 +185,11 @@ class HomeController extends Controller
         $character_id = $request->input('character_id');
         Character::where('id', '=', $character_id)->delete();
         Value::where('character_id', '=', $character_id)->delete();
+        $arrayCharacters = Character::all();
         $characters = $this->getValuesByCharacter();
         $data = [
-            'characters'    => $characters
+            'characters'    => $characters,
+            'arrayCharacters' => $arrayCharacters
         ];
 
         return $data;

@@ -795,6 +795,9 @@
                     .then(function (resp) {
                         console.log("resp", resp);
                         app.characters = resp.data.characters;
+                        for (var i = 0; i < app.characters.length; i++) {
+                            app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
+                        }
                         app.actionLog.action_type = "delete";
                         app.actionLog.model_id = tpData.character_id;
                         app.actionLog.model_name = "character";
