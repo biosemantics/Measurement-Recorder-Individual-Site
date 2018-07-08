@@ -173,6 +173,22 @@ class HomeController extends Controller
         return $data;
     }
 
+    public function deleteHeader(Request $request, $headerId) {
+        Header::where('id', '=', $headerId)->delete();
+        Value::where('header_id', '=', $headerId)->delete();
+        $characters = $this->getValuesByCharacter();
+        $arrayCharacters = Character::all();
+        $headers = Header::orderBy('created_at', 'dec')->get();
+
+        $data = [
+            'headers'               => $headers,
+            'characters'            => $characters,
+            'arrayCharacters'       => $arrayCharacters
+        ];
+
+        return $data;
+    }
+
     public function update(Request $request) {
         $value = Value::where('id', '=', $request->input('id'))->first();
         $value->value = $request->input('value');

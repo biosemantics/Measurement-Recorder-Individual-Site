@@ -286,7 +286,7 @@ button[aria-disabled="true"] {
     padding: 0 !important;
 }
 .th-input {
-    width: 100%;
+    /*width: 100%;*/
     border: none;
     text-align: center;
     height: 43px;
