@@ -292,9 +292,6 @@ button[aria-disabled="true"] {
     height: 43px;
 }
 
-.actions input {
-    width: 50%;
-}
 .actions .btn {
     padding: 5px;
 }

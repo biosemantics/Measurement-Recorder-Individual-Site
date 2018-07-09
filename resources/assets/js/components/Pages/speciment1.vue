@@ -21,7 +21,10 @@
                             <table class="table table-bordered table-responsive measure-table">
                                 <thead>
                                 <tr v-if="headers.length > 0">
-                                    <th style="min-width: 190px;"><input class="th-input" value="Character" /></th>
+                                    <th class="actions" style="min-width: 250px;">
+                                        <input class="th-input" value="Character" />
+                                        <a class="btn btn-add display-block" v-on:click="addHeader()"><span class="glyphicon glyphicon-plus"></span></a>
+                                    </th>
                                     <th style="min-width: 150px;"><input class="th-input" value="Average" /></th>
                                     <th style="min-width: 150px;"><input class="th-input" value="Deviation" /></th>
                                     <th v-if="header.id > 3" v-for="header in headers" style="min-width: 200px;">
@@ -29,11 +32,13 @@
                                         <a class="btn btn-add display-block" v-on:click="deleteHeader(header.id)"><span class="glyphicon glyphicon-remove"></span></a>
                                     </th>
                                     <!--<th v-for="header in headers" style="min-width: 150px;"><input class="th-input" v-bind:value="header.header" /></th>-->
-                                    <th class="actions" style="min-width: 150px;">
-                                        <input class="th-input display-none" v-model="newHeader.header" name="header" autofocus/>
-                                        <a class="btn btn-add display-block" v-on:click="addHeader()" style="width: 100%; height:37px; "><span class="glyphicon glyphicon-plus"></span></a>
-                                        <a class="btn btn-success btn-save display-none" v-on:click="saveHeader()"><span class="glyphicon glyphicon-floppy-disk"></span></a>
-                                        <a class="btn btn-danger btn-cancel display-none" v-on:click="cancelHeader()"><span class="glyphicon glyphicon-remove-circle"></span></a>
+                                    <th class="actions display-none" style="min-width: 150px;">
+                                        <!--<input class="th-input display-none" v-model="newHeader.header" name="header" autofocus/>-->
+                                        <!--<a class="btn btn-success btn-save display-none" v-on:click="saveHeader()"><span class="glyphicon glyphicon-floppy-disk"></span></a>-->
+                                        <!--<a class="btn btn-danger btn-cancel display-none" v-on:click="cancelHeader()"><span class="glyphicon glyphicon-remove-circle"></span></a>-->
+                                        <input style="width: 50%;" class="th-input" v-model="newHeader.header" name="header" autofocus/>
+                                        <a class="btn btn-success btn-save" v-on:click="saveHeader()"><span class="glyphicon glyphicon-floppy-disk"></span></a>
+                                        <a class="btn btn-danger btn-cancel" v-on:click="cancelHeader()"><span class="glyphicon glyphicon-remove-circle"></span></a>
                                     </th>
                                 </tr>
                                 </thead>
@@ -44,6 +49,8 @@
                                         <div>
                                             {{ item.value }} ({{ item.unit }})
                                             <a class="btn" v-on:click="editCharacter(eachCharacter[eachCharacter.length - 1])"><span class="glyphicon glyphicon-edit"></span></a>
+                                            <a class="btn" v-on:click="deleteCharacter(eachCharacter[0].character_id)"><span class="glyphicon glyphicon-trash"></span></a>
+
                                         </div>
                                     </td>
                                     <td class="text-center" v-if="item.header_id == 2" v-for="item in eachCharacter">
@@ -55,9 +62,8 @@
                                     <td v-if="item.header_id > 3" v-for="item in eachCharacter">
                                         <input v-if="item.header_id >= 4" class="td-input" v-model="item.value" v-on:blur="saveItem(item)"/>
                                     </td>
-                                    <td class="actions text-center">
-                                        <a class="btn" v-on:click="deleteCharacter(eachCharacter[0].character_id)"><span class="glyphicon glyphicon-trash"></span></a>
-                                    </td>
+                                    <!--<td class="actions text-center">-->
+                                    <!--</td>-->
                                 </tr>
                                 </tbody>
                             </table>
@@ -577,7 +583,7 @@
             },
             addHeader: function() {
 //                $('.measure-table > thead > tr > th:last-child').before('<th></th>')
-                $('th.actions > .display-none').removeClass('display-none').addClass('display-block');
+                $('th.actions.display-none').removeClass('display-none').addClass('display-block');
                 $('th.actions > .btn-add.display-block').removeClass('display-block').addClass('display-none');
             },
             saveHeader: function() {
@@ -602,7 +608,7 @@
                                     for (var i = 0; i < app.characters.length; i++) {
                                         app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
                                     }
-                                    $('th.actions > .display-block').removeClass('display-block').addClass('display-none');
+                                    $('th.actions.display-block').removeClass('display-block').addClass('display-none');
                                     $('th.actions > .btn-add.display-none').removeClass('display-none').addClass('display-block');
                                     app.actionLog.action_type = "create_header";
                                     app.actionLog.model_id = resp.data.characters[0][resp.data.characters[0].length - 1].header_id;
@@ -718,7 +724,7 @@
                     });
             },
             cancelHeader: function() {
-                $('th.actions > .display-block').removeClass('display-block').addClass('display-none');
+                $('th.actions.display-block').removeClass('display-block').addClass('display-none');
                 $('th.actions > .btn-add.display-none').removeClass('display-none').addClass('display-block');
             },
             swapComponent: function(component)
