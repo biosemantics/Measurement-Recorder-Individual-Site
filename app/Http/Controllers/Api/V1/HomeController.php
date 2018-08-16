@@ -9,6 +9,7 @@ use App\Value;
 use App\ActionLog;
 use App\ActivityLog;
 use App\MetaLog;
+use App\UserLog;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
@@ -130,6 +131,12 @@ class HomeController extends Controller
         $actionLog = ActionLog::create($request->all());
 
         return $actionLog;
+    }
+
+    public function saveUserLog(Request $request) {
+        $userLog = UserLog::create($request->all());
+
+        return $userLog;
     }
 
     public function all(Request $request)

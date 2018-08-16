@@ -29,7 +29,7 @@
                                     <th style="min-width: 150px;"><input class="th-input" value="Deviation" /></th>
                                     <th v-if="header.id > 3" v-for="header in headers" style="min-width: 200px;">
                                         <input class="th-input" v-bind:value="header.header" />
-                                        <a class="btn btn-add display-block" v-on:click="deleteHeader(header.id)"><span class="glyphicon glyphicon-remove"></span></a>
+                                        <a class="btn btn-add display-block" v-on:click="deleteHeader(header.id, header.header)"><span class="glyphicon glyphicon-remove"></span></a>
                                     </th>
                                     <!--<th v-for="header in headers" style="min-width: 150px;"><input class="th-input" v-bind:value="header.header" /></th>-->
                                     <th class="actions display-none" style="min-width: 150px;">
@@ -84,15 +84,15 @@
                                             <div class="row">
                                                 <div class="col-md-7 radial-menu">
                                                     <ul style="margin-left: auto; margin-right: auto;">
-                                                        <li class="method"><a v-on:click="showDetails('method')">Method</a></li>
-                                                        <li class="unit"><a v-on:click="showDetails('unit')">Unit</a></li>
-                                                        <li class="semantics"><a v-on:click="showDetails('semantics')">Semantics</a></li>
-                                                        <li class="creator"><a v-on:click="showDetails('creator')">Creator</a></li>
-                                                        <li><a v-on:click="showDetails('usage')">Usage</a></li>
-                                                        <li><a v-on:click="showDetails('history')">History</a></li>
-                                                        <li><a v-on:click="showDetails('')">Future<br>Function</a></li>
-                                                        <li><a v-on:click="showDetails('')">Future<br>Function</a></li>
-                                                        <li><a v-on:click="showDetails('')">Future<br>Function</a></li>
+                                                        <li class="method"><a v-on:click="showDetails('method', metadataFlag)">Method</a></li>
+                                                        <li class="unit"><a v-on:click="showDetails('unit', metadataFlag)">Unit</a></li>
+                                                        <li class="semantics"><a v-on:click="showDetails('semantics', metadataFlag)">Semantics</a></li>
+                                                        <li class="creator"><a v-on:click="showDetails('creator', metadataFlag)">Creator</a></li>
+                                                        <li><a v-on:click="showDetails('usage', metadataFlag)">Usage</a></li>
+                                                        <li><a v-on:click="showDetails('history', metadataFlag)">History</a></li>
+                                                        <li><a v-on:click="showDetails('', metadataFlag)">Future<br>Function</a></li>
+                                                        <li><a v-on:click="showDetails('', metadataFlag)">Future<br>Function</a></li>
+                                                        <li><a v-on:click="showDetails('', metadataFlag)">Future<br>Function</a></li>
                                                     </ul>
                                                     <div class="center">
                                                         <a>{{ character.name }}</a>
@@ -109,7 +109,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12 text-right" style="margin-top: 15px;">
-                                                    <a :disabled="saveDisabled == true" v-on:click="saveCharacter()" class="btn btn-primary">Save</a>
+                                                    <a :disabled="saveDisabled == true" v-on:click="saveCharacter(metadataFlag)" class="btn btn-primary">Save</a>
                                                     <a v-on:click="cancelCharacter()" class="btn btn-danger">Cancel</a>
                                                 </div>
                                             </div>
@@ -175,7 +175,7 @@
                     header: ''
                 },
                 parentData: '',
-                metadataFlag: '',
+                metadataFlag: null,
                 detailsFlag: false,
                 updatedFlag: false,
                 showModal: false,
@@ -249,14 +249,26 @@
                 axios.get("/mr/shared/public/api/v1/character/" + character.character_id)
                     .then(function (resp) {
                         console.log("get Character", resp);
-                        app.metadataFlag = 'method';
+//                        app.metadataFlag = 'method';
                         app.character = resp.data;
                         app.parentData = [];
                         app.parentData.push(app.character.method_from);
                         app.parentData.push(app.character.method_to);
                         app.parentData[2] = app.character.method_as;
-                        app.currentMetadata = method;
+//                        app.currentMetadata = method;
                         app.detailsFlag = true;
+                        var jsonRequest = {
+                            'user_id': app.user.id,
+                            'action': 'clicked on "Edit Icon" on "' + character.value + '"',
+                            'type': 'Measurement Recorder'
+                        };
+                        axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
+                            .then(function(resp) {
+                                console.log('userLog resp', resp);
+                            })
+                            .catch(function(resp) {
+                                console.log('userLog error', resp);
+                            });
                         axios.get("/mr/shared/public/api/v1/meta-log/" + character.character_id)
                             .then(function (resp) {
                                 console.log("history resp", resp);
@@ -288,7 +300,8 @@
                     });
 
             },
-            showDetails (metadata) {
+            showDetails (metadata, previousMetadata = null) {
+                var app = this;
                 console.log("metadata", metadata);
                 console.log("character", this.character);
                 this.metadataFlag = metadata;
@@ -329,8 +342,66 @@
                     default:
                         break;
                 }
+
+                if (previousMetadata != null) {
+                    var jsonRequest = {
+                        'user_id': app.user.id,
+                        'type': 'Measurement Recorder',
+                        'action': 'entered ' + previousMetadata + ' for "' + app.character.name + '"',
+                        'action_detail': ' '
+                    };
+                    console.log('previousMetadata', previousMetadata);
+
+                    switch(previousMetadata) {
+                        case '':
+                            break;
+                        case 'method':
+                            if (app.character.method_as != null) {
+                                jsonRequest.action_detail = jsonRequest.action_detail + 'As: ' + app.character.method_as + '; ';
+                            }
+                            if (app.character.method_from != null) {
+                                jsonRequest.action_detail = jsonRequest.action_detail + 'From: ' + app.character.method_from + '; ';
+                            }
+                            if (app.character.method_to != null) {
+                                jsonRequest.action_detail = jsonRequest.action_detail + 'To: ' + app.character.method_to + '; ';
+                            }
+                            break;
+                        case 'unit':
+                            jsonRequest.action_detail = app.character.unit;
+                            break;
+                        case 'semantics':
+                            jsonRequest.action_detail = 'Measure: ' + app.character.measure_semantic + '; Entity: ' + app.character.entity_semantic;
+                            break;
+                        default:
+                            break;
+                    }
+                    axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
+                        .then(function(resp) {
+                            console.log('userLog resp', resp);
+                        })
+                        .catch(function(resp) {
+                            console.log('userLog error', resp);
+                        });
+                }
+
+                if (metadata != '') {
+                    var jsonRequest = {
+                        'user_id': app.user.id,
+                        'action': 'clicked on ' + metadata,
+                        'type': 'Measurement Recorder'
+                    };
+                    axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
+                        .then(function(resp) {
+                            console.log('userLog resp', resp);
+                        })
+                        .catch(function(resp) {
+                            console.log("userLog error", resp);
+                        });
+                }
+
             },
-            saveCharacter () {
+            saveCharacter (currentMetadata) {
+                var app = this;
                 console.log('save character', this.character);
                 console.log('edit Flag', this.editFlag);
 
@@ -348,7 +419,6 @@
                     (this.character['method_to'] == null || this.character['method_to'] == ''))) {
                     checkFields = false;
                 }
-                var app = this;
 
                 if (checkFields) {
                     this.detailsFlag = false;
@@ -371,6 +441,43 @@
                             }
 
                             if (checkName || app.editFlag) {
+                                var jsonUserLog = {
+                                    'user_id': app.user.id,
+                                    'type': 'Measurement Recorder',
+                                    'action': 'entered method for "' + app.character.name + '"',
+                                    'action_detail': ''
+                                };
+                                switch (currentMetadata) {
+                                    case 'method':
+
+                                        if (app.character.method_as != null) {
+                                            jsonUserLog.action_detail = jsonUserLog.action_detail + 'As: ' + app.character.method_as + '; ';
+                                        }
+                                        if (app.character.method_from != null) {
+                                            jsonUserLog.action_detail = jsonUserLog.action_detail + 'From: ' + app.character.method_from + '; ';
+                                        }
+                                        if (app.character.method_to != null) {
+                                            jsonUserLog.action_detail = jsonUserLog.action_detail + 'To: ' + app.character.method_to + '; ';
+                                        }
+                                        break;
+                                    case 'unit':
+                                        jsonUserLog.action_detail = app.character.unit;
+                                        break;
+                                    case 'semantics':
+                                        jsonUserLog.action_detail = 'Measure: ' + app.character.measure_semantic + '; Entity: ' + app.character.entity_semantic;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                axios.post('/mr/shared/public/api/v1/user-log', jsonUserLog)
+                                    .then(function(resp) {
+                                        console.log('userLog resp', resp);
+                                    })
+                                    .catch(function(resp) {
+                                        console.log('userLog error', resp);
+                                    });
+
+
                                 axios.post('/mr/shared/public/api/v1/character/create', app.character)
                                     .then(function (resp) {
                                         console.log("resp", resp);
@@ -560,6 +667,18 @@
                                         console.log(resp);
                                         alert("Error Occured !");
                                     });
+                                var jsonRequest = {
+                                    'user_id': app.user.id,
+                                    'action': 'clicked on Save for "' + app.character.name + '"',
+                                    'type': 'Measurement Recorder'
+                                };
+                                axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
+                                    .then(function(resp) {
+                                        console.log("userLog resp", resp);
+                                    })
+                                    .catch(function(resp) {
+                                        console.log('userLog error', resp);
+                                    });
                             } else {
                                 alert("You can not create new character with the same name of existing character !");
                             }
@@ -576,9 +695,22 @@
 
             },
             cancelCharacter () {
+                var app = this;
                 this.detailsFlag = false;
                 this.updatedFlag = false;
                 this.parentData = null;
+                var jsonRequest = {
+                    'user_id': app.user.id,
+                    'action': 'clicked on Cancel for "' + app.character.name,
+                    'type': 'Measurement Recorder'
+                };
+                axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
+                    .then(function(resp) {
+                        console.log('userLog resp', resp);
+                    })
+                    .catch(function(resp) {
+                        console.log('userLog error', resp);
+                    });
                 this.character.name = '';
             },
             addHeader: function() {
@@ -621,6 +753,19 @@
                                             console.log(resp);
                                             alert("Error Occured !");
                                         });
+                                    var jsonRequest = {
+                                        'user_id': app.user.id,
+                                        'action': 'added a new column',
+                                        'action_detail': app.newHeader.header,
+                                        'type': 'Measurement Recorder'
+                                    };
+                                    axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
+                                        .then(function (resp) {
+                                            console.log('userLog resp', resp);
+                                        })
+                                        .catch(function(resp) {
+                                            console.log('userLog error', resp);
+                                        });
                                 })
                                 .catch(function (resp) {
                                     console.log(resp);
@@ -634,7 +779,7 @@
                     });
 
             },
-            deleteHeader: function(headerId) {
+            deleteHeader: function(headerId, headerName) {
                 var app = this;
                 console.log("headerId", headerId);
                 axios.post('/mr/shared/public/api/v1/character/delete-header/' + headerId)
@@ -655,6 +800,18 @@
                             .catch(function (resp) {
                                 console.log(resp);
                                 alert("Error Occured !");
+                            });
+                        var jsonRequest = {
+                            'user_id': app.user.id,
+                            'action': 'removed a column "' + headerName + '"',
+                            'type': 'Measurement Recorder'
+                        };
+                        axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
+                            .then(function(resp) {
+                                console.log('userLog resp', resp);
+                            })
+                            .catch(function(resp) {
+                                console.log('userLog error', resp);
                             });
                         var totalSum = [];
                         var headerCount = [];
@@ -757,17 +914,43 @@
                     }
                 }
                 if (tpFlag) {
+                    var jsonRequest = {
+                        'user_id': app.user.id,
+                        'action': 'new character',
+                        'action_detail': app.character.name,
+                        'type': 'Measurement Recorder'
+                    };
+                    axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
+                        .then(function(resp) {
+                            console.log('userLog resp', resp);
+                        })
+                        .catch(function (resp) {
+                            console.log("userLog error", resp);
+                        });
                     sessionStorage.setItem("characterName", this.character.name);
                     console.log("detailsFlag", this.detailsFlag);
                     app.parentData = [];
                     app.parentData[0] = "";
                     app.parentData[1] = "";
-                    app.currentMetadata = method;
+//                    app.currentMetadata = method;
                     app.detailsFlag = true;
                     app.editFlag = false;
-                    app.metadataFlag = "method";
+//                    app.metadataFlag = "method";
                 } else {
-                    alert("The header name should contain 'of' word.");
+                    var jsonRequest = {
+                        'user_id': app.user.id,
+                        'action': 'new character',
+                        'type': 'Measurement Recorder',
+                        'abnormal_system_response': 'error: character name must contain "of"'
+                    };
+                    axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
+                        .then(function(resp) {
+                           console.log('userLog resp', resp);
+                            alert("The header name should contain 'of' word.");
+                        })
+                        .catch(function(resp) {
+                            console.log('userLog error', resp);
+                        });
                 }
 
             },
@@ -783,6 +966,49 @@
                     axios.post('/mr/shared/public/api/v1/character/update', item)
                         .then(function (resp) {
                             console.log("update item", resp.data);
+                            console.log('characters', app.characters);
+                            console.log('headers', app.headers);
+
+                            for (var i = 0; i < app.characters.length; i++) {
+                                if (app.characters[i][app.characters.length - 1].character_id = resp.data.character_id) {
+                                    for (var j = 0; j < app.headers.length; j++) {
+                                        if (app.headers[j].id == resp.data.header_id) {
+                                            if (item.value != '') {
+                                                var jsonRequest = {
+                                                    'user_id': app.user.id,
+                                                    'action': 'added "' + app.characters[i][app.characters[i].length - 1].value + '" value for "' + app.headers[j].header + '"',
+                                                    'action_detail': resp.data.value,
+                                                    'type': 'Measurement Recorder'
+                                                };
+
+                                                axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
+                                                    .then(function(resp) {
+                                                        console.log('userLog resp', resp);
+                                                    })
+                                                    .catch(function(resp) {
+                                                        console.log('userLog error', resp);
+                                                    });
+                                            } else {
+                                                var jsonRequest = {
+                                                    'user_id': app.user.id,
+                                                    'action': 'removed "' + response.data.name + '" value for "' + app.headers[app.headers.length - resp.data.header_id].header + '"',
+                                                    'action_detail': resp.data.value,
+                                                    'type': 'Measurement Recorder'
+                                                };
+
+                                                axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
+                                                    .then(function(resp) {
+                                                        console.log('userLog resp', resp);
+                                                    })
+                                                    .catch(function(resp) {
+                                                        console.log('userLog error', resp);
+                                                    });
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
                             var updatedCharacter = resp.data;
 
                             app.actionLog.action_type = "update";
@@ -882,6 +1108,22 @@
                 axios.post('/mr/shared/public/api/v1/character/delete', tpData)
                     .then(function (resp) {
                         console.log("resp", resp);
+                        for (var i = 0; i < app.characters.length; i++) {
+                            if (app.characters[i][app.characters[i].length - 1].character_id == character_id) {
+                                var jsonRequest = {
+                                    'user_id': app.user.id,
+                                    'action': 'Trashed "' + app.characters[i][app.characters[i].length - 1].value + '"',
+                                    'type': 'Measurement Recorder'
+                                };
+                                axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
+                                    .then(function(resp) {
+                                        console.log('userLog resp', resp);
+                                    })
+                                    .catch(function(resp) {
+                                        console.log('userLog error', resp);
+                                    });
+                            }
+                        }
                         app.characters = resp.data.characters;
                         for (var i = 0; i < app.characters.length; i++) {
                             app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
