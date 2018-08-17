@@ -766,6 +766,7 @@
                                         .catch(function(resp) {
                                             console.log('userLog error', resp);
                                         });
+                                    app.newHeader.header = '';
                                 })
                                 .catch(function (resp) {
                                     console.log(resp);
@@ -991,7 +992,7 @@
                                             } else {
                                                 var jsonRequest = {
                                                     'user_id': app.user.id,
-                                                    'action': 'removed "' + response.data.name + '" value for "' + app.headers[app.headers.length - resp.data.header_id].header + '"',
+                                                    'action': 'removed "' + app.characters[i][app.characters[i].length - 1].value + '" value for "' + app.headers[j].header + '"',
                                                     'action_detail': resp.data.value,
                                                     'type': 'Measurement Recorder'
                                                 };
