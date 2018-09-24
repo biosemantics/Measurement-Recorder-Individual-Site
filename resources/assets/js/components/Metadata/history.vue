@@ -19,7 +19,8 @@
         data: function () {
             return {
                 childData: '',
-                character_name: null
+                character_name: null,
+                viewFlag: false,
             }
         },
         props: {
@@ -38,6 +39,7 @@
         },
         beforeMount () {
             this.character_name = sessionStorage.getItem("characterName");
+            this.viewFlag = (sessionStorage.getItem('viewFlag') == 'true');
             this.childData = this.parentData; // save props data to itself's data and deal with it
         }
     }

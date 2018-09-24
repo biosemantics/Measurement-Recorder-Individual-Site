@@ -47,6 +47,7 @@ class HomeController extends Controller
             $character->measure_semantic = $request->input('measure_semantic');
             $character->entity_semantic = $request->input('entity_semantic');
             $character->creator = $request->input('creator');
+            $character->username = $request->input('username');
             $character->save();
 
         } else {
@@ -59,6 +60,7 @@ class HomeController extends Controller
                 'measure_semantic' => $request->input('measure_semantic'),
                 'entity_semantic' => $request->input('entity_semantic'),
                 'creator' => $request->input('creator'),
+                'username' => $request->input('username'),
             ]);
 //            $headers = Header::orderBy('created_at', 'dec')->get();
             $headers = Header::all();
@@ -78,6 +80,15 @@ class HomeController extends Controller
 
         $characters = $this->getValuesByCharacter();
         $arrayCharacters = Character::all();
+
+        foreach ($arrayCharacters as $each) {
+            $usageCount = Value::where('character_id', '=', $each->id)
+                ->where('header_id', '>', 4)
+                ->where('value', '<>', '')
+                ->count();
+            $each->usageCount = $usageCount;
+        }
+
         $data = [
             'character'  => $character,
             'value'       => $value,
@@ -108,7 +119,7 @@ class HomeController extends Controller
     public function usage(Request $request, $characterId)
     {
         $values = Value::where('character_id', '=', $characterId)
-            ->where('header_id', '>', 3)
+            ->where('header_id', '>', 4)
             ->where('value', '<>', '')
             ->get();
 
@@ -146,6 +157,14 @@ class HomeController extends Controller
         $characters = $this->getValuesByCharacter();
         $arrayCharacters = Character::all();
 
+        foreach ($arrayCharacters as $each) {
+            $usageCount = Value::where('character_id', '=', $each->id)
+                ->where('header_id', '>', 4)
+                ->where('value', '<>', '')
+                ->count();
+            $each->usageCount = $usageCount;
+        }
+
         $data = [
             'headers'               => $headers,
             'characters'            => $characters,
@@ -171,6 +190,14 @@ class HomeController extends Controller
         $characters = $this->getValuesByCharacter();
         $arrayCharacters = Character::all();
 
+        foreach ($arrayCharacters as $each) {
+            $usageCount = Value::where('character_id', '=', $each->id)
+                ->where('header_id', '>', 4)
+                ->where('value', '<>', '')
+                ->count();
+            $each->usageCount = $usageCount;
+        }
+
         $data = [
             'headers'       => $headers,
             'characters'    => $characters,
@@ -185,6 +212,15 @@ class HomeController extends Controller
         Value::where('header_id', '=', $headerId)->delete();
         $characters = $this->getValuesByCharacter();
         $arrayCharacters = Character::all();
+
+        foreach ($arrayCharacters as $each) {
+            $usageCount = Value::where('character_id', '=', $each->id)
+                ->where('header_id', '>', 4)
+                ->where('value', '<>', '')
+                ->count();
+            $each->usageCount = $usageCount;
+        }
+
         $headers = Header::orderBy('created_at', 'dec')->get();
 
         $data = [
@@ -209,6 +245,15 @@ class HomeController extends Controller
         Character::where('id', '=', $character_id)->delete();
         Value::where('character_id', '=', $character_id)->delete();
         $arrayCharacters = Character::all();
+
+        foreach ($arrayCharacters as $each) {
+            $usageCount = Value::where('character_id', '=', $each->id)
+                ->where('header_id', '>', 4)
+                ->where('value', '<>', '')
+                ->count();
+            $each->usageCount = $usageCount;
+        }
+
         $characters = $this->getValuesByCharacter();
         $data = [
             'characters'    => $characters,

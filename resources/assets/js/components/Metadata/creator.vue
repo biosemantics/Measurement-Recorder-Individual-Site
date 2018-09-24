@@ -4,7 +4,8 @@
             {{ character_name }} was created by
         </div>
         <div class="col-md-12">
-            <input style="width: 100%;" v-model="childData" @change="handleDataFc()"/>
+            <input v-if="viewFlag == false" style="width: 100%;" v-model="childData" @change="handleDataFc()"/>
+            <div v-if="viewFlag == true" style="border: 1px solid grey">{{ childData }}</div>
             at {{ timestamp }}
         </div>
     </div>
@@ -18,6 +19,7 @@
                 childData: '',
                 character_name: null,
                 timestamp: null,
+                viewFlag: false,
             }
         },
         props: {
@@ -46,6 +48,8 @@
             this.timestamp = this.timestamp.getFullYear() + '/' + this.timestamp.getMonth() + '/' + this.timestamp.getDate() + ' ' + this.timestamp.getHours() + ':' + this.timestamp.getMinutes() + ':' + this.timestamp.getSeconds();
 
             this.character_name = sessionStorage.getItem("characterName");
+            this.viewFlag = (sessionStorage.getItem('viewFlag') == 'true');
+            console.log("viewFlag", this.viewFlag);
             this.childData = this.parentData; // save props data to itself's data and deal with it
         }
     }

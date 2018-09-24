@@ -4,14 +4,29 @@
             <div class="tab-pane" id="">
                 <form class="row" autocomplete="off">
                     <div class="col-md-4">
-                        New Character
+                        Find or create character
                     </div>
                     <div class="col-md-4">
-                        <input placeholder="Measure of Entity (e.g: length of leaf)" style="width: 100%;" v-model="character.name" name="text"/>
+                        <!--<input placeholder="Measure of Entity (e.g: length of leaf)" style="width: 100%;" v-model="character.name" name="text"/>-->
+                        <!--<list-select :list="arraySearch"-->
+                                     <!--option-value="code"-->
+                                     <!--option-text="name"-->
+                                     <!--:selected-item="item"-->
+                                     <!--placeholder="select item"-->
+                                     <!--@select="onSelect">-->
+                        <!--</list-select>-->
+                        <model-select :options="arraySearch"
+                                      v-model="item"
+                                      placeholder="Find or create a character"
+                                      @searchchange="printSearchText"
+                                      @select="onSelect">
+                        </model-select>
                     </div>
-                    <div class="col-md-4">
-                        <a v-on:click="storeCharacter()" class="btn btn-primary"
+                    <div class="col-md-4 text-center">
+                        <a v-on:click="addHeader()" class="btn btn-primary"
                            style="height: 28px; line-height: 28px; font-size: 50px; padding: 0 5px;">+</a>
+                        <br/>
+                        Add a column
                     </div>
                     <div class="col-md-12" style="margin-top: 10px;">
                         Character List
@@ -23,19 +38,21 @@
                                 <tr v-if="headers.length > 0">
                                     <th class="actions" style="min-width: 250px;">
                                         <input class="th-input" value="Character" />
-                                        <a class="btn btn-add display-block" v-on:click="addHeader()"><span class="glyphicon glyphicon-plus"></span></a>
+                                        <!--<a class="btn btn-add display-block" v-on:click="addHeader()"><span class="glyphicon glyphicon-plus"></span></a>-->
                                     </th>
-                                    <th style="min-width: 150px;"><input class="th-input" value="Average" /></th>
-                                    <th style="min-width: 150px;"><input class="th-input" value="Deviation" /></th>
-                                    <th v-if="header.id > 3" v-for="header in headers" style="min-width: 200px;">
+                                    <!-- Average and Deviation column start -->
+
+                                    <!--<th style="min-width: 150px;"><input class="th-input" value="Average" /></th>-->
+                                    <!--<th style="min-width: 150px;"><input class="th-input" value="Deviation" /></th>-->
+
+                                    <!-- Average and Deviation column end -->
+                                    <th style="min-width: 150px;"><input class="th-input" value="Range" /></th>
+
+                                    <th v-if="header.id > 4" v-for="header in headers" style="min-width: 200px;">
                                         <input class="th-input" v-bind:value="header.header" />
                                         <a class="btn btn-add display-block" v-on:click="deleteHeader(header.id, header.header)"><span class="glyphicon glyphicon-remove"></span></a>
                                     </th>
-                                    <!--<th v-for="header in headers" style="min-width: 150px;"><input class="th-input" v-bind:value="header.header" /></th>-->
                                     <th class="actions display-none" style="min-width: 150px;">
-                                        <!--<input class="th-input display-none" v-model="newHeader.header" name="header" autofocus/>-->
-                                        <!--<a class="btn btn-success btn-save display-none" v-on:click="saveHeader()"><span class="glyphicon glyphicon-floppy-disk"></span></a>-->
-                                        <!--<a class="btn btn-danger btn-cancel display-none" v-on:click="cancelHeader()"><span class="glyphicon glyphicon-remove-circle"></span></a>-->
                                         <input style="width: 50%;" class="th-input" v-model="newHeader.header" name="header" autofocus/>
                                         <a class="btn btn-success btn-save" v-on:click="saveHeader()"><span class="glyphicon glyphicon-floppy-disk"></span></a>
                                         <a class="btn btn-danger btn-cancel" v-on:click="cancelHeader()"><span class="glyphicon glyphicon-remove-circle"></span></a>
@@ -47,28 +64,53 @@
 
                                     <td class="text-center" v-if="item.header_id == 1" v-for="item in eachCharacter">
                                         <div>
-                                            {{ item.value }} ({{ item.unit }})
+                                            {{ item.value }} ({{ item.username }})
                                             <a class="btn" v-on:click="editCharacter(eachCharacter[eachCharacter.length - 1])"><span class="glyphicon glyphicon-edit"></span></a>
                                             <a class="btn" v-on:click="deleteCharacter(eachCharacter[0].character_id)"><span class="glyphicon glyphicon-trash"></span></a>
 
                                         </div>
                                     </td>
-                                    <td class="text-center" v-if="item.header_id == 2" v-for="item in eachCharacter">
+                                    <!-- Average and Deviation row start -->
+                                    <!--<td class="text-center" v-if="item.header_id == 2" v-for="item in eachCharacter">-->
+                                        <!--{{ item.value }}-->
+                                    <!--</td>-->
+                                    <!--<td class="text-center" v-if="item.header_id == 3" v-for="item in eachCharacter">-->
+                                        <!--{{ item.value }}-->
+                                    <!--</td>-->
+                                    <!-- Average and Deviation row end -->
+                                    <td class="text-center" v-if="item.header_id == 4" v-for="item in eachCharacter">
                                         {{ item.value }}
                                     </td>
-                                    <td class="text-center" v-if="item.header_id == 3" v-for="item in eachCharacter">
-                                        {{ item.value }}
-                                    </td>
-                                    <td v-if="item.header_id > 3" v-for="item in eachCharacter">
+                                    <td v-if="item.header_id > 4" v-for="item in eachCharacter">
                                         <input v-if="item.header_id >= 4" class="td-input" v-model="item.value" v-on:blur="saveItem(item)"/>
                                     </td>
-                                    <!--<td class="actions text-center">-->
-                                    <!--</td>-->
+
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
 
+                    </div>
+                    <div v-if="newCharacterFlag" @close="newCharacterFlag = false">
+                        <transition name="modal">
+                            <div class="modal-mask">
+                                <div class="modal-wrapper">
+                                    <div class="modal-container">
+                                        <div class="modal-header">
+                                            Input the character name in the input box and click OK.
+                                        </div>
+                                        <div class="modal-body">
+                                            Character name:
+                                            <input v-model="character.name" />
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a class="btn btn-primary" v-on:click="storeCharacter()">OK</a>
+                                            <a v-on:click="cancelNewCharacter()" class="btn btn-danger">Cancel</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </transition>
                     </div>
                     <div v-if="detailsFlag" @close="detailsFlag = false">
                         <transition name="modal">
@@ -109,7 +151,9 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12 text-right" style="margin-top: 15px;">
-                                                    <a :disabled="saveDisabled == true" v-on:click="saveCharacter(metadataFlag)" class="btn btn-primary">Save</a>
+                                                    <a v-if="viewFlag == false" :disabled="saveDisabled == true" v-on:click="saveCharacter(metadataFlag)" class="btn btn-primary">Save</a>
+                                                    <a v-if="viewFlag == true" v-on:click="use(item)" class="btn btn-primary">Use this</a>
+                                                    <a v-if="viewFlag == true" v-on:click="enhance(item)" class="btn btn-primary">Clone and enhance</a>
                                                     <a v-on:click="cancelCharacter()" class="btn btn-danger">Cancel</a>
                                                 </div>
                                             </div>
@@ -143,12 +187,31 @@
 
     Vue.component('modal', modal);
 
+//    import { ModelSelect } from 'vue-search-select'
+    import { ListSelect } from '../vue-search-select-lib'
+    import { ModelSelect } from '../vue-search-select-lib'
+    Vue.use({ListSelect});
+    Vue.use({ModelSelect});
+//    import vSelect from 'vue-select';
+//    Vue.component('v-select', vSelect);
+
     export default {
         props: [
             'user'
         ],
         data: function () {
             return {
+                arraySearch: [
+
+                ],
+                newCharacterFlag: false,
+                item: {
+                    value: '',
+                    text: ''
+                },
+                viewFlag: false,
+                searchText: '',
+                cloneFlag: false,
                 saveDisabled: true,
                 character: {
                     name: null,
@@ -161,7 +224,8 @@
                     semantics: null,
                     creator: this.user.name,
                     usage: [],
-                    history: []
+                    history: [],
+                    username: this.user.name
                 },
                 actionLog: {
                     user_id: this.user.id
@@ -250,12 +314,14 @@
                     .then(function (resp) {
                         console.log("get Character", resp);
 //                        app.metadataFlag = 'method';
+                        app.metadataFlag = '';
                         app.character = resp.data;
                         app.parentData = [];
                         app.parentData.push(app.character.method_from);
                         app.parentData.push(app.character.method_to);
                         app.parentData[2] = app.character.method_as;
 //                        app.currentMetadata = method;
+                        app.currentMetadata = null;
                         app.detailsFlag = true;
                         var jsonRequest = {
                             'user_id': app.user.id,
@@ -320,7 +386,7 @@
                     case 'semantics':
                         this.parentData = [];
                         this.character.semantics = [];
-                        if (this.editFlag) {
+                        if (this.editFlag || this.cloneFlag) {
                             this.character.semantics.push(this.character.measure_semantic);
                             this.character.semantics.push(this.character.entity_semantic);
                         }
@@ -400,7 +466,44 @@
                 }
 
             },
-            saveCharacter (currentMetadata) {
+            use(characterId) {
+                var app = this;
+                console.log('characterId', characterId);
+                sessionStorage.setItem('viewFlag', false);
+                axios.get('/mr/shared/public/api/v1/character/' + characterId)
+                    .then(function(resp) {
+                        console.log('getCharacter resp', resp);
+                        var newCharacter = resp.data;
+                        newCharacter.username = app.user.name;
+                        app.viewFlag = false;
+                        app.editFlag = false;
+                        app.character = newCharacter;
+                        app.saveCharacter();
+
+                    })
+                    .catch(function(resp) {
+                        console.log("getCharacter error", resp);
+                    });
+            },
+            enhance(characterId) {
+                var app = this;
+                sessionStorage.setItem('viewFlag', false);
+                axios.get('/mr/shared/public/api/v1/character/' + characterId)
+                    .then(function(resp) {
+                        console.log('getCharacter resp', resp);
+                        var newCharacter = resp.data;
+                        newCharacter.username = app.user.name;
+                        newCharacter.creator = app.user.name;
+                        app.viewFlag = false;
+                        app.editFlag = false;
+                        app.cloneFlag = true;
+                        app.character = newCharacter;
+                    })
+                    .catch(function(resp) {
+                        console.log('getCharacter error', resp);
+                    });
+            },
+            saveCharacter (currentMetadata = null) {
                 var app = this;
                 console.log('save character', this.character);
                 console.log('edit Flag', this.editFlag);
@@ -423,13 +526,13 @@
                 if (checkFields) {
                     this.detailsFlag = false;
                     this.updatedFlag = false;
-                    axios.get('/mr/shared/public/api/v1/character/name')
+                    axios.get('/mr/shared/public/api/v1/character/all')
                         .then(function (resp) {
                             console.log('get name resp', resp);
                             var checkName = true;
 
-                            for (var i = 0; i < resp.data.length; i++) {
-                                if (app.character.name == resp.data[i].name) {
+                            for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
+                                if ((app.character.name == resp.data.arrayCharacters[i].name) && (resp.data.arrayCharacters[i].username == app.character.username)) {
                                     checkName = false;
                                 }
                             }
@@ -485,6 +588,16 @@
                                         app.character = resp.data.character;
                                         for (var i = 0; i < app.characters.length; i++) {
                                             app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
+                                            app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
+                                        }
+                                        app.arraySearch = [];
+                                        for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
+                                            var temp = {
+
+                                            };
+                                            temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usageCount + ')';
+                                            temp.value = resp.data.arrayCharacters[i].id;
+                                            app.arraySearch.push(temp);
                                         }
 
                                         if (app.editFlag) {
@@ -646,20 +759,43 @@
                                                     });
                                             }
                                         } else {
-                                            var jsonRequest = {
+                                            if (app.cloneFlag == true) {
+                                                axios.get('/mr/shared/public/api/v1/character/' + app.item)
+                                                    .then(function(resp) {
+                                                        var jsonRequest = {
 
-                                            };
-                                            jsonRequest.character_id = app.character.id;
-                                            jsonRequest.username = app.user.name;
-                                            jsonRequest.description = 'created';
-                                            axios.post('/mr/shared/public/api/v1/meta-log', jsonRequest)
-                                                .then(function(resp) {
-                                                    console.log("create metalog", resp);
-                                                })
-                                                .catch(function(resp) {
-                                                    console.log('error', resp);
-                                                    alert('Error Occurred while meta logging.')
-                                                });
+                                                        };
+                                                        jsonRequest.character_id = app.character.id;
+                                                        jsonRequest.username = '';
+                                                        jsonRequest.description = 'cloned by ' + resp.data.username;
+                                                        axios.post('/mr/shared/public/api/v1/meta-log', jsonRequest)
+                                                            .then(function(resp) {
+                                                                console.log("create metalog", resp);
+                                                            })
+                                                            .catch(function(resp) {
+                                                                console.log('error', resp);
+                                                                alert('Error Occurred while meta logging.')
+                                                            });
+                                                    })
+                                                    .catch(function(resp) {
+                                                        console.log('getCharacter error', resp);
+                                                    });
+                                            }  else {
+                                                var jsonRequest = {
+
+                                                };
+                                                jsonRequest.character_id = app.character.id;
+                                                jsonRequest.username = app.user.name;
+                                                jsonRequest.description = 'created';
+                                                axios.post('/mr/shared/public/api/v1/meta-log', jsonRequest)
+                                                    .then(function(resp) {
+                                                        console.log("create metalog", resp);
+                                                    })
+                                                    .catch(function(resp) {
+                                                        console.log('error', resp);
+                                                        alert('Error Occurred while meta logging.')
+                                                    });
+                                            }
 
                                         }
                                     })
@@ -699,6 +835,9 @@
                 this.detailsFlag = false;
                 this.updatedFlag = false;
                 this.parentData = null;
+                this.viewFlag = false;
+                this.cloneFlag = false;
+                sessionStorage.setItem('viewFlag', false);
                 var jsonRequest = {
                     'user_id': app.user.id,
                     'action': 'clicked on Cancel for "' + app.character.name,
@@ -739,6 +878,16 @@
                                     app.characters = resp.data.characters;
                                     for (var i = 0; i < app.characters.length; i++) {
                                         app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
+                                        app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
+                                    }
+                                    app.arraySearch = [];
+                                    for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
+                                        var temp = {
+
+                                        };
+                                        temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usageCount + ')';
+                                        temp.value = resp.data.arrayCharacters[i].id;
+                                        app.arraySearch.push(temp);
                                     }
                                     $('th.actions.display-block').removeClass('display-block').addClass('display-none');
                                     $('th.actions > .btn-add.display-none').removeClass('display-none').addClass('display-block');
@@ -790,6 +939,16 @@
                         app.characters = resp.data.characters;
                         for (var i = 0; i < app.characters.length; i++) {
                             app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
+                            app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
+                        }
+                        app.arraySearch = [];
+                        for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
+                            var temp = {
+
+                            };
+                            temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usageCount + ')';
+                            temp.value = resp.data.arrayCharacters[i].id;
+                            app.arraySearch.push(temp);
                         }
                         app.actionLog.action_type = "delete_header";
                         app.actionLog.model_id = resp.data.characters[0][resp.data.characters[0].length - 1].header_id;
@@ -906,6 +1065,7 @@
                 this.unitUpdateFlag = false;
                 this.semanticsUpdateFlag = false;
                 this.creatorUpdateFlag = false;
+                this.newCharacterFlag = false;
 
 
                 var tpFlag = false;
@@ -1036,7 +1196,7 @@
                                         if (app.characters[i][j].header_id == updatedCharacter.header_id) {
                                             app.characters[i][j].value = updatedCharacter.value;
                                         }
-                                        if (app.characters[i][j].header_id > 3) {
+                                        if (app.characters[i][j].header_id > 4) {
                                             console.log("value", parseFloat(app.characters[i][j].value));
                                             console.log("check if NaN", isNaN(parseFloat(app.characters[i][j].value)));
                                             if (isNaN(parseFloat(app.characters[i][j].value)) == false) {
@@ -1068,7 +1228,7 @@
                             var deviationValue = 0;
 
                             if (headerCount > 1) {
-                                for (var i = 0; i < (app.characters[characterIndex].length - 3); i++) {
+                                for (var i = 0; i < (app.characters[characterIndex].length - 4); i++) {
                                     console.log("check value for deviation", app.characters[characterIndex][i].value);
                                     console.log("check of parse for deviation", isNaN(parseFloat(app.characters[characterIndex][i].value)));
                                     if (isNaN(parseFloat(app.characters[characterIndex][i].value)) == false) {
@@ -1077,7 +1237,7 @@
                                 }
                                 deviationValue = Math.pow((deviationSum / (headerCount - 1)), 0.5).toFixed(2);
                             } else if (headerCount == 1) {
-                                for (var i = 0; i < (app.characters[characterIndex].length - 3); i++) {
+                                for (var i = 0; i < (app.characters[characterIndex].length - 4); i++) {
                                     if (isNaN(parseFloat(app.characters[characterIndex][i].value)) == false) {
                                         deviationValue = parseFloat(app.characters[characterIndex][i].value).toFixed(2);
                                     }
@@ -1087,6 +1247,33 @@
                             app.characters[characterIndex][app.characters[characterIndex].length - 3].value = deviationValue;
 
                             axios.post('/mr/shared/public/api/v1/character/update', app.characters[characterIndex][app.characters[characterIndex].length - 3])
+                                .then(function (resp) {
+                                    console.log('update deviation', resp);
+                                })
+                                .catch(function (resp) {
+                                    console.log(resp);
+                                    alert("Error Occured !");
+                                });
+
+
+                            var minVal = 0;
+                            for (var i = 0; i < app.characters[characterIndex].length - 4; i++) {
+                                if (!isNaN(parseFloat(app.characters[characterIndex][i].value))) {
+                                    minVal = parseFloat(app.characters[characterIndex][i].value);
+                                    break;
+                                }
+                            }
+                            var maxVal = 0;
+                            for (var i = 0; i < app.characters[characterIndex].length - 4; i++) {
+                                if (!isNaN(parseFloat(app.characters[characterIndex][i].value)) && parseFloat(minVal) >= parseFloat(app.characters[characterIndex][i].value)) {
+                                    minVal = app.characters[characterIndex][i].value;
+                                }
+                                if (!isNaN(parseFloat(app.characters[characterIndex][i].value)) && parseFloat(maxVal) <= parseFloat(app.characters[characterIndex][i].value)) {
+                                    maxVal = app.characters[characterIndex][i].value;
+                                }
+                            }
+                            app.characters[characterIndex][app.characters[characterIndex].length - 4].value = minVal + '-' + maxVal;
+                            axios.post('/mr/shared/public/api/v1/character/update', app.characters[characterIndex][app.characters[characterIndex].length - 4])
                                 .then(function (resp) {
                                     console.log('update deviation', resp);
                                 })
@@ -1128,6 +1315,16 @@
                         app.characters = resp.data.characters;
                         for (var i = 0; i < app.characters.length; i++) {
                             app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
+                            app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
+                        }
+                        app.arraySearch = [];
+                        for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
+                            var temp = {
+
+                            };
+                            temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usageCount + ')';
+                            temp.value = resp.data.arrayCharacters[i].id;
+                            app.arraySearch.push(temp);
                         }
                         app.actionLog.action_type = "delete";
                         app.actionLog.model_id = tpData.character_id;
@@ -1145,10 +1342,38 @@
                         console.log(resp);
                         alert("Error Occured !");
                     });
+            },
+            selectItem(val) {
+                console.log("selectedItem", val);
+            },
+            onSelect (item) {
+                var app = this;
+                app.item = item;
+                console.log('selectedItem', item);
+                if (item == null) {
+                    app.newCharacterFlag = true;
+                } else {
+                    for (var i = 0; i < app.characters.length; i++) {
+                        for (var j = 0; j < app.characters[i].length; j++) {
+                            if (app.characters[i][j].header_id == 1 && app.characters[i][j].character_id == item) {
+                                app.viewFlag = true;
+                                sessionStorage.setItem('viewFlag', true);
+                                app.editCharacter(app.characters[i][j]);
+                            }
+                        }
+                    }
+                }
+            },
+            printSearchText (searchText) {
+                this.searchText = searchText
+            },
+            cancelNewCharacter() {
+                this.newCharacterFlag = false;
             }
         },
         created() {
             var app = this;
+            sessionStorage.setItem('viewFlag', false);
             axios.get('/mr/shared/public/api/v1/character/all')
                 .then(function (resp) {
                     console.log(resp);
@@ -1157,6 +1382,16 @@
 
                     for (var i = 0; i < app.characters.length; i++) {
                         app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
+                        app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
+                    }
+                    app.arraySearch = [];
+                    for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
+                        var temp = {
+
+                        };
+                        temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usageCount + ')';
+                        temp.value = resp.data.arrayCharacters[i].id;
+                        app.arraySearch.push(temp);
                     }
                 })
                 .catch(function (resp) {
@@ -1165,6 +1400,11 @@
 
         },
         mounted() {
+        },
+        components: {
+            ListSelect,
+            ModelSelect
         }
     }
+
 </script>

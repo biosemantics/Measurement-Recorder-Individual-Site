@@ -3,17 +3,22 @@
         <div class="col-md-12" style="font-size: 20px;">
             {{ character_name }} is measure ...
         </div>
-        <div class="col-md-12">
-            As: <input class="child-model" style="width: 100%;" v-model="childData[2]" v-on:change="handleDataFc()"/>
-        </div>
-        <div class="col-md-12 text-center">
-            Or
-        </div>
-        <div class="col-md-12">
-            From: <input class="child-model" style="width: 100%;" v-model="childData[0]" v-on:change="handleDataFc()"/>
-        </div>
-        <div class="col-md-12">
-            To: <input class="child-model" style="width: 100%;" v-model="childData[1]" v-on:change="handleDataFc()"/>
+        <div>
+            <div class="col-md-12">
+                As: <input v-if="viewFlag == false" class="child-model" style="width: 100%;" v-model="childData[2]" v-on:change="handleDataFc()"/>
+                <input v-if="viewFlag == true" disabled class="child-model" style="width: 100%;" v-model="childData[2]" v-on:change="handleDataFc()"/>
+            </div>
+            <div class="col-md-12 text-center">
+                Or
+            </div>
+            <div class="col-md-12">
+                From: <input v-if="viewFlag == false" class="child-model" style="width: 100%;" v-model="childData[0]" v-on:change="handleDataFc()"/>
+                <input v-if="viewFlag == true" disabled class="child-model" style="width: 100%;" v-model="childData[0]" v-on:change="handleDataFc()"/>
+            </div>
+            <div class="col-md-12">
+                To: <input v-if="viewFlag == false" class="child-model" style="width: 100%;" v-model="childData[1]" v-on:change="handleDataFc()"/>
+                <input v-if="viewFlag == true" disabled class="child-model" style="width: 100%;" v-model="childData[1]" v-on:change="handleDataFc()"/>
+            </div>
         </div>
     </div>
 </template>
@@ -24,7 +29,8 @@
         data: function () {
             return {
                 childData: [],
-                character_name: null
+                character_name: null,
+                viewFlag: false,
             }
         },
         props: {
@@ -43,7 +49,7 @@
         },
         beforeMount () {
             this.character_name = sessionStorage.getItem("characterName");
-            console.log("parentData", this.parentData);
+            this.viewFlag = (sessionStorage.getItem('viewFlag') == 'true');
             this.childData = this.parentData; // save props data to itself's data and deal with it
 
         },

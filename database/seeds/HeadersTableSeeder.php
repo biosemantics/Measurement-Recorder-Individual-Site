@@ -24,5 +24,9 @@ class HeadersTableSeeder extends Seeder
             'id' => 3,
             'header' => 'Deviation',
         ]);
+//        DB::table('headers')->insert([
+//            'id' => 4,
+//            'header' => 'Range',
+//        ]);
     }
 }

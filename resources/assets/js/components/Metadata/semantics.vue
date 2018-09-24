@@ -6,9 +6,12 @@
         <div class="col-md-12">
             <b>Semantic for Measure {{ character_name[0] }}:</b>
             <div v-if="measureArray.length > 0">
-                <select style="width: 100%;" v-model="measureSemantic" @change="handleDataFc(0)">
+                <select v-if="viewFlag == false" style="width: 100%;" v-model="measureSemantic" @change="handleDataFc(0)">
                     <option v-for="item in measureArray" :value="item">{{item}}</option>
                 </select>
+                <div v-if="viewFlag == true" style="border: 1px solid grey">
+                    {{ measureSemantic }}
+                </div>
                 <div v-if="measureDetails != null">
                     Label: {{ measureDetails.term }}<br>
                     Matching Score: {{ measureDetails.score }}<br>
@@ -41,15 +44,19 @@
                 </div>
             </div>
             <div v-if="measureArray.length == 0">
-                <input :placeholder="placeholder[0]" class="child-model" style="width: 100%;" v-model="measureSemantic" v-on:change="handleDataFc(0)"/>
+                <input v-if="viewFlag == false" :placeholder="placeholder[0]" class="child-model" style="width: 100%;" v-model="measureSemantic" v-on:change="handleDataFc(0)"/>
+                <div v-if="viewFlag == true" style="border: 1px solid grey">Nothing</div>
             </div>
         </div>
         <div class="col-md-12">
             <b>Semantic for Entity {{ character_name[1] }}:</b>
             <div v-if="entityArray.length > 0">
-                <select style="width: 100%;" v-model="entitySemantic" @change="handleDataFc(1)">
+                <select v-if="viewFlag == false" style="width: 100%;" v-model="entitySemantic" @change="handleDataFc(1)">
                     <option v-for="item in entityArray" :value="item">{{item}}</option>
                 </select>
+                <div v-if="viewFlag == true" style="border: 1px solid grey">
+                    {{ entitySemantic }}
+                </div>
                 <div v-if="entityDetails != null">
                     Label: {{ entityDetails.term }}<br>
                     Matching Score: {{ entityDetails.score }}<br>
@@ -82,7 +89,8 @@
                 </div>
             </div>
             <div v-if="entityArray.length == 0">
-                <input :placeholder="placeholder[1]" class="child-model" style="width: 100%;" v-model="entitySemantic" v-on:change="handleDataFc(1)"/>
+                <input v-if="viewFlag == false" :placeholder="placeholder[1]" class="child-model" style="width: 100%;" v-model="entitySemantic" v-on:change="handleDataFc(1)"/>
+                <div v-if="viewFlag == true" style="border: 1px solid grey">Nothing</div>
             </div>
 
         </div>
@@ -105,7 +113,8 @@
                 entityDetails: null,
                 character_name: null,
                 objectProperty: null,
-                placeholder: []
+                placeholder: [],
+                viewFlag: false,
             }
         },
         props: {
@@ -149,6 +158,7 @@
         },
         beforeMount () {
             this.character_name = sessionStorage.getItem("characterName");
+            this.viewFlag = (sessionStorage.getItem('viewFlag') == 'true');
             this.character_name = this.character_name.split(' of ');
             this.childData = this.parentData; // save props data to itself's data and deal with it
             var app = this;

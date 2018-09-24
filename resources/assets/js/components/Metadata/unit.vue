@@ -4,12 +4,15 @@
             {{ character_name }} uses unit:
         </div>
         <div class="col-md-12">
-            <select style="width: 100%;" v-model="childData" @change="handleDataFc()">
+            <select v-if="viewFlag == false" style="width: 100%;" v-model="childData" @change="handleDataFc()">
                 <option value="m">m</option>
                 <option value="dm">dm</option>
                 <option value="cm">cm</option>
                 <option value="mm">mm</option>
             </select>
+            <div v-if="viewFlag == true" style="border: 1px solid grey;">
+                {{ childData }}
+            </div>
         </div>
     </div>
 </template>
@@ -21,6 +24,7 @@
             return {
                 childData: '',
                 character_name: null,
+                viewFlag: false,
             }
         },
         props: {
@@ -39,6 +43,7 @@
         },
         beforeMount () {
             this.character_name = sessionStorage.getItem("characterName");
+            this.viewFlag = (sessionStorage.getItem('viewFlag') == 'true');
             this.childData = this.parentData; // save props data to itself's data and deal with it
         }
     }
