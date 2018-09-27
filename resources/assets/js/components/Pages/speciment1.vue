@@ -255,6 +255,7 @@
 
         methods: {
             handleFcAfterDateBack (event) {
+                var app = this;
                 this.updatedFlag = true;
                 $('.center').addClass('back-yellow');
                 $('.' + this.metadataFlag).addClass('back-median-green');

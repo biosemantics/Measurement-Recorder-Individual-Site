@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-md-12" style="font-size: 20px;">
+        <div class="col-md-12" style="font-size: 15px;">
             Method: Please explain how to measure the item. e.g. from top to the bottom.
             <br/>
             (Choose the one(s) fits your method best.)
