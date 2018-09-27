@@ -581,8 +581,6 @@
                 console.log('save character', this.character);
                 console.log('edit Flag', this.editFlag);
 
-                console.log('methodEntry on save', methodEntry);
-
 
                 var checkFields = true;
 
