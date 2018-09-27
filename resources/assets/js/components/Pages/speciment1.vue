@@ -873,6 +873,13 @@
                                     axios.post('http://shark.sbs.arizona.edu:8080/esynonym', jsonEsynonym)
                                         .then(function(resp) {
                                             console.log('esynonym resp', resp);
+                                            axios.post('http://shark.sbs.arizona.edu:8080/save', {})
+                                                .then(function(resp) {
+                                                    console.log('save resp', resp);
+                                                })
+                                                .catch(function(resp) {
+
+                                                });
                                             axios.post('/mr/shared/public/api/v1/character/create', app.character)
                                                 .then(function (resp) {
                                                     console.log("resp", resp);

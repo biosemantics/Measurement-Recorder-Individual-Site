@@ -1,12 +1,14 @@
 <template>
     <div class="row">
         <div class="col-md-12" style="font-size: 20px;">
-            {{ character_name }} is measure ...
+            Method: Please explain how to measure the item. e.g. from top to the bottom.
+            <br/>
+            (Choose the one(s) fits your method best.)
         </div>
         <div class="col-md-12" v-if="methodEntry == null">
             The images will be displayed soon.
             Please wait until the images are displayed.
-            It will take less than few seconds...
+            It will take more than few seconds...
         </div>
         <div v-if="methodEntry != null">
             <!--<div class="col-md-12">-->
@@ -109,7 +111,23 @@
                     return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
                 })[0].value;
                 console.log('childData', app.childData);
+
+                var jsonRequest = {
+                    'user_id': app.user.id,
+                    'action': 'clicked method image for "' + app.character_name + '"',
+                    'type': 'Measurement Recorder',
+                    'action_detail': value
+                };
+                axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
+                    .then(function(resp) {
+                        console.log("userLog resp", resp);
+                    })
+                    .catch(function(resp) {
+                        console.log('userLog error', resp);
+                    });
+
                 app.$emit('interface', app.childData);
+
             },
             noneOfAbove() {
                 var app = this;
@@ -119,6 +137,9 @@
                 var app = this;
                 app.noneMethod = false;
             },
+            checkDictionary() {
+
+            }
         },
         beforeMount () {
             var app = this;
