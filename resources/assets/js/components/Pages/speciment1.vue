@@ -268,6 +268,19 @@
                         this.parentData = event;
                         this.methodUpdateFlag = true;
                         console.log("method return", event);
+                        var jsonRequest = {
+                            'user_id': app.user.id,
+                            'action': 'clicked method image for "' + app.character.name + '"',
+                            'type': 'Measurement Recorder',
+                            'action_detail': app.character.method_as
+                        };
+                        axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
+                            .then(function(resp) {
+                                console.log("userLog resp", resp);
+                            })
+                            .catch(function(resp) {
+                                console.log('userLog error', resp);
+                            });
                         break;
                     case 'unit':
                         this.character.unit = event;

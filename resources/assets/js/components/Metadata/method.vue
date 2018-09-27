@@ -112,19 +112,7 @@
                 })[0].value;
                 console.log('childData', app.childData);
 
-                var jsonRequest = {
-                    'user_id': app.user.id,
-                    'action': 'clicked method image for "' + app.character_name + '"',
-                    'type': 'Measurement Recorder',
-                    'action_detail': value
-                };
-                axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
-                    .then(function(resp) {
-                        console.log("userLog resp", resp);
-                    })
-                    .catch(function(resp) {
-                        console.log('userLog error', resp);
-                    });
+
 
                 app.$emit('interface', app.childData);
 
