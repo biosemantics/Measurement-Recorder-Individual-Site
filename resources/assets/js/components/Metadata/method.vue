@@ -3,7 +3,7 @@
         <div class="col-md-12" style="font-size: 20px;">
             {{ character_name }} is measure ...
         </div>
-        <div v-if="methodEntry == null">
+        <div class="col-md-12" v-if="methodEntry == null">
             The images will be displayed soon.
             Please wait until the images are displayed.
             It will take less than few seconds...
