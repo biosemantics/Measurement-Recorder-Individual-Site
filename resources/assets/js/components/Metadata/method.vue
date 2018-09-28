@@ -19,27 +19,27 @@
             </div>
             <div v-if="noneMethod == true || methodArray.length == 0">
                 <div class="col-md-12">
-                    <a class="btn btn-primary" v-on:click="displayImageSection()">Open Image Segment</a>
+                    <a v-if="methodArray.length > 0" class="btn btn-primary" v-on:click="displayImageSection()">Open Image Segment</a>
                 </div>
                 <div class="col-md-12">
                     <label class="col-md-3 text-right">From:</label>
-                    <input class="col-md-9" v-model="methodFrom"/>
+                    <input class="col-md-8" v-model="methodFrom"/> <p v-if="fromId != null" style="color: green;">&#10004;</p>
                 </div>
                 <div class="col-md-12">
                     <label class="col-md-3 text-right">To:</label>
-                    <input class="col-md-9" v-model="methodTo"/>
+                    <input class="col-md-8" v-model="methodTo"/> <p v-if="toId != null" style="color: green;">&#10004;</p>
                 </div>
                 <div class="col-md-12">
                     <label class="col-md-3 text-right">Include:</label>
-                    <input class="col-md-9" v-model="methodInclude"/>
+                    <input class="col-md-8" v-model="methodInclude"/>
                 </div>
                 <div class="col-md-12">
                     <label class="col-md-3 text-right">Exclude:</label>
-                    <input class="col-md-9" v-model="methodExclude"/>
+                    <input class="col-md-8" v-model="methodExclude"/>
                 </div>
                 <div class="col-md-12">
                     <label class="col-md-3 text-right">At:</label>
-                    <input class="col-md-9" v-model="methodAt"/>
+                    <input class="col-md-8" v-model="methodAt"/>
                 </div>
                 <div class="col-md-12 text-right">
                     <a class="btn btn-primary" v-on:click="checkDictionary()">Check</a>
@@ -158,10 +158,10 @@
                                             axios.post('http://shark.sbs.arizona.edu:8080/class', jsonClass)
                                                 .then(function(resp) {
                                                     console.log('class resp', resp);
-                                                    axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
-                                                        .then(function(resp) {
-                                                            console.log('save resp', resp);
-                                                        });
+//                                                    axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
+//                                                        .then(function(resp) {
+//                                                            console.log('save resp', resp);
+//                                                        });
                                                 })
                                                 .catch(function(resp) {
                                                     console.log('class error resp', resp);
