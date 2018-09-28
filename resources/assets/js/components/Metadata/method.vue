@@ -11,22 +11,6 @@
             It will take more than few seconds...
         </div>
         <div v-if="methodEntry != null">
-            <!--<div class="col-md-12">-->
-                <!--As: <input v-if="viewFlag == false" class="child-model" style="width: 100%;" v-model="childData[2]" v-on:change="handleDataFc()"/>-->
-                <!--<input v-if="viewFlag == true" disabled class="child-model" style="width: 100%;" v-model="childData[2]" v-on:change="handleDataFc()"/>-->
-            <!--</div>-->
-            <!--<div class="col-md-12 text-center">-->
-                <!--Or-->
-            <!--</div>-->
-            <!--<div class="col-md-12">-->
-                <!--From: <input v-if="viewFlag == false" class="child-model" style="width: 100%;" v-model="childData[0]" v-on:change="handleDataFc()"/>-->
-                <!--<input v-if="viewFlag == true" disabled class="child-model" style="width: 100%;" v-model="childData[0]" v-on:change="handleDataFc()"/>-->
-            <!--</div>-->
-            <!--<div class="col-md-12">-->
-                <!--To: <input v-if="viewFlag == false" class="child-model" style="width: 100%;" v-model="childData[1]" v-on:change="handleDataFc()"/>-->
-                <!--<input v-if="viewFlag == true" disabled class="child-model" style="width: 100%;" v-model="childData[1]" v-on:change="handleDataFc()"/>-->
-            <!--</div>-->
-
             <div v-for="(each, index) in methodEntry.resultAnnotations" v-if="noneMethod == false && each.property == 'http://purl.oblibrary.org/obo/IAO_0000600'" class="col-md-6">
                 <img class="img-method" v-on:click="clickedMethod(index, each.value.substring(1, each.value.length - 1))" v-bind:id="'img-method-' + index" style="width: 100%;" v-bind:src="'https://drive.google.com/uc?id=' + each.value.split('id=')[1].substring(0, each.value.split('id=')[1].length - 1)"/>
                 <!--<img class="img-method" v-on:click="clickedMethod(index, each.value.substring(1, each.value.length - 1))" v-bind:id="'img-method-' + index" style="width: 100%;" v-bind:src="'/images/' + each.value.split('id=')[1].substring(0, each.value.split('id=')[1].length - 1) + '.png'"/>-->
@@ -86,6 +70,10 @@
                 methodInclude: null,
                 methodExclude: null,
                 methodAt: null,
+                fromId: null,
+                fromTerm: null,
+                toId: null,
+                toTerm: null,
             }
         },
         props: {
@@ -127,7 +115,69 @@
                 app.noneMethod = false;
             },
             checkDictionary() {
+                var app = this;
+                axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.character_name)
+                    .then(function(resp) {
+                        console.log('search resp', resp);
+                        var tempFlag = false;
+                        for (var i = 0; i < resp.data.entries.length; i++) {
+                            if (resp.data.entries[i].term == app.character_name) {
+                                tempFlag = true;
+                            }
+                        }
+                        if (tempFlag == false) {
+                            axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodFrom)
+                                .then(function(resp) {
+                                    console.log('search resp', resp);
+                                    for (var i = 0; i < resp.data.entries.length; i++) {
+                                        if (resp.data.entries[i].score == 1) {
+                                            app.fromTerm = resp.data.entries[i].term;
+                                            app.fromId = resp.data.entries[i].resultAnnotations.filter(function(e) {
+                                                return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
+                                            })[0].value;
+                                        }
+                                    }
+                                    axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodTo)
+                                        .then(function(resp) {
+                                            console.log('search resp', resp);
+                                            for (var i = 0; i < resp.data.entries.length; i++) {
+                                                if (resp.data.entries[i].score == 1) {
+                                                    app.toTerm = resp.data.entries[i].term;
+                                                    app.toId = resp.data.entries[i].resultAnnotations.filter(function(e) {
+                                                        return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
+                                                    })[0].value;
+                                                }
+                                            }
+                                            var jsonClass = {
+                                                "user": '',
+                                                "ontology": 'exp',
+                                                "term": app.character_name,
+                                                "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#measurement",
+                                                "definition": "from [" + app.methodFrom + "] to [" + app.methodTo + "]",
+                                                "createdBy": app.childData[3].name,
+                                                "creationDate": new Date(),
+                                                "definitionSrc": "tba",
+                                                "examples": "tba",
+                                                "logicDefinition": "measured_from some [" + app.fromId +"] and measured_to some [" + app.toId + "]"
+                                            };
+                                            axios.post('http://shark.sbs.arizona.edu:8080/class', jsonClass)
+                                                .then(function(resp) {
+                                                    console.log('class resp', resp);
+                                                    axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
+                                                        .then(function(resp) {
+                                                            console.log('save resp', resp);
+                                                        });
+                                                })
+                                                .catch(function(resp) {
+                                                    console.log('class error resp', resp);
+                                                });
+                                        });
+                                });
+                        }
+                    })
+                    .catch(function(resp) {
 
+                    });
             }
         },
         beforeMount () {

@@ -349,6 +349,7 @@
 //                                app.parentData.push(app.character.method_from);
 //                                app.parentData.push(app.character.method_to);
                                 app.parentData.push(app.character.method_as);
+                                app.parentData[3] = app.user;
                                 app.currentMetadata = method;
                                 break;
                             case 'unit':
@@ -438,6 +439,7 @@
 //                        this.parentData.push(this.character.method_from);
 //                        this.parentData.push(this.character.method_to);
                         this.parentData[0] = this.character.method_as;
+                        app.parentData[3] = app.user;
                         this.currentMetadata = method;
                         break;
                     case 'unit':
@@ -885,7 +887,7 @@
                                     axios.post('http://shark.sbs.arizona.edu:8080/esynonym', jsonEsynonym)
                                         .then(function(resp) {
                                             console.log('esynonym resp', resp);
-                                            axios.post('http://shark.sbs.arizona.edu:8080/save', {})
+                                            axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
                                                 .then(function(resp) {
                                                     console.log('save resp', resp);
                                                 })
@@ -1387,7 +1389,7 @@
 
                 var tpFlag = false;
                 for (var i = 0; i < tpArray.length; i++) {
-                    if (tpArray[i] == 'of') {
+                    if (tpArray[i] == 'of' || tpArray[i] == 'between') {
                         tpFlag = true;
                     }
                 }
@@ -1424,7 +1426,7 @@
                     axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
                         .then(function(resp) {
                            console.log('userLog resp', resp);
-                            alert("The header name should contain 'of' word.");
+                            alert("The header name should contain 'of' or 'between' word.");
                         })
                         .catch(function(resp) {
                             console.log('userLog error', resp);
