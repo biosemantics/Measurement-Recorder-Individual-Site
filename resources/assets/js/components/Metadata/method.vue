@@ -3,7 +3,6 @@
         <div class="col-md-12" style="font-size: 15px;">
             Method: Please explain how to measure the item. e.g. from top to the bottom.
             <br/>
-            (Choose the one(s) fits your method best.)
         </div>
         <div class="col-md-12" v-if="methodEntry == null">
             The images will be displayed soon.
@@ -15,17 +14,12 @@
                 <img class="img-method" v-on:click="clickedMethod(index, each.value.substring(1, each.value.length - 1))" v-bind:id="'img-method-' + index" style="width: 100%;" v-bind:src="'https://drive.google.com/uc?id=' + each.value.split('id=')[1].substring(0, each.value.split('id=')[1].length - 1)"/>
                 <!--<img class="img-method" v-on:click="clickedMethod(index, each.value.substring(1, each.value.length - 1))" v-bind:id="'img-method-' + index" style="width: 100%;" v-bind:src="'/images/' + each.value.split('id=')[1].substring(0, each.value.split('id=')[1].length - 1) + '.png'"/>-->
             </div>
-            <div v-if="noneMethod == false" class="col-md-12 text-right">
+            <div v-if="noneMethod == false && methodArray.length > 0" class="col-md-12 text-right">
                 <a class="btn btn-primary" v-on:click="noneOfAbove()">None of above</a>
             </div>
-            <div v-if="noneMethod == true">
+            <div v-if="noneMethod == true || methodArray.length == 0">
                 <div class="col-md-12">
                     <a class="btn btn-primary" v-on:click="displayImageSection()">Open Image Segment</a>
-                </div>
-                <div class="col-md-12">
-                    Method: Please explain how to measure the item. e.g. from top to the bottom.
-                    <br/>
-                    (Choose the one(s) fits your method best.)
                 </div>
                 <div class="col-md-12">
                     <label class="col-md-3 text-right">From:</label>
@@ -48,7 +42,7 @@
                     <input class="col-md-9" v-model="methodAt"/>
                 </div>
                 <div class="col-md-12 text-right">
-                    <a class="btn btn-primary" v-on:click="checkDictionary()">Check for the dictionary</a>
+                    <a class="btn btn-primary" v-on:click="checkDictionary()">Check</a>
                 </div>
             </div>
         </div>
@@ -74,6 +68,7 @@
                 fromTerm: null,
                 toId: null,
                 toTerm: null,
+                methodArray: [],
             }
         },
         props: {
@@ -190,6 +185,9 @@
                 .then(function(resp) {
                     console.log('exp search resp', resp);
                     app.methodEntry = resp.data.entries[0];
+                    app.methodArray = resp.data.entries[0].resultAnnotations.filter(function(e) {
+                        return e.property == 'http://purl.oblibrary.org/obo/IAO_0000600';
+                    });
                 })
                 .catch(function(resp) {
                     console.log('exp search resp error', resp);
