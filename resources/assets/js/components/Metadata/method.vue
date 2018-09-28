@@ -29,6 +29,7 @@
 
             <div v-for="(each, index) in methodEntry.resultAnnotations" v-if="noneMethod == false && each.property == 'http://purl.oblibrary.org/obo/IAO_0000600'" class="col-md-6">
                 <img class="img-method" v-on:click="clickedMethod(index, each.value.substring(1, each.value.length - 1))" v-bind:id="'img-method-' + index" style="width: 100%;" v-bind:src="'https://drive.google.com/uc?id=' + each.value.split('id=')[1].substring(0, each.value.split('id=')[1].length - 1)"/>
+                <!--<img class="img-method" v-on:click="clickedMethod(index, each.value.substring(1, each.value.length - 1))" v-bind:id="'img-method-' + index" style="width: 100%;" v-bind:src="'/images/' + each.value.split('id=')[1].substring(0, each.value.split('id=')[1].length - 1) + '.png'"/>-->
             </div>
             <div v-if="noneMethod == false" class="col-md-12 text-right">
                 <a class="btn btn-primary" v-on:click="noneOfAbove()">None of above</a>
@@ -135,24 +136,25 @@
             this.viewFlag = (sessionStorage.getItem('viewFlag') == 'true');
             this.childData = this.parentData; // save props data to itself's data and deal with it
             console.log('parentData', app.parentData);
-            var jsonPost = {
-                user: '',
-                ontologies: 'exp'
-            };
-            axios.post('http://shark.sbs.arizona.edu:8080/createUserOntology', jsonPost)
+            axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.character_name)
                 .then(function(resp) {
-                    axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.character_name)
-                        .then(function(resp) {
-                            console.log('exp search resp', resp);
-                            app.methodEntry = resp.data.entries[0];
-                        })
-                        .catch(function(resp) {
-                            console.log('exp search resp error', resp);
-                        });
+                    console.log('exp search resp', resp);
+                    app.methodEntry = resp.data.entries[0];
                 })
                 .catch(function(resp) {
-                    console.log('createUserOntology error resp', resp);
+                    console.log('exp search resp error', resp);
                 });
+//            var jsonPost = {
+//                user: '',
+//                ontologies: 'exp'
+//            };
+//            axios.post('http://shark.sbs.arizona.edu:8080/createUserOntology', jsonPost)
+//                .then(function(resp) {
+//
+//                })
+//                .catch(function(resp) {
+//                    console.log('createUserOntology error resp', resp);
+//                });
         },
         mounted() {
         }
