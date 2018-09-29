@@ -153,8 +153,16 @@
                                                 "creationDate": new Date(),
                                                 "definitionSrc": "tba",
                                                 "examples": "tba",
-                                                "logicDefinition": "measured_from some [" + app.fromId +"] and measured_to some [" + app.toId + "]"
+                                                "logicDefinition": "measured_from some [" + app.methodFrom +"] and measured_to some [" + app.methodTo + "]"
                                             };
+                                            if (app.character_name.split(' ')[0] == 'distance') {
+                                                jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#distance"
+                                            } else if (app.character_name.split(' ')[0] == 'length') {
+                                                jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#length"
+
+                                            } else if (app.character_name.split(' ')[0] == 'width') {
+                                                jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#width"
+                                            }
                                             axios.post('http://shark.sbs.arizona.edu:8080/class', jsonClass)
                                                 .then(function(resp) {
                                                     console.log('class resp', resp);
