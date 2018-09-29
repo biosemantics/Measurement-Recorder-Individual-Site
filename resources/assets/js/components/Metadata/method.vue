@@ -166,10 +166,10 @@
                                             axios.post('http://shark.sbs.arizona.edu:8080/class', jsonClass)
                                                 .then(function(resp) {
                                                     console.log('class resp', resp);
-                                                    axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
-                                                        .then(function(resp) {
-                                                            console.log('save resp', resp);
-                                                        });
+//                                                    axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
+//                                                        .then(function(resp) {
+//                                                            console.log('save resp', resp);
+//                                                        });
                                                 })
                                                 .catch(function(resp) {
                                                     console.log('class error resp', resp);
@@ -193,9 +193,12 @@
                 .then(function(resp) {
                     console.log('exp search resp', resp);
                     app.methodEntry = resp.data.entries[0];
-                    app.methodArray = resp.data.entries[0].resultAnnotations.filter(function(e) {
-                        return e.property == 'http://purl.oblibrary.org/obo/IAO_0000600';
-                    });
+                    if (resp.data.entries.length > 0) {
+                        app.methodArray = resp.data.entries[0].resultAnnotations.filter(function(e) {
+                            return e.property == 'http://purl.oblibrary.org/obo/IAO_0000600';
+                        });
+                    }
+
                 })
                 .catch(function(resp) {
                     console.log('exp search resp error', resp);
