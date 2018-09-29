@@ -166,10 +166,10 @@
                                             axios.post('http://shark.sbs.arizona.edu:8080/class', jsonClass)
                                                 .then(function(resp) {
                                                     console.log('class resp', resp);
-//                                                    axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
-//                                                        .then(function(resp) {
-//                                                            console.log('save resp', resp);
-//                                                        });
+                                                    axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
+                                                        .then(function(resp) {
+                                                            console.log('save resp', resp);
+                                                        });
                                                 })
                                                 .catch(function(resp) {
                                                     console.log('class error resp', resp);
