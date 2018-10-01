@@ -43,6 +43,9 @@ class HomeController extends Controller
             $character->method_as = $request->input('method_as');
             $character->method_from = $request->input('method_from');
             $character->method_to = $request->input('method_to');
+            $character->method_include = $request->input('method_include');
+            $character->method_exclude = $request->input('method_exclude');
+            $character->method_at = $request->input('method_at');
             $character->unit = $request->input('unit');
             $character->measure_semantic = $request->input('measure_semantic');
             $character->entity_semantic = $request->input('entity_semantic');
@@ -56,6 +59,9 @@ class HomeController extends Controller
                 'method_as' => $request->input('method_as'),
                 'method_from' => $request->input('method_from'),
                 'method_to' => $request->input('method_to'),
+                'method_include' => $request->input('method_include'),
+                'method_exclude' => $request->input('method_exclude'),
+                'method_at' => $request->input('method_at'),
                 'unit' => $request->input('unit'),
                 'measure_semantic' => $request->input('measure_semantic'),
                 'entity_semantic' => $request->input('entity_semantic'),

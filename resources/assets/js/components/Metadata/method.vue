@@ -31,15 +31,15 @@
                 </div>
                 <div class="col-md-12">
                     <label class="col-md-3 text-right">Include:</label>
-                    <input class="col-md-8" v-model="methodInclude"/>
+                    <input class="col-md-8" v-model="methodInclude"/> <p v-if="includeId != null" style="color: green;">&#10004;</p>
                 </div>
                 <div class="col-md-12">
                     <label class="col-md-3 text-right">Exclude:</label>
-                    <input class="col-md-8" v-model="methodExclude"/>
+                    <input class="col-md-8" v-model="methodExclude"/> <p v-if="excludeId != null" style="color: green;">&#10004;</p>
                 </div>
                 <div class="col-md-12">
                     <label class="col-md-3 text-right">At:</label>
-                    <input class="col-md-8" v-model="methodAt"/>
+                    <input class="col-md-8" v-model="methodAt"/> <p v-if="atId != null" style="color: green;">&#10004;</p>
                 </div>
                 <div class="col-md-12 text-right">
                     <a class="btn btn-primary" v-on:click="checkDictionary()">Check</a>
@@ -68,6 +68,12 @@
                 fromTerm: null,
                 toId: null,
                 toTerm: null,
+                includeTerm: null,
+                includeId: null,
+                excludeTerm: null,
+                excludeId: null,
+                atTerm: null,
+                atId: null,
                 methodArray: [],
             }
         },
@@ -94,6 +100,12 @@
                 app.childData[2] = app.methodEntry.resultAnnotations.filter(function(e) {
                     return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
                 })[0].value;
+                app.childData[3] = app.methodFrom;
+                app.childData[4] = app.methodTo;
+                app.childData[5] = app.methodInclude;
+                app.childData[6] = app.methodExclude;
+                app.childData[7] = app.methodAt;
+
                 console.log('childData', app.childData);
 
 
@@ -111,6 +123,17 @@
             },
             checkDictionary() {
                 var app = this;
+                app.childData[0] = '';
+                app.childData[1] = '';
+                app.childData[2] = '';
+                app.childData[4] = app.methodFrom;
+                app.childData[5] = app.methodTo;
+                app.childData[6] = app.methodInclude;
+                app.childData[7] = app.methodExclude;
+                app.childData[8] = app.methodAt;
+
+                this.$emit('interface', this.childData); // handle data and give it back to parent by interface
+
                 axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.character_name)
                     .then(function(resp) {
                         console.log('search resp', resp);
@@ -176,7 +199,50 @@
                                                 .catch(function(resp) {
                                                     console.log('class error resp', resp);
                                                 });
+
                                         });
+                                });
+                            axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodInclude)
+                                .then(function (resp) {
+                                    console.log('search methodInclude resp', resp);
+                                    for (var i = 0; i < resp.data.entries.length; i++) {
+                                        if (resp.data.entries[i].score == 1) {
+                                            app.includeTerm = resp.data.entries[i].term;
+                                            app.includeId = resp.data.entries[i].resultAnnotations.filter(function(e) {
+                                                return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
+                                            })[0].value;
+                                            console.log('includeId', app.includeId);
+                                        }
+                                    }
+
+                                });
+                            axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodExclude)
+                                .then(function (resp) {
+                                    console.log('search methodExclude resp', resp);
+                                    for (var i = 0; i < resp.data.entries.length; i++) {
+                                        if (resp.data.entries[i].score == 1) {
+                                            app.excludeTerm = resp.data.entries[i].term;
+                                            app.excludeId = resp.data.entries[i].resultAnnotations.filter(function(e) {
+                                                return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
+                                            })[0].value;
+                                            console.log('excludeId', app.excludeId);
+                                        }
+                                    }
+
+                                });
+                            axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodAt)
+                                .then(function (resp) {
+                                    console.log('search methodAt resp', resp);
+                                    for (var i = 0; i < resp.data.entries.length; i++) {
+                                        if (resp.data.entries[i].score == 1) {
+                                            app.atTerm = resp.data.entries[i].term;
+                                            app.atId = resp.data.entries[i].resultAnnotations.filter(function(e) {
+                                                return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
+                                            })[0].value;
+                                            console.log('atId', app.atId);
+                                        }
+                                    }
+
                                 });
                         }
                     })
@@ -191,6 +257,11 @@
             this.viewFlag = (sessionStorage.getItem('viewFlag') == 'true');
             this.childData = this.parentData; // save props data to itself's data and deal with it
             console.log('parentData', app.parentData);
+            app.methodFrom = app.childData[4];
+            app.methodTo = app.childData[5];
+            app.methodInclude = app.childData[6];
+            app.methodExclude = app.childData[7];
+            app.methodAt = app.childData[8];
             axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.character_name)
                 .then(function(resp) {
                     console.log('exp search resp', resp);

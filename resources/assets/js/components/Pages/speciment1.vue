@@ -218,6 +218,9 @@
                     method_from: null,
                     method_to: null,
                     method_as: null,
+                    method_include: null,
+                    method_exclude: null,
+                    method_at: null,
                     unit: null,
                     measure_semantic: null,
                     entity_semantic: null,
@@ -266,6 +269,11 @@
                         this.character.method_as = event[0];
                         app.term = event[1];
                         app.termValue = event[2];
+                        this.character.method_from = event[4];
+                        this.character.method_to = event[5];
+                        this.character.method_include = event[6];
+                        this.character.method_exclude = event[7];
+                        this.character.method_at = event[8];
                         this.parentData = event;
                         this.methodUpdateFlag = true;
                         console.log("method return", event);
@@ -350,6 +358,11 @@
 //                                app.parentData.push(app.character.method_to);
                                 app.parentData.push(app.character.method_as);
                                 app.parentData[3] = app.user;
+                                app.parentData[4] = app.character.method_from;
+                                app.parentData[5] = app.character.method_to;
+                                app.parentData[6] = app.character.method_include;
+                                app.parentData[7] = app.character.method_exclude;
+                                app.parentData[8] = app.character.method_at;
                                 app.currentMetadata = method;
                                 break;
                             case 'unit':
@@ -440,6 +453,11 @@
 //                        this.parentData.push(this.character.method_to);
                         this.parentData[0] = this.character.method_as;
                         app.parentData[3] = app.user;
+                        app.parentData[4] = app.character.method_from;
+                        app.parentData[5] = app.character.method_to;
+                        app.parentData[6] = app.character.method_include;
+                        app.parentData[7] = app.character.method_exclude;
+                        app.parentData[8] = app.character.method_at;
                         this.currentMetadata = method;
                         break;
                     case 'unit':
