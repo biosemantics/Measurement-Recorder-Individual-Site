@@ -130,6 +130,7 @@
                                             app.fromId = resp.data.entries[i].resultAnnotations.filter(function(e) {
                                                 return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
                                             })[0].value;
+                                            console.log('fromId', app.fromId);
                                         }
                                     }
                                     axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodTo)
@@ -141,6 +142,7 @@
                                                     app.toId = resp.data.entries[i].resultAnnotations.filter(function(e) {
                                                         return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
                                                     })[0].value;
+                                                    console.log('toId', app.toId);
                                                 }
                                             }
                                             var jsonClass = {
@@ -166,10 +168,10 @@
                                             axios.post('http://shark.sbs.arizona.edu:8080/class', jsonClass)
                                                 .then(function(resp) {
                                                     console.log('class resp', resp);
-//                                                    axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
-//                                                        .then(function(resp) {
-//                                                            console.log('save resp', resp);
-//                                                        });
+                                                    axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
+                                                        .then(function(resp) {
+                                                            console.log('save resp', resp);
+                                                        });
                                                 })
                                                 .catch(function(resp) {
                                                     console.log('class error resp', resp);
@@ -192,11 +194,15 @@
             axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.character_name)
                 .then(function(resp) {
                     console.log('exp search resp', resp);
-                    app.methodEntry = resp.data.entries[0];
                     if (resp.data.entries.length > 0) {
+                        app.methodEntry = resp.data.entries[0];
                         app.methodArray = resp.data.entries[0].resultAnnotations.filter(function(e) {
                             return e.property == 'http://purl.oblibrary.org/obo/IAO_0000600';
                         });
+                    } else {
+                        app.methodEntry = true;
+                        app.methodArray = resp.data.entries;
+                        console.log('methodArray', app.methodArray);
                     }
 
                 })
