@@ -605,7 +605,7 @@
                 var checkFields = true;
 
                 for (var key in this.character) {
-                    if (key != 'confirmed' && key != 'measure_semantic' && key != 'entity_semantic' && key != 'usage' && key != 'history' && (this.character[key] == null || this.character[key] == '')) {
+                    if (key != 'confirmed' && key != 'usage' && key != 'history' && (this.character[key] == null || this.character[key] == '')) {
                         console.log(key);
                         checkFields = false;
                     }
