@@ -605,7 +605,7 @@
                 var checkFields = true;
 
                 for (var key in this.character) {
-                    if (key != 'confirmed' && key != 'usage' && key != 'history' && (this.character[key] == null || this.character[key] == '')) {
+                    if (key != 'confirmed' && key != 'method_as' && key != 'method_from' && key != 'method_to' && key != 'method_include' && key != 'method_exclude' && key != 'method_at' && key != 'usage' && key != 'history' && (this.character[key] == null || this.character[key] == '')) {
                         console.log(key);
                         checkFields = false;
                     }
