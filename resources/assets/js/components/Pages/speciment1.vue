@@ -605,14 +605,17 @@
                 var checkFields = true;
 
                 for (var key in this.character) {
-                    if (key != 'confirmed' && key != 'method_as' && key != 'method_from' && key != 'method_to' && key != 'measure_semantic' && key != 'entity_semantic' && key != 'usage' && key != 'history' && (this.character[key] == null || this.character[key] == '')) {
+                    if (key != 'confirmed' && key != 'measure_semantic' && key != 'entity_semantic' && key != 'usage' && key != 'history' && (this.character[key] == null || this.character[key] == '')) {
                         console.log(key);
                         checkFields = false;
                     }
                 }
                 if ((this.character['method_as'] == null || this.character['method_as'] == '') &&
                     ((this.character['method_from'] == null || this.character['method_from'] == '') ||
-                    (this.character['method_to'] == null || this.character['method_to'] == ''))) {
+                    (this.character['method_to'] == null || this.character['method_to'] == '')) &&
+                    ((this.character['method_include'] == null || this.character['method_include'] == '') ||
+                    (this.character['method_exclude'] == null || this.character['method_exclude'] == '')) &&
+                    (this.character['method_at'] == null || this.character['method_at'] == '')) {
                     checkFields = false;
                 }
 
