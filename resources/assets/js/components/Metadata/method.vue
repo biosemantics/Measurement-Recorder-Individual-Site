@@ -181,19 +181,19 @@
                                                 "logicDefinition": "measured_from some [" + app.methodFrom +"] and measured_to some [" + app.methodTo + "]"
                                             };
                                             if (app.methodFrom != null) {
-                                                jsonClass = jsonClass + 'from [' + app.methodFrom + ']';
+                                                jsonClass.definition = jsonClass.definition + 'from [' + app.methodFrom + ']';
                                             }
                                             if (app.methodTo != null) {
-                                                jsonClass = jsonClass + ' to [' + app.methodTo + ']';
+                                                jsonClass.definition = jsonClass.definition + ' to [' + app.methodTo + ']';
                                             }
                                             if (app.methodInclude != null) {
-                                                jsonClass = jsonClass + ' include [' + app.methodInclude + ']';
+                                                jsonClass.definition = jsonClass.definition + ' include [' + app.methodInclude + ']';
                                             }
                                             if (app.methodExclude != null) {
-                                                jsonClass = jsonClass + ' exclude [' + app.methodExclude + ']';
+                                                jsonClass.definition = jsonClass.definition + ' exclude [' + app.methodExclude + ']';
                                             }
                                             if (app.methodAt != null) {
-                                                jsonClass = jsonClass + ' at [' + app.methodAt + ']';
+                                                jsonClass.definition = jsonClass.definition + ' at [' + app.methodAt + ']';
                                             }
                                             if (app.character_name.split(' ')[0] == 'distance') {
                                                 jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#distance"
