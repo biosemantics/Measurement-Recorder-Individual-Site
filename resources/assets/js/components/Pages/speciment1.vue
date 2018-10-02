@@ -1393,6 +1393,9 @@
                 var tpArray = this.character.name.split(' ');
                 this.character.method_from = null;
                 this.character.method_to = null;
+                this.character.method_include = null;
+                this.character.method_exclude = null;
+                this.character.method_at = null;
                 this.character.method_as = null;
                 this.character.unit = null;
                 this.character.measure_semantic = null;
@@ -1719,37 +1722,66 @@
                 user: '',
                 ontologies: 'exp'
             };
-            axios.post('http://shark.sbs.arizona.edu:8080/createUserOntology', jsonPost)
-                .then(function (resp) {
-                    console.log('createUserOntology resp', resp);
-                    sessionStorage.setItem('viewFlag', false);
-                    axios.get('/mr/shared/public/api/v1/character/all')
-                        .then(function (resp) {
-                            console.log(resp);
-                            app.headers = resp.data.headers;
-                            app.characters = resp.data.characters;
+            if (sessionStorage.getItem('createOntologyApi')) {
+                sessionStorage.setItem('viewFlag', false);
+                axios.get('/mr/shared/public/api/v1/character/all')
+                    .then(function (resp) {
+                        console.log(resp);
+                        app.headers = resp.data.headers;
+                        app.characters = resp.data.characters;
 
-                            for (var i = 0; i < app.characters.length; i++) {
-                                app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
-                                app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
-                            }
-                            app.arraySearch = [];
-                            for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
-                                var temp = {
+                        for (var i = 0; i < app.characters.length; i++) {
+                            app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
+                            app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
+                        }
+                        app.arraySearch = [];
+                        for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
+                            var temp = {
 
-                                };
-                                temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usageCount + ')';
-                                temp.value = resp.data.arrayCharacters[i].id;
-                                app.arraySearch.push(temp);
-                            }
-                        })
-                        .catch(function (resp) {
-                            console.log(resp);
-                        });
-                })
-                .catch(function (resp) {
+                            };
+                            temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usageCount + ')';
+                            temp.value = resp.data.arrayCharacters[i].id;
+                            app.arraySearch.push(temp);
+                        }
+                    })
+                    .catch(function (resp) {
+                        console.log(resp);
+                    });
+            } else {
+                axios.post('http://shark.sbs.arizona.edu:8080/createUserOntology', jsonPost)
+                    .then(function (resp) {
+                        sessionStorage.setItem('createOntologyApi', true);
+                        console.log('createUserOntology resp', resp);
+                        sessionStorage.setItem('viewFlag', false);
+                        axios.get('/mr/shared/public/api/v1/character/all')
+                            .then(function (resp) {
+                                console.log(resp);
+                                app.headers = resp.data.headers;
+                                app.characters = resp.data.characters;
 
-                });
+                                for (var i = 0; i < app.characters.length; i++) {
+                                    app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
+                                    app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
+                                }
+                                app.arraySearch = [];
+                                for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
+                                    var temp = {
+
+                                    };
+                                    temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usageCount + ')';
+                                    temp.value = resp.data.arrayCharacters[i].id;
+                                    app.arraySearch.push(temp);
+                                }
+                            })
+                            .catch(function (resp) {
+                                console.log(resp);
+                            });
+                    })
+                    .catch(function (resp) {
+
+                    });
+            }
+
 
 
         },
