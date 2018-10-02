@@ -173,13 +173,28 @@
                                                 "ontology": 'exp',
                                                 "term": app.character_name,
                                                 "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#measurement",
-                                                "definition": "from [" + app.methodFrom + "] to [" + app.methodTo + "]",
+                                                "definition": '',
                                                 "createdBy": app.childData[3].name,
                                                 "creationDate": new Date(),
                                                 "definitionSrc": "tba",
                                                 "examples": "tba",
                                                 "logicDefinition": "measured_from some [" + app.methodFrom +"] and measured_to some [" + app.methodTo + "]"
                                             };
+                                            if (app.methodFrom != null) {
+                                                jsonClass = jsonClass + 'from [' + app.methodFrom + ']';
+                                            }
+                                            if (app.methodTo != null) {
+                                                jsonClass = jsonClass + ' to [' + app.methodTo + ']';
+                                            }
+                                            if (app.methodInclude != null) {
+                                                jsonClass = jsonClass + ' include [' + app.methodInclude + ']';
+                                            }
+                                            if (app.methodExclude != null) {
+                                                jsonClass = jsonClass + ' exclude [' + app.methodExclude + ']';
+                                            }
+                                            if (app.methodAt != null) {
+                                                jsonClass = jsonClass + ' at [' + app.methodAt + ']';
+                                            }
                                             if (app.character_name.split(' ')[0] == 'distance') {
                                                 jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#distance"
                                             } else if (app.character_name.split(' ')[0] == 'length') {
