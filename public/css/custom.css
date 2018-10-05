@@ -259,6 +259,19 @@ button[aria-disabled="true"] {
     width: 1px;
 }
 
+.red {
+    color: red;
+    cursor: pointer;
+}
+
+.btn-basic {
+    background-color: rgb(221, 221, 221);
+    color: rgb(30, 30, 30);
+    margin-right: 15px;
+    border: 1px solid rgb(20, 10, 89);
+    margin-bottom: 5px;
+}
+
 /* wheel menu stylesheets */
 
 #piemenu > svg { width: 100%; height: 100%; }

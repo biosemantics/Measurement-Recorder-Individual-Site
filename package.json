@@ -26,6 +26,7 @@
         "vuex": "^2.3.1"
     },
     "dependencies": {
+        "v-tooltip": "^2.0.0-rc.33",
         "vue-router": "^3.0.1",
         "vue-tabs-component": "^1.4.0",
         "wheelnav": "^1.7.1"

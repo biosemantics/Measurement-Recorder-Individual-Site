@@ -225,7 +225,7 @@
                     measure_semantic: null,
                     entity_semantic: null,
                     semantics: null,
-                    creator: this.user.name,
+                    creator: this.user.name + ' via MR',
                     usage: [],
                     history: [],
                     username: this.user.name
@@ -343,7 +343,7 @@
                         app.metadataFlag = metadataFlag;
                         app.character = resp.data;
                         if (metadataFlag != '') {
-                            app.character.creator = app.user.name;
+                            app.character.creator = app.user.name + ' via MR';
                             app.character.username = app.user.name;
                         }
 
@@ -577,7 +577,7 @@
                         console.log('getCharacter resp', resp);
                         var newCharacter = resp.data;
                         newCharacter.username = app.user.name;
-                        newCharacter.creator = app.user.name;
+                        newCharacter.creator = app.user.name + ' via MR';
                         app.detailsFlag = false;
                         app.viewFlag = false;
                         app.editFlag = false;
@@ -1400,7 +1400,7 @@
                 this.character.unit = null;
                 this.character.measure_semantic = null;
                 this.character.entity_semantic = null;
-                this.character.creator = this.user.name;
+                this.character.creator = this.user.name + ' via MR';
                 this.character.usage = [];
                 this.character.history = [];
 
@@ -1726,7 +1726,7 @@
                 sessionStorage.setItem('viewFlag', false);
                 axios.get('/mr/shared/public/api/v1/character/all')
                     .then(function (resp) {
-                        console.log(resp);
+                        console.log('all resp', resp);
                         app.headers = resp.data.headers;
                         app.characters = resp.data.characters;
 
@@ -1755,7 +1755,7 @@
                         sessionStorage.setItem('viewFlag', false);
                         axios.get('/mr/shared/public/api/v1/character/all')
                             .then(function (resp) {
-                                console.log(resp);
+                                console.log('all resp', resp);
                                 app.headers = resp.data.headers;
                                 app.characters = resp.data.characters;
 
