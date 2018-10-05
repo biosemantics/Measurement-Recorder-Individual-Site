@@ -101,7 +101,7 @@
                                         </div>
                                         <div class="modal-body">
                                             Character name:
-                                            <input v-model="character.name" />
+                                            <input autofocus v-model="character.name" />
                                         </div>
                                         <div class="modal-footer">
                                             <a class="btn btn-primary" v-on:click="storeCharacter()">OK</a>
