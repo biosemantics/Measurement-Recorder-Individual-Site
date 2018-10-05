@@ -1409,7 +1409,7 @@
                 this.semanticsUpdateFlag = false;
                 this.creatorUpdateFlag = false;
                 this.newCharacterFlag = false;
-
+                this.currentMetadata = null;
 
                 var tpFlag = false;
                 for (var i = 0; i < tpArray.length; i++) {
@@ -1691,21 +1691,25 @@
             },
             onSelect (item) {
                 var app = this;
+                var tempFlag = false;
                 app.item = item;
                 console.log('selectedItem', item);
-                if (item == null) {
-                    app.newCharacterFlag = true;
-                } else {
-                    for (var i = 0; i < app.characters.length; i++) {
-                        for (var j = 0; j < app.characters[i].length; j++) {
-                            if (app.characters[i][j].header_id == 1 && app.characters[i][j].character_id == item) {
-                                app.viewFlag = true;
-                                sessionStorage.setItem('viewFlag', true);
-                                console.log('onSelect', app.characters[i][j]);
-                                app.editCharacter(app.characters[i][j]);
-                            }
+
+                for (var i = 0; i < app.characters.length; i++) {
+                    for (var j = 0; j < app.characters[i].length; j++) {
+                        if (app.characters[i][j].header_id == 1 && app.characters[i][j].character_id == item) {
+                            app.viewFlag = true;
+                            sessionStorage.setItem('viewFlag', true);
+                            console.log('onSelect', app.characters[i][j]);
+                            tempFlag = true;
+                            app.editCharacter(app.characters[i][j]);
                         }
                     }
+                }
+
+                if (tempFlag == false) {
+                    app.character.name = item;
+                    app.newCharacterFlag= true;
                 }
             },
             printSearchText (searchText) {

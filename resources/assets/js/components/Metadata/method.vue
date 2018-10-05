@@ -25,15 +25,15 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">From:</label>
-                    <input class="col-md-8" v-model="methodFrom"/> <p v-if="fromId != null" style="color: green;">&#10004;</p>
+                    <input class="col-md-8" v-model="methodFrom"/> <p v-if="fromId != null || greenTick.from == true" style="color: green;">&#10004;</p>
                     <a v-if="fromNeedMore == true" class="red col-md-12" v-on:click="needMore('from')">Need info on new terms:</a>
                     <div class="col-md-12" v-if="formViewFlag.from == true">
                         <div class="col-md-12">
                             {{ methodFrom }}: is a synonym of
 
                         </div>
-                        <div class="col-md-12">
-                            <a class="btn btn-basic" v-on:click="addSynonym('from', each)" v-tooltip="each.tooltip" v-if="fromSynonyms.length > 0" v-for="each in fromSynonyms">
+                        <div class="col-md-12" v-if="fromSynonyms.length > 0" >
+                            <a class="btn btn-basic" v-on:click="addSynonym('from', each)" v-tooltip="each.tooltip" v-for="each in fromSynonyms">
                                 {{ each.term }}
                             </a>
                             <a class="col-md-12 btn btn-basic" v-on:click="noneSynonym('from')">None of above, add the term to Dictionary</a>
@@ -50,12 +50,12 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">To:</label>
-                    <input class="col-md-8" v-model="methodTo"/> <p v-if="toId != null" style="color: green;">&#10004;</p>
+                    <input class="col-md-8" v-model="methodTo"/> <p v-if="toId != null || greenTick.to == true" style="color: green;">&#10004;</p>
                     <a v-if="toNeedMore == true" class="red col-md-12" v-on:click="needMore('to')">Need info on new terms:</a>
                     <div class="col-md-12" v-if="formViewFlag.to == true">
                         {{ methodTo }}: is a synonym of
-                        <div class="col-md-12">
-                            <a class="btn btn-basic" v-on:click="addSynonym('to', each)" v-tooltip="each.tooltip" v-if="toSynonyms.length > 0" v-for="each in toSynonyms">
+                        <div class="col-md-12" v-if="toSynonyms.length > 0">
+                            <a class="btn btn-basic" v-on:click="addSynonym('to', each)" v-tooltip="each.tooltip" v-for="each in toSynonyms">
                                 {{ each.term }}
                             </a>
                             <a class="col-md-12 btn btn-basic" v-on:click="noneSynonym('to')">None of above, add the term to Dictionary</a>
@@ -72,12 +72,12 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Include:</label>
-                    <input class="col-md-8" v-model="methodInclude"/> <p v-if="includeId != null" style="color: green;">&#10004;</p>
+                    <input class="col-md-8" v-model="methodInclude"/> <p v-if="includeId != null || greenTick.include == true" style="color: green;">&#10004;</p>
                     <a v-if="includeNeedMore == true" class="red col-md-12" v-on:click="needMore('include')">Need info on new terms:</a>
                     <div class="col-md-12" v-if="formViewFlag.include == true">
                         {{ methodInclude }}: is a synonym of
-                        <div class="col-md-12">
-                            <a class="btn btn-basic" v-on:click="addSynonym('include', each)" v-tooltip="each.tooltip" v-if="includeSynonyms.length > 0" v-for="each in includeSynonyms">
+                        <div class="col-md-12" v-if="includeSynonyms.length > 0">
+                            <a class="btn btn-basic" v-on:click="addSynonym('include', each)" v-tooltip="each.tooltip" v-for="each in includeSynonyms">
                                 {{ each.term }}
                             </a>
                             <a class="col-md-12 btn btn-basic" v-on:click="noneSynonym('include')">None of above, add the term to Dictionary</a>
@@ -94,12 +94,12 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Exclude:</label>
-                    <input class="col-md-8" v-model="methodExclude"/> <p v-if="excludeId != null" style="color: green;">&#10004;</p>
+                    <input class="col-md-8" v-model="methodExclude"/> <p v-if="excludeId != null || greenTick.exclude == true" style="color: green;">&#10004;</p>
                     <a v-if="excludeNeedMore == true" class="red col-md-12" v-on:click="needMore('exclude')">Need info on new terms:</a>
                     <div class="col-md-12" v-if="formViewFlag.exclude == true">
                         {{ methodExclude }}: is a synonym of
-                        <div class="col-md-12">
-                            <a class="btn btn-basic" v-on:click="addSynonym('exclude', each)" v-tooltip="each.tooltip" v-if="excludeSynonyms.length > 0" v-for="each in excludeSynonyms">
+                        <div class="col-md-12" v-if="excludeSynonyms.length > 0">
+                            <a class="btn btn-basic" v-on:click="addSynonym('exclude', each)" v-tooltip="each.tooltip" v-for="each in excludeSynonyms">
                                 {{ each.term }}
                             </a>
                             <a class="col-md-12 btn btn-basic" v-on:click="noneSynonym('exclude')">None of above, add the term to Dictionary</a>
@@ -116,12 +116,12 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">At:</label>
-                    <input class="col-md-8" v-model="methodAt"/> <p v-if="atId != null" style="color: green;">&#10004;</p>
+                    <input class="col-md-8" v-model="methodAt"/> <p v-if="atId != null || greenTick.at == true" style="color: green;">&#10004;</p>
                     <a v-if="atNeedMore == true" class="red col-md-12" v-on:click="needMore('at')">Need info on new terms:</a>
                     <div class="col-md-12" v-if="formViewFlag.at == true">
                         {{ methodAt }}: is a synonym of
-                        <div class="col-md-12">
-                            <a class="btn btn-basic" v-on:click="addSynonym('at', each)" v-tooltip="each.tooltip" v-if="atSynonyms.length > 0" v-for="each in atSynonyms">
+                        <div class="col-md-12" v-if="atSynonyms.length > 0">
+                            <a class="btn btn-basic" v-on:click="addSynonym('at', each)" v-tooltip="each.tooltip" v-for="each in atSynonyms">
                                 {{ each.term }}
                             </a>
                             <a class="col-md-12 btn btn-basic" v-on:click="noneSynonym('at')">None of above, add the term to Dictionary</a>
@@ -184,6 +184,13 @@
                 excludeSynonyms: [],
                 atSynonyms: [],
                 formViewFlag: {
+                    from: false,
+                    to: false,
+                    include: false,
+                    exclude: false,
+                    at: false
+                },
+                greenTick: {
                     from: false,
                     to: false,
                     include: false,
@@ -267,6 +274,8 @@
                 axios.post('http://shark.sbs.arizona.edu:8080/class', jsonRequest)
                     .then(function(resp) {
                         console.log('class resp', resp);
+                        app.greenTick[setting] = true;
+                        app.formViewFlag[setting] = false;
                         axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
                             .then(function(resp) {
                                 console.log('save resp', resp);
@@ -320,6 +329,8 @@
                         axios.post('http://shark.sbs.arizona.edu:8080/class', jsonRequest)
                             .then(function(resp) {
                                 console.log('class resp', resp);
+                                app.greenTick[setting] = true;
+                                app.formViewFlag[setting] = false;
                                 axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
                                     .then(function(resp) {
                                         console.log('save resp', resp);
@@ -333,6 +344,10 @@
                     axios.post('http://shark.sbs.arizona.edu:8080/esynonym', jsonRequest)
                         .then(function(resp) {
                             console.log('esynonym resp', resp);
+                            if (resp.data == 'SUCCESSFULLY') {
+                                app.greenTick[setting] = true;
+                                app.formViewFlag[setting] = false;
+                            }
                             axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
                                 .then(function(resp) {
                                     console.log('save resp', resp);
@@ -408,6 +423,9 @@
                                         if (app.fromId == null) {
                                             app.fromNeedMore = true;
                                             app.fromSynonyms = resp.data.entries;
+                                            if (app.fromSynonyms.length == 0) {
+                                                app.noneSynonymFlag.from = true;
+                                            }
                                             for (var i = 0; i < app.fromSynonyms.length; i++) {
                                                 app.fromSynonyms[i].tooltip = '';
                                                 var temp = app.fromSynonyms[i].resultAnnotations.filter(function(e){
@@ -436,6 +454,9 @@
                                         if (app.toId == null) {
                                             app.toNeedMore = true;
                                             app.toSynonyms = resp.data.entries;
+                                            if (app.toSynonyms.length == 0) {
+                                                app.noneSynonymFlag.to = true;
+                                            }
                                             for (var i = 0; i < app.toSynonyms.length; i++) {
                                                 app.toSynonyms[i].tooltip = '';
                                                 var temp = app.toSynonyms[i].resultAnnotations.filter(function(e){
@@ -464,6 +485,9 @@
                                         if (app.includeId == null) {
                                             app.includeNeedMore = true;
                                             app.includeSynonyms = resp.data.entries;
+                                            if (app.includeSynonyms.length == 0) {
+                                                app.noneSynonymFlag.include = true;
+                                            }
                                             for (var i = 0; i < app.includeSynonyms.length; i++) {
                                                 app.includeSynonyms[i].tooltip = '';
                                                 var temp = app.includeSynonyms[i].resultAnnotations.filter(function(e){
@@ -492,6 +516,9 @@
                                         if (app.excludeId == null) {
                                             app.excludeNeedMore = true;
                                             app.excludeSynonyms = resp.data.entries;
+                                            if (app.excludeSynonyms.length == 0) {
+                                                app.noneSynonymFlag.exclude = true;
+                                            }
                                             for (var i = 0; i < app.excludeSynonyms.length; i++) {
                                                 app.excludeSynonyms[i].tooltip = '';
                                                 var temp = app.excludeSynonyms[i].resultAnnotations.filter(function(e){
@@ -520,6 +547,9 @@
                                         if (app.atId == null) {
                                             app.atNeedMore = true;
                                             app.atSynonyms = resp.data.entries;
+                                            if (app.atSynonyms.length == 0) {
+                                                app.noneSynonymFlag.at = true;
+                                            }
                                             for (var i = 0; i < app.atSynonyms.length; i++) {
                                                 app.atSynonyms[i].tooltip = '';
                                                 var temp = app.atSynonyms[i].resultAnnotations.filter(function(e){

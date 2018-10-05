@@ -175,10 +175,11 @@
         common.mousedownItem(this)
       },
       selectItem (option) {
+          var temp = this.searchText;
           this.searchText = '';
           this.closeOptions();
           if (option == null) {
-              this.$emit('select', null);
+              this.$emit('select', temp);
           }
           else if (Object.keys(option).length === 0 && option.constructor === Object) {
               this.$emit('select', option)
