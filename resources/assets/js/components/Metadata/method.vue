@@ -18,10 +18,12 @@
                 <a class="btn btn-primary" v-on:click="noneOfAbove()">None of above</a>
             </div>
             <div v-if="noneMethod == true || methodArray.length == 0">
-                <div class="col-md-12">
-                    <a v-if="methodArray.length > 0" class="btn btn-primary" v-on:click="displayImageSection()">Open Image Segment</a>
+                <div class="col-md-12 text-right">
+                    <a v-if="methodArray.length > 0" class="btn btn-primary" v-on:click="displayImageSection()" style="padding: 3px 8px;">
+                        Open Image Segment
+                    </a>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">From:</label>
                     <input class="col-md-8" v-model="methodFrom"/> <p v-if="fromId != null" style="color: green;">&#10004;</p>
                     <a v-if="fromNeedMore == true" class="red col-md-12" v-on:click="needMore('from')">Need info on new terms:</a>
