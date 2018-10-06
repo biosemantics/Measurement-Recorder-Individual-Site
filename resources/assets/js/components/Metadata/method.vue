@@ -404,6 +404,21 @@
                         for (var i = 0; i < resp.data.entries.length; i++) {
                             if (resp.data.entries[i].term == app.character_name) {
                                 tempFlag = true;
+                                if (app.methodFrom != null) {
+                                    app.greenTick.from = true;
+                                }
+                                if (app.methodTo != null) {
+                                    app.greenTick.to = true;
+                                }
+                                if (app.methodInclude != null) {
+                                    app.greenTick.include = true;
+                                }
+                                if (app.methodExclude != null) {
+                                    app.greenTick.exclude = true;
+                                }
+                                if (app.methodAt != null) {
+                                    app.greenTick.at = true;
+                                }
                             }
                         }
                         if (tempFlag == false) {
