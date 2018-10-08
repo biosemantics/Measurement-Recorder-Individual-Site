@@ -25,10 +25,10 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">From:</label>
-                    <input class="col-md-8" v-model="methodFrom"/> <p v-if="fromId != null || greenTick.from == true" style="color: green;">&#10004;</p>
-                    <a v-if="fromNeedMore == true" class="red col-md-12" v-on:click="needMore('from')">Need info on new terms:</a>
+                    <input v-on:blur="userLog('From')" class="col-md-8" v-model="methodFrom"/> <p v-if="fromId != null || greenTick.from == true" style="color: green;">&#10004;</p>
+                    <a v-if="fromNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.from }" v-on:click="needMore('from')">Need info on new terms:</a>
                     <div class="col-md-12" v-if="formViewFlag.from == true">
-                        <div class="col-md-12">
+                        <div class="col-md-12" v-if="fromSynonyms.length > 0">
                             {{ methodFrom }}: is a synonym of
 
                         </div>
@@ -42,18 +42,22 @@
                             <div>
                                 Add the following to the dictionary:
                             </div>
-                            <label> {{ methodFrom }} : </label>
-                            <input v-model="definition.from" style="margin-left: 10px;"/>
-                            <a class="btn btn-primary" v-on:click="addUserSynonym('from', definition.from)">Add</a>
+                            <a class="btn btn-primary col-md-4" v-on:click="addTerm('from', methodFrom)" style="padding: 3px 8px;"> {{ methodFrom }} </a>
+                            <div class="col-md-7" style="border: 1px solid grey; border-radius: 4px; margin-left: 10px;">
+                                <input v-model="definition.from" style="max-width: 120px;"/>
+                                <a class="btn btn-primary" v-on:click="addUserSynonym('from', definition.from)" style="padding: 3px 8px;">Add</a>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">To:</label>
-                    <input class="col-md-8" v-model="methodTo"/> <p v-if="toId != null || greenTick.to == true" style="color: green;">&#10004;</p>
-                    <a v-if="toNeedMore == true" class="red col-md-12" v-on:click="needMore('to')">Need info on new terms:</a>
+                    <input v-on:blur="userLog('To')" class="col-md-8" v-model="methodTo"/> <p v-if="toId != null || greenTick.to == true" style="color: green;">&#10004;</p>
+                    <a v-if="toNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.to }" v-on:click="needMore('to')">Need info on new terms:</a>
                     <div class="col-md-12" v-if="formViewFlag.to == true">
-                        {{ methodTo }}: is a synonym of
+                        <div class="col-md-12" v-if="toSynonyms.length > 0">
+                            {{ methodTo }}: is a synonym of
+                        </div>
                         <div class="col-md-12" v-if="toSynonyms.length > 0">
                             <a class="btn btn-basic" v-on:click="addSynonym('to', each)" v-tooltip="each.tooltip" v-for="each in toSynonyms">
                                 {{ each.term }}
@@ -64,18 +68,22 @@
                             <div>
                                 Add the following to the dictionary:
                             </div>
-                            <label> {{ methodTo }} : </label>
-                            <input v-model="definition.to" style="margin-left: 10px;"/>
-                            <a class="btn btn-primary" v-on:click="addUserSynonym('to', definition.to)">Add</a>
+                            <a class="btn btn-primary col-md-4" v-on:click="addTerm('to', methodTo)" style="padding: 3px 8px;"> {{ methodTo }} </a>
+                            <div class="col-md-7" style="border: 1px solid grey; border-radius: 4px; margin-left: 10px;">
+                                <input v-model="definition.to" style="max-width: 120px;"/>
+                                <a class="btn btn-primary" v-on:click="addUserSynonym('to', definition.to)" style="padding: 3px 8px;">Add</a>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Include:</label>
-                    <input class="col-md-8" v-model="methodInclude"/> <p v-if="includeId != null || greenTick.include == true" style="color: green;">&#10004;</p>
-                    <a v-if="includeNeedMore == true" class="red col-md-12" v-on:click="needMore('include')">Need info on new terms:</a>
+                    <input v-on:blur="userLog('Include')" class="col-md-8" v-model="methodInclude"/> <p v-if="includeId != null || greenTick.include == true" style="color: green;">&#10004;</p>
+                    <a v-if="includeNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.include }" v-on:click="needMore('include')">Need info on new terms:</a>
                     <div class="col-md-12" v-if="formViewFlag.include == true">
-                        {{ methodInclude }}: is a synonym of
+                        <div class="col-md-12" v-if="includeSynonyms.length > 0">
+                            {{ methodInclude }}: is a synonym of
+                        </div>
                         <div class="col-md-12" v-if="includeSynonyms.length > 0">
                             <a class="btn btn-basic" v-on:click="addSynonym('include', each)" v-tooltip="each.tooltip" v-for="each in includeSynonyms">
                                 {{ each.term }}
@@ -86,18 +94,22 @@
                             <div>
                                 Add the following to the dictionary:
                             </div>
-                            <label> {{ methodInclude }} : </label>
-                            <input v-model="definition.include" style="margin-left: 10px;"/>
-                            <a class="btn btn-primary" v-on:click="addUserSynonym('include', definition.include)">Add</a>
+                            <a class="btn btn-primary col-md-4" v-on:click="addTerm('include', methodInclude)" style="padding: 3px 8px;"> {{ methodInclude }} </a>
+                            <div class="col-md-7" style="border: 1px solid grey; border-radius: 4px; margin-left: 10px;">
+                                <input v-model="definition.include" style="max-width: 120px;"/>
+                                <a class="btn btn-primary" v-on:click="addUserSynonym('from', definition.include)" style="padding: 3px 8px;">Add</a>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Exclude:</label>
-                    <input class="col-md-8" v-model="methodExclude"/> <p v-if="excludeId != null || greenTick.exclude == true" style="color: green;">&#10004;</p>
-                    <a v-if="excludeNeedMore == true" class="red col-md-12" v-on:click="needMore('exclude')">Need info on new terms:</a>
+                    <input v-on:blur="userLog('Exclude')" class="col-md-8" v-model="methodExclude"/> <p v-if="excludeId != null || greenTick.exclude == true" style="color: green;">&#10004;</p>
+                    <a v-if="excludeNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.exclude }" v-on:click="needMore('exclude')">Need info on new terms:</a>
                     <div class="col-md-12" v-if="formViewFlag.exclude == true">
-                        {{ methodExclude }}: is a synonym of
+                        <div class="col-md-12" v-if="excludeSynonyms.length > 0">
+                            {{ methodExclude }}: is a synonym of
+                        </div>
                         <div class="col-md-12" v-if="excludeSynonyms.length > 0">
                             <a class="btn btn-basic" v-on:click="addSynonym('exclude', each)" v-tooltip="each.tooltip" v-for="each in excludeSynonyms">
                                 {{ each.term }}
@@ -108,18 +120,22 @@
                             <div>
                                 Add the following to the dictionary:
                             </div>
-                            <label> {{ methodExclude }} : </label>
-                            <input v-model="definition.exclude" style="margin-left: 10px;"/>
-                            <a class="btn btn-primary" v-on:click="addUserSynonym('exclude', definition.exclude)">Add</a>
+                            <a class="btn btn-primary col-md-4" v-on:click="addTerm('exclude', methodExclude)" style="padding: 3px 8px;"> {{ methodExclude }} </a>
+                            <div class="col-md-7" style="border: 1px solid grey; border-radius: 4px; margin-left: 10px;">
+                                <input v-model="definition.exclude" style="max-width: 120px;"/>
+                                <a class="btn btn-primary" v-on:click="addUserSynonym('from', definition.exclude)" style="padding: 3px 8px;">Add</a>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">At:</label>
-                    <input class="col-md-8" v-model="methodAt"/> <p v-if="atId != null || greenTick.at == true" style="color: green;">&#10004;</p>
-                    <a v-if="atNeedMore == true" class="red col-md-12" v-on:click="needMore('at')">Need info on new terms:</a>
+                    <input v-on:blur="userLog('At')" class="col-md-8" v-model="methodAt"/> <p v-if="atId != null || greenTick.at == true" style="color: green;">&#10004;</p>
+                    <a v-if="atNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.at }" v-on:click="needMore('at')">Need info on new terms:</a>
                     <div class="col-md-12" v-if="formViewFlag.at == true">
-                        {{ methodAt }}: is a synonym of
+                        <div class="col-md-12" v-if="atSynonyms.length > 0">
+                            {{ methodAt }}: is a synonym of
+                        </div>
                         <div class="col-md-12" v-if="atSynonyms.length > 0">
                             <a class="btn btn-basic" v-on:click="addSynonym('at', each)" v-tooltip="each.tooltip" v-for="each in atSynonyms">
                                 {{ each.term }}
@@ -130,14 +146,36 @@
                             <div>
                                 Add the following to the dictionary:
                             </div>
-                            <label> {{ methodExclude }} : </label>
-                            <input v-model="definition.at" style="margin-left: 10px;"/>
-                            <a class="btn btn-primary" v-on:click="addUserSynonym('at', definition.at)">Add</a>
+                            <a class="btn btn-primary col-md-4" v-on:click="addTerm('at', methodAt)" style="padding: 3px 8px;"> {{ methodAt }} </a>
+                            <div class="col-md-7" style="border: 1px solid grey; border-radius: 4px; margin-left: 10px;">
+                                <input v-model="definition.at" style="max-width: 120px;"/>
+                                <a class="btn btn-primary" v-on:click="addUserSynonym('at', definition.at)" style="padding: 3px 8px;">Add</a>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12 text-right">
                     <a class="btn btn-primary" v-on:click="checkDictionary()">Check</a>
+                </div>
+                <div v-if="modalFlag == true" @close="modalFlag = false">
+                    <transition name="modal">
+                        <div class="modal-mask">
+                            <div class="modal-wrapper">
+                                <div class="modal-container">
+                                    <div class="modal-header">
+                                        Adding "{{ newTerm }}" to Dictionary
+                                    </div>
+                                    <div class="modal-body">
+                                        Definition:
+                                        <input v-model="newTermDefinition" />
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a class="btn btn-primary" v-on:click="confirmTerm(newTermDefinition)">Add</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </transition>
                 </div>
             </div>
         </div>
@@ -149,7 +187,7 @@
     import Vue from 'vue';
     import VTooltip from 'v-tooltip'
 
-    Vue.use(VTooltip)
+    Vue.use(VTooltip);
     export default {
         data: function () {
             return {
@@ -211,7 +249,17 @@
                     exclude: false,
                     at: false
                 },
+                needMoreGreen: {
+                    from: false,
+                    to: false,
+                    include: false,
+                    exclude: false,
+                    at: false
+                },
                 methodArray: [],
+                modalFlag: false,
+                newTerm: null,
+                newTermDefinition: null,
             }
         },
         props: {
@@ -235,13 +283,103 @@
                 var app = this;
                 app.formViewFlag[setting] = !(app.formViewFlag[setting]);
             },
+            addTerm: function(setting, value) {
+                var app = this;
+                app.newTerm = value;
+                app.currentSetting = setting;
+                var jsonRequest = {
+                    'user_id': app.childData[3].id,
+                    'action': 'In Method, add new term',
+                    'action_detail': 'term=' + app.newTerm,
+                    'type': 'Measurement Recorder',
+                };
+                axios.post('/mr/shared/public/api/v1/user-log',jsonRequest)
+                    .then(function(resp) {
+                        console.log('user-log resp', resp);
+                    });
+                app.modalFlag = true;
+
+            },
             addUserSynonym: function(setting, definition) {
                 var app = this;
+                app.newTerm = definition;
+                app.currentSetting = setting;
+                var jsonRequest = {
+                    'user_id': app.childData[3].id,
+                    'action': 'In Method, add new term',
+                    'action_detail': 'term=' + app.newTerm,
+                    'type': 'Measurement Recorder',
+                };
+                axios.post('/mr/shared/public/api/v1/user-log',jsonRequest)
+                    .then(function(resp) {
+                        console.log('user-log resp', resp);
+                    });
+                app.modalFlag = true;
 
+//                var app = this;
+//
+//                var jsonRequest = {
+//                    user: '',
+//                    ontology: 'exp',
+//                    term: '',
+//                    superclassIRI: "http://biosemantics.arizona.edu/ontology/exp#physical_entity",
+//                    definition: definition,
+//                    elucidation: '',
+//                    createdBy: app.childData[3].name + ' via MR',
+//                    examples: app.character_name,
+//                    creationDate: new Date(),
+//                    definitionSrc: app.childData[3].name,
+//                    logicDefinition: ''
+//                };
+//
+//                switch (setting) {
+//                    case 'from':
+//                        jsonRequest.term = app.methodFrom;
+//                        break;
+//                    case 'to':
+//                        jsonRequest.term = app.methodTo;
+//                        break;
+//                    case 'include':
+//                        jsonRequest.term = app.methodInclude;
+//                        break;
+//                    case 'exclude':
+//                        jsonRequest.term = app.methodExclude;
+//                        break;
+//                    case 'at':
+//                        jsonRequest.term = app.methodExclude;
+//                        break;
+//                    default:
+//                        break;
+//                }
+//                axios.post('http://shark.sbs.arizona.edu:8080/class', jsonRequest)
+//                    .then(function(resp) {
+//                        console.log('class resp', resp);
+//                        app.greenTick[setting] = true;
+//                        app.formViewFlag[setting] = false;
+//                        app.needMoreGreen[setting] = true;
+//                        axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
+//                            .then(function(resp) {
+//                                console.log('save resp', resp);
+//                            });
+//                    });
+            },
+            confirmTerm: function (definition) {
+                var app = this;
+
+                var jsonLog = {
+                    'user_id': app.childData[3].id,
+                    'action': 'In Method, add definition for term',
+                    'action_detail': 'term=' + app.newTerm + ', definition=' + definition,
+                    'type': 'Measurement Recorder',
+                };
+                axios.post('/mr/shared/public/api/v1/user-log',jsonLog)
+                    .then(function(resp) {
+                        console.log('user-log resp', resp);
+                    });
                 var jsonRequest = {
                     user: '',
                     ontology: 'exp',
-                    term: '',
+                    term: app.newTerm,
                     superclassIRI: "http://biosemantics.arizona.edu/ontology/exp#physical_entity",
                     definition: definition,
                     elucidation: '',
@@ -252,34 +390,19 @@
                     logicDefinition: ''
                 };
 
-                switch (setting) {
-                    case 'from':
-                        jsonRequest.term = app.methodFrom;
-                        break;
-                    case 'to':
-                        jsonRequest.term = app.methodTo;
-                        break;
-                    case 'include':
-                        jsonRequest.term = app.methodInclude;
-                        break;
-                    case 'exclude':
-                        jsonRequest.term = app.methodExclude;
-                        break;
-                    case 'at':
-                        jsonRequest.term = app.methodExclude;
-                        break;
-                    default:
-                        break;
-                }
                 axios.post('http://shark.sbs.arizona.edu:8080/class', jsonRequest)
                     .then(function(resp) {
                         console.log('class resp', resp);
-                        app.greenTick[setting] = true;
-                        app.formViewFlag[setting] = false;
+                        app.greenTick[app.currentSetting] = true;
+                        app.formViewFlag[app.currentSetting] = false;
+                        app.needMoreGreen[app.currentSetting] = true;
+                        app.modalFlag = false;
+                        app.newTermDefinition = null;
                         axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
                             .then(function(resp) {
                                 console.log('save resp', resp);
                             });
+
                     });
             },
             addSynonym: function (setting, value) {
@@ -326,27 +449,50 @@
                         jsonRequest.creationDate = new Date();
                         jsonRequest.definitionSrc = app.childData[3].name;
                         jsonRequest.logicDefinition = value.term;
+                        var jsonLog = {
+                            'user_id': app.childData[3].id,
+                            'action': 'In Method, add new term',
+                            'action_detail': 'term=' + jsonRequest.term,
+                            'type': 'Measurement Recorder',
+                        };
+                        axios.post('/mr/shared/public/api/v1/user-log',jsonLog)
+                            .then(function(resp) {
+                                console.log('user-log resp', resp);
+                            });
                         axios.post('http://shark.sbs.arizona.edu:8080/class', jsonRequest)
                             .then(function(resp) {
                                 console.log('class resp', resp);
                                 app.greenTick[setting] = true;
                                 app.formViewFlag[setting] = false;
+                                app.needMoreGreen[setting] = true;
                                 axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
                                     .then(function(resp) {
                                         console.log('save resp', resp);
                                     });
+
                             });
                     }
                 } else {
                     if (temp.length > 0) {
                         jsonRequest.classIRI = temp[0].value;
                     }
+                    var jsonLog = {
+                        'user_id': app.childData[3].id,
+                        'action': 'In Method, add synonym',
+                        'action_detail': 'term=' + jsonRequest.term + ', synonym=' + value.term,
+                        'type': 'Measurement Recorder',
+                    };
+                    axios.post('/mr/shared/public/api/v1/user-log',jsonLog)
+                        .then(function(resp) {
+                            console.log('user-log resp', resp);
+                        });
                     axios.post('http://shark.sbs.arizona.edu:8080/esynonym', jsonRequest)
                         .then(function(resp) {
                             console.log('esynonym resp', resp);
                             if (resp.data == 'SUCCESSFULLY') {
                                 app.greenTick[setting] = true;
                                 app.formViewFlag[setting] = false;
+                                app.needMoreGreen[setting] = true;
                             }
                             axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
                                 .then(function(resp) {
@@ -360,6 +506,16 @@
                 $('.img-method').css('border', 'none');
                 $('#img-method-' + index).css('border', 'solid 1px green');
                 console.log('value', value);
+                var jsonLog = {
+                    'user_id': app.childData[3].id,
+                    'action': 'In Method, clicked Illustrator',
+                    'action_detail': value,
+                    'type': 'Measurement Recorder',
+                };
+                axios.post('/mr/shared/public/api/v1/user-log',jsonLog)
+                    .then(function(resp) {
+                        console.log('user-log resp', resp);
+                    });
                 app.childData[0] = value;
                 app.childData[1] = app.methodEntry.term;
                 app.childData[2] = app.methodEntry.resultAnnotations.filter(function(e) {
@@ -384,6 +540,38 @@
                 var app = this;
                 app.noneMethod = false;
             },
+            userLog(setting) {
+                var app = this;
+                var jsonLog = {
+                    'user_id': app.childData[3].id,
+                    'action': 'In Method, added' + setting,
+                    'action_detail': '',
+                    'type': 'Measurement Recorder',
+                };
+                switch(setting) {
+                    case 'From':
+                        jsonLog.action_detail = app.methodFrom;
+                        break;
+                    case 'To':
+                        jsonLog.action_detail = app.methodTo;
+                        break;
+                    case 'Include':
+                        jsonLog.action_detail = app.methodInclude;
+                        break;
+                    case 'Exclude':
+                        jsonLog.action_detail = app.methodExclude;
+                        break;
+                    case 'At':
+                        jsonLog.action_detail = app.methodAt;
+                        break;
+                    default:
+                        break;
+                }
+                axios.post('/mr/shared/public/api/v1/user-log',jsonLog)
+                    .then(function(resp) {
+                        console.log('user-log resp', resp);
+                    });
+            },
             checkDictionary() {
                 var app = this;
                 app.childData[0] = '';
@@ -404,179 +592,164 @@
                         for (var i = 0; i < resp.data.entries.length; i++) {
                             if (resp.data.entries[i].term == app.character_name) {
                                 tempFlag = true;
-                                if (app.methodFrom != null) {
-                                    app.greenTick.from = true;
-                                }
-                                if (app.methodTo != null) {
-                                    app.greenTick.to = true;
-                                }
-                                if (app.methodInclude != null) {
-                                    app.greenTick.include = true;
-                                }
-                                if (app.methodExclude != null) {
-                                    app.greenTick.exclude = true;
-                                }
-                                if (app.methodAt != null) {
-                                    app.greenTick.at = true;
-                                }
                             }
                         }
+                        if (app.methodFrom != null) {
+                            axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodFrom)
+                                .then(function(resp) {
+                                    console.log('search from resp', resp);
+                                    for (var i = 0; i < resp.data.entries.length; i++) {
+                                        if (resp.data.entries[i].score == 1) {
+                                            app.fromTerm = resp.data.entries[i].term;
+                                            app.fromId = resp.data.entries[i].resultAnnotations.filter(function(e) {
+                                                return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
+                                            })[0].value;
+                                            console.log('fromId', app.fromId);
+                                        }
+                                    }
+                                    if (app.fromId == null) {
+                                        app.fromNeedMore = true;
+                                        app.fromSynonyms = resp.data.entries;
+                                        if (app.fromSynonyms.length == 0) {
+                                            app.noneSynonymFlag.from = true;
+                                        }
+                                        for (var i = 0; i < app.fromSynonyms.length; i++) {
+                                            app.fromSynonyms[i].tooltip = '';
+                                            var temp = app.fromSynonyms[i].resultAnnotations.filter(function(e){
+                                                return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
+                                            });
+                                            if (temp.length > 0) {
+                                                app.fromSynonyms[i].tooltip = temp[0].value;
+                                            }
+                                        }
+                                    }
+                                });
+                        }
+                        if (app.methodTo != null) {
+                            axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodTo)
+                                .then(function(resp) {
+                                    console.log('search to resp', resp);
+                                    for (var i = 0; i < resp.data.entries.length; i++) {
+                                        if (resp.data.entries[i].score == 1) {
+                                            app.toTerm = resp.data.entries[i].term;
+                                            app.toId = resp.data.entries[i].resultAnnotations.filter(function(e) {
+                                                return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
+                                            })[0].value;
+                                            console.log('toId', app.toId);
+                                        }
+                                    }
+                                    if (app.toId == null) {
+                                        app.toNeedMore = true;
+                                        app.toSynonyms = resp.data.entries;
+                                        if (app.toSynonyms.length == 0) {
+                                            app.noneSynonymFlag.to = true;
+                                        }
+                                        for (var i = 0; i < app.toSynonyms.length; i++) {
+                                            app.toSynonyms[i].tooltip = '';
+                                            var temp = app.toSynonyms[i].resultAnnotations.filter(function(e){
+                                                return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
+                                            });
+                                            if (temp.length > 0) {
+                                                app.toSynonyms[i].tooltip = temp[0].value;
+                                            }
+                                        }
+                                    }
+                                });
+                        }
+                        if (app.methodInclude != null) {
+                            axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodInclude)
+                                .then(function (resp) {
+                                    console.log('search include resp', resp);
+                                    for (var i = 0; i < resp.data.entries.length; i++) {
+                                        if (resp.data.entries[i].score == 1) {
+                                            app.includeTerm = resp.data.entries[i].term;
+                                            app.includeId = resp.data.entries[i].resultAnnotations.filter(function(e) {
+                                                return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
+                                            })[0].value;
+                                            console.log('includeId', app.includeId);
+                                        }
+                                    }
+                                    if (app.includeId == null) {
+                                        app.includeNeedMore = true;
+                                        app.includeSynonyms = resp.data.entries;
+                                        if (app.includeSynonyms.length == 0) {
+                                            app.noneSynonymFlag.include = true;
+                                        }
+                                        for (var i = 0; i < app.includeSynonyms.length; i++) {
+                                            app.includeSynonyms[i].tooltip = '';
+                                            var temp = app.includeSynonyms[i].resultAnnotations.filter(function(e){
+                                                return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
+                                            });
+                                            if (temp.length > 0) {
+                                                app.includeSynonyms[i].tooltip = temp[0].value;
+                                            }
+                                        }
+                                    }
+                                });
+                        }
+                        if (app.methodExclude != null) {
+                            axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodExclude)
+                                .then(function (resp) {
+                                    console.log('search exclude resp', resp);
+                                    for (var i = 0; i < resp.data.entries.length; i++) {
+                                        if (resp.data.entries[i].score == 1) {
+                                            app.excludeTerm = resp.data.entries[i].term;
+                                            app.excludeId = resp.data.entries[i].resultAnnotations.filter(function(e) {
+                                                return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
+                                            })[0].value;
+                                            console.log('excludeId', app.excludeId);
+                                        }
+                                    }
+                                    if (app.excludeId == null) {
+                                        app.excludeNeedMore = true;
+                                        app.excludeSynonyms = resp.data.entries;
+                                        if (app.excludeSynonyms.length == 0) {
+                                            app.noneSynonymFlag.exclude = true;
+                                        }
+                                        for (var i = 0; i < app.excludeSynonyms.length; i++) {
+                                            app.excludeSynonyms[i].tooltip = '';
+                                            var temp = app.excludeSynonyms[i].resultAnnotations.filter(function(e){
+                                                return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
+                                            });
+                                            if (temp.length > 0) {
+                                                app.excludeSynonyms[i].tooltip = temp[0].value;
+                                            }
+                                        }
+                                    }
+                                });
+                        }
+                        if (app.methodAt != null) {
+                            axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodAt)
+                                .then(function (resp) {
+                                    console.log('search at resp', resp);
+                                    for (var i = 0; i < resp.data.entries.length; i++) {
+                                        if (resp.data.entries[i].score == 1) {
+                                            app.atTerm = resp.data.entries[i].term;
+                                            app.atId = resp.data.entries[i].resultAnnotations.filter(function(e) {
+                                                return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
+                                            })[0].value;
+                                            console.log('atId', app.atId);
+                                        }
+                                    }
+                                    if (app.atId == null) {
+                                        app.atNeedMore = true;
+                                        app.atSynonyms = resp.data.entries;
+                                        if (app.atSynonyms.length == 0) {
+                                            app.noneSynonymFlag.at = true;
+                                        }
+                                        for (var i = 0; i < app.atSynonyms.length; i++) {
+                                            app.atSynonyms[i].tooltip = '';
+                                            var temp = app.atSynonyms[i].resultAnnotations.filter(function(e){
+                                                return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
+                                            });
+                                            if (temp.length > 0) {
+                                                app.atSynonyms[i].tooltip = temp[0].value;
+                                            }
+                                        }
+                                    }
+                                });
+                        }
                         if (tempFlag == false) {
-                            if (app.methodFrom != null) {
-                                axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodFrom)
-                                    .then(function(resp) {
-                                        console.log('search from resp', resp);
-                                        for (var i = 0; i < resp.data.entries.length; i++) {
-                                            if (resp.data.entries[i].score == 1) {
-                                                app.fromTerm = resp.data.entries[i].term;
-                                                app.fromId = resp.data.entries[i].resultAnnotations.filter(function(e) {
-                                                    return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
-                                                })[0].value;
-                                                console.log('fromId', app.fromId);
-                                            }
-                                        }
-                                        if (app.fromId == null) {
-                                            app.fromNeedMore = true;
-                                            app.fromSynonyms = resp.data.entries;
-                                            if (app.fromSynonyms.length == 0) {
-                                                app.noneSynonymFlag.from = true;
-                                            }
-                                            for (var i = 0; i < app.fromSynonyms.length; i++) {
-                                                app.fromSynonyms[i].tooltip = '';
-                                                var temp = app.fromSynonyms[i].resultAnnotations.filter(function(e){
-                                                    return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
-                                                });
-                                                if (temp.length > 0) {
-                                                    app.fromSynonyms[i].tooltip = temp[0].value;
-                                                }
-                                            }
-                                        }
-                                    });
-                            }
-                            if (app.methodTo != null) {
-                                axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodTo)
-                                    .then(function(resp) {
-                                        console.log('search to resp', resp);
-                                        for (var i = 0; i < resp.data.entries.length; i++) {
-                                            if (resp.data.entries[i].score == 1) {
-                                                app.toTerm = resp.data.entries[i].term;
-                                                app.toId = resp.data.entries[i].resultAnnotations.filter(function(e) {
-                                                    return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
-                                                })[0].value;
-                                                console.log('toId', app.toId);
-                                            }
-                                        }
-                                        if (app.toId == null) {
-                                            app.toNeedMore = true;
-                                            app.toSynonyms = resp.data.entries;
-                                            if (app.toSynonyms.length == 0) {
-                                                app.noneSynonymFlag.to = true;
-                                            }
-                                            for (var i = 0; i < app.toSynonyms.length; i++) {
-                                                app.toSynonyms[i].tooltip = '';
-                                                var temp = app.toSynonyms[i].resultAnnotations.filter(function(e){
-                                                    return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
-                                                });
-                                                if (temp.length > 0) {
-                                                    app.toSynonyms[i].tooltip = temp[0].value;
-                                                }
-                                            }
-                                        }
-                                    });
-                            }
-                            if (app.methodInclude != null) {
-                                axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodInclude)
-                                    .then(function (resp) {
-                                        console.log('search include resp', resp);
-                                        for (var i = 0; i < resp.data.entries.length; i++) {
-                                            if (resp.data.entries[i].score == 1) {
-                                                app.includeTerm = resp.data.entries[i].term;
-                                                app.includeId = resp.data.entries[i].resultAnnotations.filter(function(e) {
-                                                    return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
-                                                })[0].value;
-                                                console.log('includeId', app.includeId);
-                                            }
-                                        }
-                                        if (app.includeId == null) {
-                                            app.includeNeedMore = true;
-                                            app.includeSynonyms = resp.data.entries;
-                                            if (app.includeSynonyms.length == 0) {
-                                                app.noneSynonymFlag.include = true;
-                                            }
-                                            for (var i = 0; i < app.includeSynonyms.length; i++) {
-                                                app.includeSynonyms[i].tooltip = '';
-                                                var temp = app.includeSynonyms[i].resultAnnotations.filter(function(e){
-                                                    return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
-                                                });
-                                                if (temp.length > 0) {
-                                                    app.includeSynonyms[i].tooltip = temp[0].value;
-                                                }
-                                            }
-                                        }
-                                    });
-                            }
-                            if (app.methodExclude != null) {
-                                axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodExclude)
-                                    .then(function (resp) {
-                                        console.log('search exclude resp', resp);
-                                        for (var i = 0; i < resp.data.entries.length; i++) {
-                                            if (resp.data.entries[i].score == 1) {
-                                                app.excludeTerm = resp.data.entries[i].term;
-                                                app.excludeId = resp.data.entries[i].resultAnnotations.filter(function(e) {
-                                                    return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
-                                                })[0].value;
-                                                console.log('excludeId', app.excludeId);
-                                            }
-                                        }
-                                        if (app.excludeId == null) {
-                                            app.excludeNeedMore = true;
-                                            app.excludeSynonyms = resp.data.entries;
-                                            if (app.excludeSynonyms.length == 0) {
-                                                app.noneSynonymFlag.exclude = true;
-                                            }
-                                            for (var i = 0; i < app.excludeSynonyms.length; i++) {
-                                                app.excludeSynonyms[i].tooltip = '';
-                                                var temp = app.excludeSynonyms[i].resultAnnotations.filter(function(e){
-                                                    return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
-                                                });
-                                                if (temp.length > 0) {
-                                                    app.excludeSynonyms[i].tooltip = temp[0].value;
-                                                }
-                                            }
-                                        }
-                                    });
-                            }
-                            if (app.methodAt != null) {
-                                axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodAt)
-                                    .then(function (resp) {
-                                        console.log('search at resp', resp);
-                                        for (var i = 0; i < resp.data.entries.length; i++) {
-                                            if (resp.data.entries[i].score == 1) {
-                                                app.atTerm = resp.data.entries[i].term;
-                                                app.atId = resp.data.entries[i].resultAnnotations.filter(function(e) {
-                                                    return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
-                                                })[0].value;
-                                                console.log('atId', app.atId);
-                                            }
-                                        }
-                                        if (app.atId == null) {
-                                            app.atNeedMore = true;
-                                            app.atSynonyms = resp.data.entries;
-                                            if (app.atSynonyms.length == 0) {
-                                                app.noneSynonymFlag.at = true;
-                                            }
-                                            for (var i = 0; i < app.atSynonyms.length; i++) {
-                                                app.atSynonyms[i].tooltip = '';
-                                                var temp = app.atSynonyms[i].resultAnnotations.filter(function(e){
-                                                    return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
-                                                });
-                                                if (temp.length > 0) {
-                                                    app.atSynonyms[i].tooltip = temp[0].value;
-                                                }
-                                            }
-                                        }
-                                    });
-                            }
 
                             var jsonClass = {
                                 "user": '',
@@ -613,6 +786,73 @@
                             } else if (app.character_name.split(' ')[0] == 'width') {
                                 jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#width"
                             }
+                            var jsonLog = {
+                                'user_id': app.childData[3].id,
+                                'action': 'In Method, add new term',
+                                'action_detail': 'term=' + jsonClass.term,
+                                'type': 'Measurement Recorder',
+                            };
+                            axios.post('/mr/shared/public/api/v1/user-log',jsonLog)
+                                .then(function(resp) {
+                                    console.log('user-log resp', resp);
+                                });
+                            axios.post('http://shark.sbs.arizona.edu:8080/class', jsonClass)
+                                .then(function(resp) {
+                                    console.log('class resp', resp);
+                                    axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
+                                        .then(function(resp) {
+                                            console.log('save resp', resp);
+                                        });
+                                })
+                                .catch(function(resp) {
+                                    console.log('class error resp', resp);
+                                });
+                        } else {
+                            var jsonClass = {
+                                "user": '',
+                                "ontology": 'exp',
+                                "term": app.character_name + '(' + app.childData[3].name + ')',
+                                "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#measurement",
+                                "definition": '',
+                                "createdBy": app.childData[3].name,
+                                "creationDate": new Date(),
+                                "definitionSrc": "tba",
+                                "examples": "tba",
+                                "logicDefinition": "measured_from some [" + app.methodFrom +"] and measured_to some [" + app.methodTo + "]"
+                            };
+                            if (app.methodFrom != null) {
+                                jsonClass.definition = jsonClass.definition + 'from [' + app.methodFrom + ']';
+                            }
+                            if (app.methodTo != null) {
+                                jsonClass.definition = jsonClass.definition + ' to [' + app.methodTo + ']';
+                            }
+                            if (app.methodInclude != null) {
+                                jsonClass.definition = jsonClass.definition + ' include [' + app.methodInclude + ']';
+                            }
+                            if (app.methodExclude != null) {
+                                jsonClass.definition = jsonClass.definition + ' exclude [' + app.methodExclude + ']';
+                            }
+                            if (app.methodAt != null) {
+                                jsonClass.definition = jsonClass.definition + ' at [' + app.methodAt + ']';
+                            }
+                            if (app.character_name.split(' ')[0] == 'distance') {
+                                jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#distance"
+                            } else if (app.character_name.split(' ')[0] == 'length') {
+                                jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#length"
+
+                            } else if (app.character_name.split(' ')[0] == 'width') {
+                                jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#width"
+                            }
+                            var jsonLog = {
+                                'user_id': app.childData[3].id,
+                                'action': 'In Method, add new term',
+                                'action_detail': 'term=' + jsonClass.term,
+                                'type': 'Measurement Recorder',
+                            };
+                            axios.post('/mr/shared/public/api/v1/user-log',jsonLog)
+                                .then(function(resp) {
+                                    console.log('user-log resp', resp);
+                                });
                             axios.post('http://shark.sbs.arizona.edu:8080/class', jsonClass)
                                 .then(function(resp) {
                                     console.log('class resp', resp);

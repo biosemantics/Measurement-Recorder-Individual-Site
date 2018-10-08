@@ -4,7 +4,7 @@
             {{ character_name }} was created by
         </div>
         <div class="col-md-12">
-            <input v-if="viewFlag == false" style="width: 100%;" v-model="childData" @change="handleDataFc()"/>
+            <input disabled v-if="viewFlag == false" style="width: 100%;" v-model="childData" @change="handleDataFc()"/>
             <div v-if="viewFlag == true" style="border: 1px solid grey">{{ childData }}</div>
             at {{ timestamp }}
         </div>
@@ -37,15 +37,15 @@
             },
             updateTime: function() {
                 this.timestamp = new Date();
-                this.timestamp = this.timestamp.getFullYear() + '/' + this.timestamp.getMonth() + '/' + this.timestamp.getDate() + ' ' + this.timestamp.getHours() + ':' + this.timestamp.getMinutes() + ':' + this.timestamp.getSeconds();
+                this.timestamp = this.timestamp.getFullYear() + '/' + this.timestamp.getMonth() + '/' + this.timestamp.getDate() + ' ' + this.timestamp.getHours();
             }
         },
         mounted() {
-            setInterval(this.updateTime, 1000);
+//            setInterval(this.updateTime, 1000);
         },
         beforeMount () {
             this.timestamp = new Date();
-            this.timestamp = this.timestamp.getFullYear() + '/' + this.timestamp.getMonth() + '/' + this.timestamp.getDate() + ' ' + this.timestamp.getHours() + ':' + this.timestamp.getMinutes() + ':' + this.timestamp.getSeconds();
+            this.timestamp = this.timestamp.getFullYear() + '/' + this.timestamp.getMonth() + '/' + this.timestamp.getDate() + ' ' + this.timestamp.getHours();
 
             this.character_name = sessionStorage.getItem("characterName");
             this.viewFlag = (sessionStorage.getItem('viewFlag') == 'true');

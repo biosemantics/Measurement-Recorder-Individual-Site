@@ -70,14 +70,7 @@
 
                                         </div>
                                     </td>
-                                    <!-- Average and Deviation row start -->
-                                    <!--<td class="text-center" v-if="item.header_id == 2" v-for="item in eachCharacter">-->
-                                        <!--{{ item.value }}-->
-                                    <!--</td>-->
-                                    <!--<td class="text-center" v-if="item.header_id == 3" v-for="item in eachCharacter">-->
-                                        <!--{{ item.value }}-->
-                                    <!--</td>-->
-                                    <!-- Average and Deviation row end -->
+
                                     <td class="text-center" v-if="item.header_id == 4" v-for="item in eachCharacter">
                                         {{ item.value }}
                                     </td>
@@ -126,15 +119,15 @@
                                             <div class="row">
                                                 <div class="col-md-6 radial-menu">
                                                     <ul style="margin-left: auto; margin-right: auto;">
-                                                        <li class="method"><a v-on:click="showDetails('method', metadataFlag)">Method</a></li>
-                                                        <li class="unit"><a v-on:click="showDetails('unit', metadataFlag)">Unit</a></li>
-                                                        <li class="semantics"><a v-on:click="showDetails('semantics', metadataFlag)">Semantics</a></li>
+                                                        <li><a v-on:click="showDetails('', metadataFlag)"></a></li>
+                                                        <li class="method"><a v-on:click="showDetails('method', metadataFlag)">Method<br><span class="glyphicon glyphicon-edit"></span><br><p>1</p></a></li>
+                                                        <li class="unit"><a v-on:click="showDetails('unit', metadataFlag)">Unit<br><span class="glyphicon glyphicon-edit"></span><br><p>2</p></a></li>
                                                         <li class="creator"><a v-on:click="showDetails('creator', metadataFlag)">Creator</a></li>
                                                         <li><a v-on:click="showDetails('usage', metadataFlag)">Usage</a></li>
                                                         <li><a v-on:click="showDetails('history', metadataFlag)">History</a></li>
-                                                        <li><a v-on:click="showDetails('', metadataFlag)">Future<br>Function</a></li>
-                                                        <li><a v-on:click="showDetails('', metadataFlag)">Future<br>Function</a></li>
-                                                        <li><a v-on:click="showDetails('', metadataFlag)">Future<br>Function</a></li>
+                                                        <li><a v-on:click="showDetails('', metadataFlag)"></a></li>
+                                                        <li><a v-on:click="showDetails('', metadataFlag)"></a></li>
+                                                        <li><a v-on:click="showDetails('', metadataFlag)"></a></li>
                                                     </ul>
                                                     <div class="center">
                                                         <a>{{ character.name }}</a>
@@ -313,8 +306,6 @@
                 if ((((this.character.method_from != null && this.character.method_from != '') &&
                     (this.character.method_to != null && this.character.method_to != '')) ||
                     (this.character.method_as != null && this.character.method_as != '')) &&
-                    ((this.character.measure_semantic != null && this.character.measure_semantic != '') &&
-                    (this.character.entity_semantic != null && this.character.entity_semantic != '')) &&
                     (this.character.unit != null && this.character.unit != '')) {
                     this.saveDisabled = false;
                     console.log("enabled");
@@ -604,18 +595,22 @@
 
                 var checkFields = true;
 
-                for (var key in this.character) {
-                    if (key != 'confirmed' && key != 'method_as' && key != 'method_from' && key != 'method_to' && key != 'method_include' && key != 'method_exclude' && key != 'method_at' && key != 'usage' && key != 'history' && (this.character[key] == null || this.character[key] == '')) {
-                        console.log(key);
-                        checkFields = false;
-                    }
-                }
+//                for (var key in this.character) {
+//                    if (key != 'confirmed' && key != 'method_as' && key != 'method_from' && key != 'method_to' && key != 'method_include' && key != 'method_exclude' && key != 'method_at' && key != 'usage' && key != 'history' && (this.character[key] == null || this.character[key] == '')) {
+//                        console.log(key);
+//                        checkFields = false;
+//                    }
+//                }
                 if ((this.character['method_as'] == null || this.character['method_as'] == '') &&
                     ((this.character['method_from'] == null || this.character['method_from'] == '') ||
                     (this.character['method_to'] == null || this.character['method_to'] == '')) &&
                     ((this.character['method_include'] == null || this.character['method_include'] == '') ||
                     (this.character['method_exclude'] == null || this.character['method_exclude'] == '')) &&
                     (this.character['method_at'] == null || this.character['method_at'] == '')) {
+                    checkFields = false;
+                }
+
+                if (app.character['unit'] == null || app.character['unit'] == '') {
                     checkFields = false;
                 }
 
