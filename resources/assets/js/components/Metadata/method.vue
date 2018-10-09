@@ -169,8 +169,8 @@
                                         Adding "{{ newTerm }}" to Dictionary
                                     </div>
                                     <div class="modal-body">
-                                        Definition:
-                                        <input v-model="newTermDefinition" />
+                                        Enter a definition for the term?
+                                        <input v-model="newTermDefinition" style="min-width: 350px;" />
                                     </div>
                                     <div class="modal-footer">
                                         <a class="btn btn-primary" v-on:click="confirmTerm(newTermDefinition)">Add</a>
