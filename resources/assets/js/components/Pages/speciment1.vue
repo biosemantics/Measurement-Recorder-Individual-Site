@@ -120,8 +120,8 @@
                                                 <div class="col-md-6 radial-menu">
                                                     <ul style="margin-left: auto; margin-right: auto;">
                                                         <li><a v-on:click="showDetails('', metadataFlag)"></a></li>
-                                                        <li class="method"><a v-on:click="showDetails('method', metadataFlag)">Method<br><span class="glyphicon glyphicon-edit"></span><br><p>1</p></a></li>
-                                                        <li class="unit"><a v-on:click="showDetails('unit', metadataFlag)">Unit<br><span class="glyphicon glyphicon-edit"></span><br><p>2</p></a></li>
+                                                        <li class="method"><a v-on:click="showDetails('method', metadataFlag)">1. Method<br><span class="glyphicon glyphicon-edit"></span></a></li>
+                                                        <li class="unit"><a v-on:click="showDetails('unit', metadataFlag)">2. Unit<br><span class="glyphicon glyphicon-edit"></span></a></li>
                                                         <li class="creator"><a v-on:click="showDetails('creator', metadataFlag)">Creator</a></li>
                                                         <li><a v-on:click="showDetails('usage', metadataFlag)">Usage</a></li>
                                                         <li><a v-on:click="showDetails('history', metadataFlag)">History</a></li>
@@ -383,7 +383,17 @@
                                 app.currentMetadata = history;
                                 break;
                             default:
-                                app.currentMetadata = null;
+                                app.parentData = [];
+//                                app.parentData.push(app.character.method_from);
+//                                app.parentData.push(app.character.method_to);
+                                app.parentData.push(app.character.method_as);
+                                app.parentData[3] = app.user;
+                                app.parentData[4] = app.character.method_from;
+                                app.parentData[5] = app.character.method_to;
+                                app.parentData[6] = app.character.method_include;
+                                app.parentData[7] = app.character.method_exclude;
+                                app.parentData[8] = app.character.method_at;
+                                app.currentMetadata = method;
                                 break;
                         }
 //                        app.currentMetadata = metadataFlag;
@@ -1404,7 +1414,6 @@
                 this.semanticsUpdateFlag = false;
                 this.creatorUpdateFlag = false;
                 this.newCharacterFlag = false;
-                this.currentMetadata = null;
 
                 var tpFlag = false;
                 for (var i = 0; i < tpArray.length; i++) {
@@ -1429,12 +1438,17 @@
                     sessionStorage.setItem("characterName", this.character.name);
                     console.log("detailsFlag", this.detailsFlag);
                     app.parentData = [];
-                    app.parentData[0] = "";
-                    app.parentData[1] = "";
-//                    app.currentMetadata = method;
+                    app.parentData.push(app.character.method_as);
+                    app.parentData[3] = app.user;
+                    app.parentData[4] = app.character.method_from;
+                    app.parentData[5] = app.character.method_to;
+                    app.parentData[6] = app.character.method_include;
+                    app.parentData[7] = app.character.method_exclude;
+                    app.parentData[8] = app.character.method_at;
+                    app.currentMetadata = method;
                     app.detailsFlag = true;
                     app.editFlag = false;
-//                    app.metadataFlag = "method";
+                    app.metadataFlag = "method";
                 } else {
                     var jsonRequest = {
                         'user_id': app.user.id,
