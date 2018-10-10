@@ -303,9 +303,12 @@
                     default:
                         break;
                 }
-                if ((((this.character.method_from != null && this.character.method_from != '') &&
-                    (this.character.method_to != null && this.character.method_to != '')) ||
-                    (this.character.method_as != null && this.character.method_as != '')) &&
+                if (((this.character.method_from != null && this.character.method_from != '') ||
+                    (this.character.method_to != null && this.character.method_to != '') ||
+                    (this.character.method_as != null && this.character.method_as != '') ||
+                    (this.character.method_include != null && this.character.method_include != '') ||
+                    (this.character.method_exclude != null && this.character.method_exclude != '') ||
+                    (this.character.method_at != null && this.character.method_at != '')) &&
                     (this.character.unit != null && this.character.unit != '')) {
                     this.saveDisabled = false;
                     console.log("enabled");
@@ -611,11 +614,11 @@
 //                        checkFields = false;
 //                    }
 //                }
-                if ((this.character['method_as'] == null || this.character['method_as'] == '') &&
+                if ((this.character['method_as'] == null || this.character['method_as'] == '') ||
                     ((this.character['method_from'] == null || this.character['method_from'] == '') ||
-                    (this.character['method_to'] == null || this.character['method_to'] == '')) &&
+                    (this.character['method_to'] == null || this.character['method_to'] == '')) ||
                     ((this.character['method_include'] == null || this.character['method_include'] == '') ||
-                    (this.character['method_exclude'] == null || this.character['method_exclude'] == '')) &&
+                    (this.character['method_exclude'] == null || this.character['method_exclude'] == '')) ||
                     (this.character['method_at'] == null || this.character['method_at'] == '')) {
                     checkFields = false;
                 }
