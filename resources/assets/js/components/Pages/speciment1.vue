@@ -223,6 +223,7 @@
                     history: [],
                     username: this.user.name,
                     usage_count: 0,
+                    show_flag: true,
                 },
                 actionLog: {
                     user_id: this.user.id
