@@ -600,6 +600,16 @@
                 app.greenTick.include = false;
                 app.greenTick.exclude = false;
                 app.greenTick.at = false;
+                app.fromNeedMore = false;
+                app.toNeedMore = false;
+                app.includeNeedMore = false;
+                app.excludeNeedMore = false;
+                app.atNeedMore = false;
+                app.needMoreGreen.from = false;
+                app.needMoreGreen.to = false;
+                app.needMoreGreen.include = false;
+                app.needMoreGreen.exclude = false;
+                app.needMoreGreen.at = false;
 
                 console.log('methodFrom**', app.methodFrom);
 

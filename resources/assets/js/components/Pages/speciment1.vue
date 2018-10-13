@@ -613,6 +613,7 @@
                         var newCharacter = resp.data;
                         newCharacter.username = app.user.name;
                         newCharacter.creator = app.user.name + ' via MR';
+                        newCharacter.show_flag = true;
                         app.detailsFlag = false;
                         app.viewFlag = false;
                         app.editFlag = false;
@@ -668,6 +669,8 @@
 
                             for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
                                 if ((app.character.name == resp.data.arrayCharacters[i].name) && (resp.data.arrayCharacters[i].username == app.character.username)) {
+                                    console.log('character username', app.character.username);
+                                    console.log('resp username', resp.data.arrayCharacters[i].username);
                                     checkName = false;
                                 }
                             }
