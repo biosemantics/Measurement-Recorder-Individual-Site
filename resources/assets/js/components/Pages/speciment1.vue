@@ -71,7 +71,7 @@
                                         </div>
                                     </td>
 
-                                    <td class="text-center" v-if="item.header_id == 4" v-for="item in eachCharacter">
+                                    <td class="text-center" v-if="item.header_id == 4" v-for="item in eachCharacter" style="line-height: 43px;">
                                         {{ item.value }}
                                     </td>
                                     <td v-if="item.header_id > 4" v-for="item in eachCharacter">

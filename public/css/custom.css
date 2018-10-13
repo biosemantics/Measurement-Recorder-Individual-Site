@@ -335,7 +335,7 @@ input.display-block {
 
 .measure-table > tbody > tr > td {
     padding: 0;
-    line-height: 44px;
+    /*line-height: 44px;*/
 }
 
 .measure-table > tbody > tr > td:last-child {

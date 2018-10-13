@@ -601,6 +601,8 @@
                 app.greenTick.exclude = false;
                 app.greenTick.at = false;
 
+                console.log('methodFrom**', app.methodFrom);
+
                 console.log('interface console', app.childData);
 
                 this.$emit('interface', this.childData); // handle data and give it back to parent by interface
@@ -614,7 +616,7 @@
                                 tempFlag = true;
                             }
                         }
-                        if (app.methodFrom != null) {
+                        if (app.methodFrom != null && app.methodFrom != '') {
                             axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodFrom)
                                 .then(function (resp) {
                                     console.log('search from resp', resp);
@@ -646,7 +648,7 @@
                                     }
                                 });
                         }
-                        if (app.methodTo != null) {
+                        if (app.methodTo != null && app.methodTo != '') {
                             axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodTo)
                                 .then(function (resp) {
                                     console.log('search to resp', resp);
@@ -678,7 +680,7 @@
                                     }
                                 });
                         }
-                        if (app.methodInclude != null) {
+                        if (app.methodInclude != null && app.methodInclude != '') {
                             axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodInclude)
                                 .then(function (resp) {
                                     console.log('search include resp', resp);
@@ -710,7 +712,7 @@
                                     }
                                 });
                         }
-                        if (app.methodExclude != null) {
+                        if (app.methodExclude != null && app.methodExclude != '') {
                             axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodExclude)
                                 .then(function (resp) {
                                     console.log('search exclude resp', resp);
@@ -742,7 +744,7 @@
                                     }
                                 });
                         }
-                        if (app.methodAt != null) {
+                        if (app.methodAt != null && app.methodAt != '') {
                             axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodAt)
                                 .then(function (resp) {
                                     console.log('search at resp', resp);
