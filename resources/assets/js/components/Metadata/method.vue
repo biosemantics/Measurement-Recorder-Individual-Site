@@ -585,6 +585,16 @@
                 app.childData[6] = app.methodInclude;
                 app.childData[7] = app.methodExclude;
                 app.childData[8] = app.methodAt;
+                app.fromTerm = null;
+                app.fromId = null;
+                app.toTerm = null;
+                app.toId == null;
+                app.includeTerm = null;
+                app.includeId = null;
+                app.excludeTerm = null;
+                app.excludeId = null;
+                app.atTerm = null;
+                app.atId = null;
 
                 console.log('interface console', app.childData);
 
