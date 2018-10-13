@@ -42,7 +42,7 @@
              @click.stop="selectItem(null)"
              @mousedown="mousedownItem"
         >
-          Nothing found, create new character
+          Nothing found, click here to create new character
         </div>
       </template>
     </div>

@@ -53,18 +53,18 @@
                                         <a class="btn btn-add display-block" v-on:click="deleteHeader(header.id, header.header)"><span class="glyphicon glyphicon-remove"></span></a>
                                     </th>
                                     <th class="actions display-none" style="min-width: 150px;">
-                                        <input style="width: 50%;" class="th-input" v-model="newHeader.header" name="header" autofocus/>
+                                        <input style="width: 50%;" id="new-header" class="th-input" v-model="newHeader.header" name="header" autofocus/>
                                         <a class="btn btn-success btn-save" v-on:click="saveHeader()"><span class="glyphicon glyphicon-floppy-disk"></span></a>
                                         <a class="btn btn-danger btn-cancel" v-on:click="cancelHeader()"><span class="glyphicon glyphicon-remove-circle"></span></a>
                                     </th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr v-for="eachCharacter in characters">
+                                <tr v-for="eachCharacter in characters" v-if="getCharacterUsingId(eachCharacter[0].character_id).show_flag == true">
 
                                     <td class="text-center" v-if="item.header_id == 1" v-for="item in eachCharacter">
                                         <div>
-                                            {{ item.value }} ({{ item.username }})
+                                            {{ item.value }} ({{ item.username }})<br> ({{ item.unit }})
                                             <a class="btn" v-on:click="editCharacter(eachCharacter[eachCharacter.length - 1])"><span class="glyphicon glyphicon-edit"></span></a>
                                             <a class="btn" v-on:click="deleteCharacter(eachCharacter[0].character_id)"><span class="glyphicon glyphicon-trash"></span></a>
 
@@ -112,7 +112,7 @@
                                     <div class="modal-container">
 
                                         <div class="modal-header">
-                                            <h3>Meta Details for {{ character.name }}</h3>
+                                            <h3>Information about "{{ character.name }}"</h3>
                                         </div>
 
                                         <div class="modal-body">
@@ -246,6 +246,7 @@
                 creatorUpdateFlag: false,
                 term: null,
                 termValue: null,
+                arrayCharacters: [],
             }
         },
 
@@ -317,6 +318,15 @@
                     console.log("disabled");
                 }
                 console.log('data after child handle: ', event); // get the data after child dealing
+            },
+            getCharacterUsingId(id) {
+                var app = this;
+                for (var i = 0; i < app.arrayCharacters.length; i++) {
+                    if (app.arrayCharacters[i].id == id) {
+                        return app.arrayCharacters[i];
+                    }
+                }
+
             },
             editCharacter (character, metadataFlag = '', editFlag = true) {
                 console.log('metadataFlag', metadataFlag);
@@ -396,6 +406,7 @@
                                 app.parentData[6] = app.character.method_include;
                                 app.parentData[7] = app.character.method_exclude;
                                 app.parentData[8] = app.character.method_at;
+                                app.showDetails('method', null);
                                 app.currentMetadata = method;
                                 break;
                         }
@@ -555,9 +566,23 @@
                 var app = this;
                 console.log('characterId', characterId);
                 sessionStorage.setItem('viewFlag', false);
+                for (var i = 0; i < app.arrayCharacters.length; i++) {
+                    if (app.arrayCharacters[i].id == characterId) {
+                        if (app.arrayCharacters[i].show_flag == false) {
+                            app.arrayCharacters[i].show_flag = true;
+                            axios.post('/mr/shared/public/api/v1/character/create', app.arrayCharacters[i])
+                                .then(function(resp) {
+                                    console.log('use resp', resp);
+                                    app.characters = resp.data.characters;
+                                    app.arrayCharacters = resp.data.arrayCharacters;
+                                });
+                        }
+                    }
+                }
                 app.viewFlag = false;
                 app.editFlag = false;
                 app.detailsFlag = false;
+
 //                axios.get('/mr/shared/public/api/v1/character/' + characterId)
 //                    .then(function(resp) {
 //                        console.log('getCharacter resp', resp);
@@ -614,11 +639,11 @@
 //                        checkFields = false;
 //                    }
 //                }
-                if ((this.character['method_as'] == null || this.character['method_as'] == '') ||
-                    ((this.character['method_from'] == null || this.character['method_from'] == '') ||
-                    (this.character['method_to'] == null || this.character['method_to'] == '')) ||
-                    ((this.character['method_include'] == null || this.character['method_include'] == '') ||
-                    (this.character['method_exclude'] == null || this.character['method_exclude'] == '')) ||
+                if ((this.character['method_as'] == null || this.character['method_as'] == '') &&
+                    (this.character['method_from'] == null || this.character['method_from'] == '') &&
+                    (this.character['method_to'] == null || this.character['method_to'] == '') &&
+                    (this.character['method_include'] == null || this.character['method_include'] == '') &&
+                    (this.character['method_exclude'] == null || this.character['method_exclude'] == '') &&
                     (this.character['method_at'] == null || this.character['method_at'] == '')) {
                     checkFields = false;
                 }
@@ -689,6 +714,7 @@
                                             console.log("resp", resp);
                                             app.characters = resp.data.characters;
                                             app.character = resp.data.character;
+                                            app.arrayCharacters = resp.data.arrayCharacters;
                                             for (var i = 0; i < app.characters.length; i++) {
                                                 app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
                                                 app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
@@ -698,7 +724,7 @@
                                                 var temp = {
 
                                                 };
-                                                temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usageCount + ')';
+                                                temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
                                                 temp.value = resp.data.arrayCharacters[i].id;
                                                 app.arraySearch.push(temp);
                                             }
@@ -928,6 +954,7 @@
                                                     console.log("resp", resp);
                                                     app.characters = resp.data.characters;
                                                     app.character = resp.data.character;
+                                                    app.arrayCharacters = resp.data.arrayCharacters;
                                                     for (var i = 0; i < app.characters.length; i++) {
                                                         app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
                                                         app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
@@ -937,7 +964,7 @@
                                                         var temp = {
 
                                                         };
-                                                        temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usageCount + ')';
+                                                        temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
                                                         temp.value = resp.data.arrayCharacters[i].id;
                                                         app.arraySearch.push(temp);
                                                     }
@@ -1173,7 +1200,7 @@
 //
 
                 } else {
-                    alert("You need to fill the all metadata !");
+                    alert("You need to fill Method and Unit sections!");
                 }
 
 
@@ -1204,6 +1231,7 @@
 //                $('.measure-table > thead > tr > th:last-child').before('<th></th>')
                 $('th.actions.display-none').removeClass('display-none').addClass('display-block');
                 $('th.actions > .btn-add.display-block').removeClass('display-block').addClass('display-none');
+                $('#new-header').focus();
             },
             saveHeader: function() {
                 var app = this;
@@ -1224,6 +1252,7 @@
 //                        $('.measure-table thead tr th:last-child').before("<th><input class='th-input' value='" + resp.data.header + "' /></th>");
                                     app.headers = resp.data.headers;
                                     app.characters = resp.data.characters;
+                                    app.arrayCharacters = resp.data.arrayCharacters;
                                     for (var i = 0; i < app.characters.length; i++) {
                                         app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
                                         app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
@@ -1233,7 +1262,7 @@
                                         var temp = {
 
                                         };
-                                        temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usageCount + ')';
+                                        temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
                                         temp.value = resp.data.arrayCharacters[i].id;
                                         app.arraySearch.push(temp);
                                     }
@@ -1285,6 +1314,7 @@
                         console.log('deleteHeader resp', resp);
                         app.headers = resp.data.headers;
                         app.characters = resp.data.characters;
+                        app.arrayCharacters = resp.data.arrayCharacters;
                         for (var i = 0; i < app.characters.length; i++) {
                             app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
                             app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
@@ -1294,7 +1324,7 @@
                             var temp = {
 
                             };
-                            temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usageCount + ')';
+                            temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
                             temp.value = resp.data.arrayCharacters[i].id;
                             app.arraySearch.push(temp);
                         }
@@ -1651,6 +1681,7 @@
                 axios.post('/mr/shared/public/api/v1/character/delete', tpData)
                     .then(function (resp) {
                         console.log("resp", resp);
+                        app.arrayCharacters = resp.data.arrayCharacters;
                         for (var i = 0; i < app.characters.length; i++) {
                             if (app.characters[i][app.characters[i].length - 1].character_id == character_id) {
                                 var jsonRequest = {
@@ -1677,7 +1708,7 @@
                             var temp = {
 
                             };
-                            temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usageCount + ')';
+                            temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
                             temp.value = resp.data.arrayCharacters[i].id;
                             app.arraySearch.push(temp);
                         }
@@ -1744,6 +1775,7 @@
                     console.log('all resp', resp);
                     app.headers = resp.data.headers;
                     app.characters = resp.data.characters;
+                    app.arrayCharacters = resp.data.arrayCharacters;
 
                     for (var i = 0; i < app.characters.length; i++) {
                         app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
@@ -1754,7 +1786,7 @@
                         var temp = {
 
                         };
-                        temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usageCount + ')';
+                        temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
                         temp.value = resp.data.arrayCharacters[i].id;
                         app.arraySearch.push(temp);
                     }

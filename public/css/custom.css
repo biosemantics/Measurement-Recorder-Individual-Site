@@ -269,6 +269,10 @@ button[aria-disabled="true"] {
     cursor: pointer;
 }
 
+.greenBorder {
+    border: 1px solid green;
+}
+
 .btn-basic {
     background-color: rgb(221, 221, 221);
     color: rgb(30, 30, 30);

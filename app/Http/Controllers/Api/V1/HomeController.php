@@ -51,6 +51,8 @@ class HomeController extends Controller
             $character->entity_semantic = $request->input('entity_semantic');
             $character->creator = $request->input('creator');
             $character->username = $request->input('username');
+            $character->usage_count = $request->input('usage_count');
+            $character->show_flag = $request->input('show_flag');
             $character->save();
 
         } else {
@@ -67,6 +69,8 @@ class HomeController extends Controller
                 'entity_semantic' => $request->input('entity_semantic'),
                 'creator' => $request->input('creator'),
                 'username' => $request->input('username'),
+                'usage_count' => $request->input('usage_count'),
+                'show_flag' => $request->input('show_flag'),
             ]);
 //            $headers = Header::orderBy('created_at', 'dec')->get();
             $headers = Header::all();
@@ -87,13 +91,13 @@ class HomeController extends Controller
         $characters = $this->getValuesByCharacter();
         $arrayCharacters = Character::all();
 
-        foreach ($arrayCharacters as $each) {
-            $usageCount = Value::where('character_id', '=', $each->id)
-                ->where('header_id', '>', 4)
-                ->where('value', '<>', '')
-                ->count();
-            $each->usageCount = $usageCount;
-        }
+//        foreach ($arrayCharacters as $each) {
+//            $usageCount = Value::where('character_id', '=', $each->id)
+//                ->where('header_id', '>', 4)
+//                ->where('value', '<>', '')
+//                ->count();
+//            $each->usageCount = $usageCount;
+//        }
 
         $data = [
             'character'  => $character,
@@ -248,8 +252,8 @@ class HomeController extends Controller
 
     public function delete(Request $request) {
         $character_id = $request->input('character_id');
-        Character::where('id', '=', $character_id)->delete();
-        Value::where('character_id', '=', $character_id)->delete();
+        Character::where('id', '=', $character_id)->update(['show_flag' => false]);
+//        Value::where('character_id', '=', $character_id)->delete();
         $arrayCharacters = Character::all();
 
         foreach ($arrayCharacters as $each) {
