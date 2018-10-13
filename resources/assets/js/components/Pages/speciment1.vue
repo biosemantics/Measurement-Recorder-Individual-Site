@@ -577,6 +577,10 @@
                                     console.log('use resp', resp);
                                     app.characters = resp.data.characters;
                                     app.arrayCharacters = resp.data.arrayCharacters;
+                                    for (var i = 0; i < app.characters.length; i++) {
+                                        app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
+                                        app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
+                                    }
                                 });
                         }
                     }
