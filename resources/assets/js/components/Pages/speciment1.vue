@@ -221,7 +221,8 @@
                     creator: this.user.name + ' via MR',
                     usage: [],
                     history: [],
-                    username: this.user.name
+                    username: this.user.name,
+                    usage_count: 0,
                 },
                 actionLog: {
                     user_id: this.user.id
