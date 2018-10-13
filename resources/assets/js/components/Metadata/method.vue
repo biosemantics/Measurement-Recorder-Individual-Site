@@ -595,6 +595,11 @@
                 app.excludeId = null;
                 app.atTerm = null;
                 app.atId = null;
+                app.greenTick.from = false;
+                app.greenTick.to = false;
+                app.greenTick.include = false;
+                app.greenTick.exclude = false;
+                app.greenTick.at = false;
 
                 console.log('interface console', app.childData);
 
