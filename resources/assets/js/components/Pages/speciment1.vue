@@ -1240,7 +1240,7 @@
 
                 } else {
                     var jsonLog = {
-                        'user_id': app.childData[3].id,
+                        'user_id': app.user.id,
                         'action': 'Failed to save character',
                         'action_detail': '',
                         'abnormal_system_response': 'need to fill Method and Unit sections',
