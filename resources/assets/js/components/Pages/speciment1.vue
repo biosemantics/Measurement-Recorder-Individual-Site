@@ -273,24 +273,31 @@
                         this.parentData = event;
                         this.methodUpdateFlag = true;
                         console.log("method return", event);
-                        var jsonRequest = {
-                            'user_id': app.user.id,
-                            'action': 'clicked method image for "' + app.character.name + '"',
-                            'type': 'Measurement Recorder',
-                            'action_detail': app.character.method_as
-                        };
-                        axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
-                            .then(function(resp) {
-                                console.log("userLog resp", resp);
-                            })
-                            .catch(function(resp) {
-                                console.log('userLog error', resp);
-                            });
+//                        var jsonRequest = {
+//                            'user_id': app.user.id,
+//                            'action': 'clicked method image for "' + app.character.name + '"',
+//                            'type': 'Measurement Recorder',
+//                            'action_detail': app.character.method_as
+//                        };
+//                        axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
+//                            .then(function(resp) {
+//                                console.log("userLog resp", resp);
+//                            });
                         break;
                     case 'unit':
                         this.character.unit = event;
                         this.parentData = event;
                         this.unitUpdateFlag = true;
+                        var jsonRequest = {
+                            'user_id': app.user.id,
+                            'action': 'set the unit',
+                            'type': 'Measurement Recorder',
+                            'action_detail': 'unit=' + app.character.unit
+                        };
+                        axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
+                            .then(function(resp) {
+                                console.log("userLog resp", resp);
+                            });
                         break;
                     case 'semantics':
                         this.character.measure_semantic = event[0];
@@ -507,46 +514,43 @@
                         break;
                 }
 
-                if (previousMetadata != null) {
-                    var jsonRequest = {
-                        'user_id': app.user.id,
-                        'type': 'Measurement Recorder',
-                        'action': 'entered ' + previousMetadata + ' for "' + app.character.name + '"',
-                        'action_detail': ' '
-                    };
-                    console.log('previousMetadata', previousMetadata);
-
-                    switch(previousMetadata) {
-                        case '':
-                            break;
-                        case 'method':
-                            if (app.character.method_as != null) {
-                                jsonRequest.action_detail = jsonRequest.action_detail + 'As: ' + app.character.method_as + '; ';
-                            }
-//                            if (app.character.method_from != null) {
-//                                jsonRequest.action_detail = jsonRequest.action_detail + 'From: ' + app.character.method_from + '; ';
-//                            }
-//                            if (app.character.method_to != null) {
-//                                jsonRequest.action_detail = jsonRequest.action_detail + 'To: ' + app.character.method_to + '; ';
-//                            }
-                            break;
-                        case 'unit':
-                            jsonRequest.action_detail = app.character.unit;
-                            break;
-                        case 'semantics':
-                            jsonRequest.action_detail = 'Measure: ' + app.character.measure_semantic + '; Entity: ' + app.character.entity_semantic;
-                            break;
-                        default:
-                            break;
-                    }
-                    axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
-                        .then(function(resp) {
-                            console.log('userLog resp', resp);
-                        })
-                        .catch(function(resp) {
-                            console.log('userLog error', resp);
-                        });
-                }
+//                if (previousMetadata != null) {
+//                    var jsonRequest = {
+//                        'user_id': app.user.id,
+//                        'type': 'Measurement Recorder',
+//                        'action': 'entered ' + previousMetadata + ' for "' + app.character.name + '"',
+//                        'action_detail': ' '
+//                    };
+//                    console.log('previousMetadata', previousMetadata);
+//
+//                    switch(previousMetadata) {
+//                        case '':
+//                            break;
+//                        case 'method':
+////                            if (app.character.method_as != null) {
+////                                jsonRequest.action_detail = jsonRequest.action_detail + 'As: ' + app.character.method_as + '; ';
+////                            }
+////                            if (app.character.method_from != null) {
+////                                jsonRequest.action_detail = jsonRequest.action_detail + 'From: ' + app.character.method_from + '; ';
+////                            }
+////                            if (app.character.method_to != null) {
+////                                jsonRequest.action_detail = jsonRequest.action_detail + 'To: ' + app.character.method_to + '; ';
+////                            }
+//                            break;
+//                        case 'unit':
+//                            jsonRequest.action_detail = app.character.unit;
+//                            break;
+//                        default:
+//                            break;
+//                    }
+//                    axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
+//                        .then(function(resp) {
+//                            console.log('userLog resp', resp);
+//                        })
+//                        .catch(function(resp) {
+//                            console.log('userLog error', resp);
+//                        });
+//                }
 
                 if (metadata != '') {
                     var jsonRequest = {
@@ -585,6 +589,19 @@
                         }
                     }
                 }
+                var jsonLog = {
+                    'user_id': app.user.id,
+                    'action': 'clicked the "Use This" button',
+                    'action_detail': '',
+                    'type': 'Measurement Recorder'
+                };
+                axios.post('/mr/shared/public/api/v1/user-log', jsonLog)
+                    .then(function (resp) {
+                        console.log('userLog resp', resp);
+                    })
+                    .catch(function(resp) {
+                        console.log('userLog error', resp);
+                    });
                 app.viewFlag = false;
                 app.editFlag = false;
                 app.detailsFlag = false;
@@ -630,6 +647,19 @@
                     })
                     .catch(function(resp) {
                         console.log('getCharacter error', resp);
+                    });
+                var jsonLog = {
+                    'user_id': app.user.id,
+                    'action': 'clicked the "Clone and Enhance" button',
+                    'action_detail': '',
+                    'type': 'Measurement Recorder'
+                };
+                axios.post('/mr/shared/public/api/v1/user-log', jsonLog)
+                    .then(function (resp) {
+                        console.log('userLog resp', resp);
+                    })
+                    .catch(function(resp) {
+                        console.log('userLog error', resp);
                     });
             },
             saveCharacter (currentMetadata = null) {
@@ -1209,6 +1239,17 @@
 //
 
                 } else {
+                    var jsonLog = {
+                        'user_id': app.childData[3].id,
+                        'action': 'Failed to save character',
+                        'action_detail': '',
+                        'abnormal_system_response': 'need to fill Method and Unit sections',
+                        'type': 'Measurement Recorder',
+                    };
+                    axios.post('/mr/shared/public/api/v1/user-log', jsonLog)
+                        .then(function (resp) {
+                            console.log('user-log resp', resp);
+                        });
                     alert("You need to fill Method and Unit sections!");
                 }
 
@@ -1224,7 +1265,7 @@
                 sessionStorage.setItem('viewFlag', false);
                 var jsonRequest = {
                     'user_id': app.user.id,
-                    'action': 'clicked on Cancel for "' + app.character.name,
+                    'action': 'clicked on Cancel for "' + app.character.name + '"',
                     'type': 'Measurement Recorder'
                 };
                 axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
@@ -1513,6 +1554,7 @@
                 console.log("componentId", componentId);
             },
             saveItem: function(item) {
+                console.log('updated item', item);
                 var app = this;
                 if (item.value < 0) {
                     alert("Value should be only positive value.");
@@ -1525,14 +1567,14 @@
                             console.log('headers', app.headers);
 
                             for (var i = 0; i < app.characters.length; i++) {
-                                if (app.characters[i][app.characters.length - 1].character_id = resp.data.character_id) {
+                                if (app.characters[i][app.characters.length - 1].character_id == resp.data.character_id) {
                                     for (var j = 0; j < app.headers.length; j++) {
                                         if (app.headers[j].id == resp.data.header_id) {
                                             if (item.value != '') {
                                                 var jsonRequest = {
                                                     'user_id': app.user.id,
                                                     'action': 'added "' + app.characters[i][app.characters[i].length - 1].value + '" value for "' + app.headers[j].header + '"',
-                                                    'action_detail': resp.data.value,
+                                                    'action_detail': 'value=' + resp.data.value,
                                                     'type': 'Measurement Recorder'
                                                 };
 
@@ -1547,7 +1589,7 @@
                                                 var jsonRequest = {
                                                     'user_id': app.user.id,
                                                     'action': 'removed "' + app.characters[i][app.characters[i].length - 1].value + '" value for "' + app.headers[j].header + '"',
-                                                    'action_detail': resp.data.value,
+                                                    'action_detail': 'value=' + resp.data.value,
                                                     'type': 'Measurement Recorder'
                                                 };
 

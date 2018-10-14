@@ -339,8 +339,8 @@
                 app.currentSetting = setting;
                 var jsonRequest = {
                     'user_id': app.childData[3].id,
-                    'action': 'In Method, add new term',
-                    'action_detail': 'term=' + app.newTerm,
+                    'action': 'In Method, added ' + setting,
+                    'action_detail': setting + '=' + app.newTerm,
                     'type': 'Measurement Recorder',
                 };
                 axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
@@ -356,8 +356,8 @@
                 app.currentSetting = setting;
                 var jsonRequest = {
                     'user_id': app.childData[3].id,
-                    'action': 'In Method, add new term',
-                    'action_detail': 'term=' + app.newTerm,
+                    'action': 'In Method, add new ' + setting,
+                    'action_detail': setting + '=' + app.newTerm,
                     'type': 'Measurement Recorder',
                 };
                 axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
@@ -611,7 +611,16 @@
                 app.needMoreGreen.exclude = false;
                 app.needMoreGreen.at = false;
 
-                console.log('methodFrom**', app.methodFrom);
+                var jsonLog = {
+                    'user_id': app.childData[3].id,
+                    'action': 'In Method, clicked on "Check" button',
+                    'action_detail': '',
+                    'type': 'Measurement Recorder',
+                };
+                axios.post('/mr/shared/public/api/v1/user-log', jsonLog)
+                    .then(function (resp) {
+                        console.log('user-log resp', resp);
+                    });
 
                 console.log('interface console', app.childData);
 
@@ -825,7 +834,7 @@
                             }
                             var jsonLog = {
                                 'user_id': app.childData[3].id,
-                                'action': 'In Method, add new term',
+                                'action': 'In Method, add new term to ontology',
                                 'action_detail': 'term=' + jsonClass.term,
                                 'type': 'Measurement Recorder',
                             };
@@ -885,7 +894,7 @@
                             }
                             var jsonLog = {
                                 'user_id': app.childData[3].id,
-                                'action': 'In Method, add new term',
+                                'action': 'In Method, add new term to ontology',
                                 'action_detail': 'term=' + jsonClass.term,
                                 'type': 'Measurement Recorder',
                             };
