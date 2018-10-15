@@ -380,7 +380,7 @@
                         console.log('user-log resp', resp);
                     });
                 var jsonRequest = {
-                    user: app.childData[3].id,
+                    user: app.childData[3].name,
                     ontology: 'exp',
                     term: app.newTerm,
                     superclassIRI: "http://biosemantics.arizona.edu/ontology/exp#physical_entity",
@@ -401,7 +401,7 @@
                         app.needMoreGreen[app.currentSetting] = true;
                         app.modalFlag = false;
                         app.newTermDefinition = null;
-                        axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
+                        axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.childData[3].name, "ontology": 'exp'})
                             .then(function (resp) {
                                 console.log('save resp', resp);
                             });
@@ -413,7 +413,7 @@
                 console.log('value', value);
 
                 var jsonRequest = {
-                    user: app.childData[3].id,
+                    user: app.childData[3].name,
                     ontology: 'exp',
                 };
                 var temp = value.resultAnnotations.filter(function (e) {
@@ -468,7 +468,7 @@
                                 app.greenTick[setting] = true;
                                 app.formViewFlag[setting] = false;
                                 app.needMoreGreen[setting] = true;
-                                axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.childData[3].id, "ontology": 'exp'})
+                                axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.childData[3].name, "ontology": 'exp'})
                                     .then(function (resp) {
                                         console.log('save resp', resp);
                                     });
@@ -497,7 +497,7 @@
                                 app.formViewFlag[setting] = false;
                                 app.needMoreGreen[setting] = true;
                             }
-                            axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.childData[3].id, "ontology": 'exp'})
+                            axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.childData[3].name, "ontology": 'exp'})
                                 .then(function (resp) {
                                     console.log('save resp', resp);
                                 });
@@ -798,7 +798,7 @@
                         if (tempFlag == false) {
 
                             var jsonClass = {
-                                "user": app.childData[3].id,
+                                "user": app.childData[3].name,
                                 "ontology": 'exp',
                                 "term": app.character_name,
                                 "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#measurement",
@@ -846,7 +846,7 @@
                                 .then(function (resp) {
                                     console.log('class resp', resp);
                                     axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                        "user": app.childData[3].id,
+                                        "user": app.childData[3].name,
                                         "ontology": 'exp'
                                     })
                                         .then(function (resp) {
@@ -858,7 +858,7 @@
                                 });
                         } else {
                             var jsonClass = {
-                                "user": app.childData[3].id,
+                                "user": app.childData[3].name,
                                 "ontology": 'exp',
                                 "term": app.character_name + '(' + app.childData[3].name + ')',
                                 "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#measurement",
@@ -906,7 +906,7 @@
                                 .then(function (resp) {
                                     console.log('class resp', resp);
                                     axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                        "user": app.childData[3].id,
+                                        "user": app.childData[3].name,
                                         "ontology": 'exp'
                                     })
                                         .then(function (resp) {

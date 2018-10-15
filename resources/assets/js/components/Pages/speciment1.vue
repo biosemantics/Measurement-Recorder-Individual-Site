@@ -973,7 +973,7 @@
                                         });
                                 } else {
                                     var jsonEsynonym = {
-                                        user: app.user.id,
+                                        user: app.user.name,
                                         ontology: 'exp',
                                         term: app.term,
                                         classIRI: app.termValue
@@ -981,7 +981,7 @@
                                     axios.post('http://shark.sbs.arizona.edu:8080/esynonym', jsonEsynonym)
                                         .then(function(resp) {
                                             console.log('esynonym resp', resp);
-                                            axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.user.id, "ontology": 'exp'})
+                                            axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.user.name, "ontology": 'exp'})
                                                 .then(function(resp) {
                                                     console.log('save resp', resp);
                                                 })
