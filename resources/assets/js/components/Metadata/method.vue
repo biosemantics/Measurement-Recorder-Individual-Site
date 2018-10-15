@@ -343,7 +343,7 @@
                     'action_detail': setting + '=' + app.newTerm,
                     'type': 'Measurement Recorder',
                 };
-                axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
+                axios.post('/api/v1/user-log', jsonRequest)
                     .then(function (resp) {
                         console.log('user-log resp', resp);
                     });
@@ -360,7 +360,7 @@
                     'action_detail': setting + '=' + app.newTerm,
                     'type': 'Measurement Recorder',
                 };
-                axios.post('/mr/shared/public/api/v1/user-log', jsonRequest)
+                axios.post('/api/v1/user-log', jsonRequest)
                     .then(function (resp) {
                         console.log('user-log resp', resp);
                     });
@@ -375,12 +375,12 @@
                     'action_detail': 'term=' + app.newTerm + ', definition=' + definition,
                     'type': 'Measurement Recorder',
                 };
-                axios.post('/mr/shared/public/api/v1/user-log', jsonLog)
+                axios.post('/api/v1/user-log', jsonLog)
                     .then(function (resp) {
                         console.log('user-log resp', resp);
                     });
                 var jsonRequest = {
-                    user: '',
+                    user: app.childData[3].id,
                     ontology: 'exp',
                     term: app.newTerm,
                     superclassIRI: "http://biosemantics.arizona.edu/ontology/exp#physical_entity",
@@ -413,7 +413,7 @@
                 console.log('value', value);
 
                 var jsonRequest = {
-                    user: '',
+                    user: app.childData[3].id,
                     ontology: 'exp',
                 };
                 var temp = value.resultAnnotations.filter(function (e) {
@@ -458,7 +458,7 @@
                             'action_detail': 'term=' + jsonRequest.term,
                             'type': 'Measurement Recorder',
                         };
-                        axios.post('/mr/shared/public/api/v1/user-log', jsonLog)
+                        axios.post('/api/v1/user-log', jsonLog)
                             .then(function (resp) {
                                 console.log('user-log resp', resp);
                             });
@@ -468,7 +468,7 @@
                                 app.greenTick[setting] = true;
                                 app.formViewFlag[setting] = false;
                                 app.needMoreGreen[setting] = true;
-                                axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
+                                axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.childData[3].id, "ontology": 'exp'})
                                     .then(function (resp) {
                                         console.log('save resp', resp);
                                     });
@@ -485,7 +485,7 @@
                         'action_detail': 'term=' + jsonRequest.term + ', synonym=' + value.term,
                         'type': 'Measurement Recorder',
                     };
-                    axios.post('/mr/shared/public/api/v1/user-log', jsonLog)
+                    axios.post('/api/v1/user-log', jsonLog)
                         .then(function (resp) {
                             console.log('user-log resp', resp);
                         });
@@ -497,7 +497,7 @@
                                 app.formViewFlag[setting] = false;
                                 app.needMoreGreen[setting] = true;
                             }
-                            axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": '', "ontology": 'exp'})
+                            axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.childData[3].id, "ontology": 'exp'})
                                 .then(function (resp) {
                                     console.log('save resp', resp);
                                 });
@@ -515,7 +515,7 @@
                     'action_detail': value,
                     'type': 'Measurement Recorder',
                 };
-                axios.post('/mr/shared/public/api/v1/user-log', jsonLog)
+                axios.post('/api/v1/user-log', jsonLog)
                     .then(function (resp) {
                         console.log('user-log resp', resp);
                     });
@@ -570,7 +570,7 @@
                     default:
                         break;
                 }
-                axios.post('/mr/shared/public/api/v1/user-log', jsonLog)
+                axios.post('/api/v1/user-log', jsonLog)
                     .then(function (resp) {
                         console.log('user-log resp', resp);
                     });
@@ -617,7 +617,7 @@
                     'action_detail': '',
                     'type': 'Measurement Recorder',
                 };
-                axios.post('/mr/shared/public/api/v1/user-log', jsonLog)
+                axios.post('/api/v1/user-log', jsonLog)
                     .then(function (resp) {
                         console.log('user-log resp', resp);
                     });
@@ -798,7 +798,7 @@
                         if (tempFlag == false) {
 
                             var jsonClass = {
-                                "user": '',
+                                "user": app.childData[3].id,
                                 "ontology": 'exp',
                                 "term": app.character_name,
                                 "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#measurement",
@@ -838,7 +838,7 @@
                                 'action_detail': 'term=' + jsonClass.term,
                                 'type': 'Measurement Recorder',
                             };
-                            axios.post('/mr/shared/public/api/v1/user-log', jsonLog)
+                            axios.post('/api/v1/user-log', jsonLog)
                                 .then(function (resp) {
                                     console.log('user-log resp', resp);
                                 });
@@ -846,7 +846,7 @@
                                 .then(function (resp) {
                                     console.log('class resp', resp);
                                     axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                        "user": '',
+                                        "user": app.childData[3].id,
                                         "ontology": 'exp'
                                     })
                                         .then(function (resp) {
@@ -858,7 +858,7 @@
                                 });
                         } else {
                             var jsonClass = {
-                                "user": '',
+                                "user": app.childData[3].id,
                                 "ontology": 'exp',
                                 "term": app.character_name + '(' + app.childData[3].name + ')',
                                 "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#measurement",
@@ -898,7 +898,7 @@
                                 'action_detail': 'term=' + jsonClass.term,
                                 'type': 'Measurement Recorder',
                             };
-                            axios.post('/mr/shared/public/api/v1/user-log', jsonLog)
+                            axios.post('/api/v1/user-log', jsonLog)
                                 .then(function (resp) {
                                     console.log('user-log resp', resp);
                                 });
@@ -906,7 +906,7 @@
                                 .then(function (resp) {
                                     console.log('class resp', resp);
                                     axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                        "user": '',
+                                        "user": app.childData[3].id,
                                         "ontology": 'exp'
                                     })
                                         .then(function (resp) {

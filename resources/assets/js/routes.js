@@ -7,7 +7,7 @@ import Specimen3 from './components/Pages/speciment3.vue';
 
 const routes = [
     {
-        path: '/mr/shared/public/home',
+        path: '/home',
         component: Specimen1,
         name: 'specimen-1'
     },
