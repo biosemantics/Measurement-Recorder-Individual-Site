@@ -279,7 +279,7 @@
 //                            'type': 'Measurement Recorder',
 //                            'action_detail': app.character.method_as
 //                        };
-//                        axios.post('/api/v1/user-log', jsonRequest)
+//                        axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
 //                            .then(function(resp) {
 //                                console.log("userLog resp", resp);
 //                            });
@@ -294,7 +294,7 @@
                             'type': 'Measurement Recorder',
                             'action_detail': 'unit=' + app.character.unit
                         };
-                        axios.post('/api/v1/user-log', jsonRequest)
+                        axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
                             .then(function(resp) {
                                 console.log("userLog resp", resp);
                             });
@@ -349,7 +349,7 @@
                 console.log("character", character);
                 sessionStorage.setItem("characterName", character.value);
                 var app = this;
-                axios.get("/api/v1/character/" + character.character_id)
+                axios.get("/mr/individual/public/api/v1/character/" + character.character_id)
                     .then(function (resp) {
                         console.log("get Character", resp);
 //                        app.metadataFlag = 'method';
@@ -427,14 +427,14 @@
                             'action': 'clicked on "Edit Icon" on "' + character.value + '"',
                             'type': 'Measurement Recorder'
                         };
-                        axios.post('/api/v1/user-log', jsonRequest)
+                        axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
                             .then(function(resp) {
                                 console.log('userLog resp', resp);
                             })
                             .catch(function(resp) {
                                 console.log('userLog error', resp);
                             });
-                        axios.get("/api/v1/meta-log/" + character.character_id)
+                        axios.get("/mr/individual/public/api/v1/meta-log/" + character.character_id)
                             .then(function (resp) {
                                 console.log("history resp", resp);
                                 app.character.history = [];
@@ -443,7 +443,7 @@
                                 }
                                 console.log("history", app.character.history);
 
-                                axios.get("/api/v1/character/usage/" + app.character.id)
+                                axios.get("/mr/individual/public/api/v1/character/usage/" + app.character.id)
                                     .then(function (resp) {
                                         console.log("usage resp", resp);
                                         app.character.usage = [];
@@ -543,7 +543,7 @@
 //                        default:
 //                            break;
 //                    }
-//                    axios.post('/api/v1/user-log', jsonRequest)
+//                    axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
 //                        .then(function(resp) {
 //                            console.log('userLog resp', resp);
 //                        })
@@ -558,7 +558,7 @@
                         'action': 'clicked on ' + metadata,
                         'type': 'Measurement Recorder'
                     };
-                    axios.post('/api/v1/user-log', jsonRequest)
+                    axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
                         .then(function(resp) {
                             console.log('userLog resp', resp);
                         })
@@ -576,7 +576,7 @@
                     if (app.arrayCharacters[i].id == characterId) {
                         if (app.arrayCharacters[i].show_flag == false) {
                             app.arrayCharacters[i].show_flag = true;
-                            axios.post('/api/v1/character/create', app.arrayCharacters[i])
+                            axios.post('/mr/individual/public/api/v1/character/create', app.arrayCharacters[i])
                                 .then(function(resp) {
                                     console.log('use resp', resp);
                                     app.characters = resp.data.characters;
@@ -595,7 +595,7 @@
                     'action_detail': '',
                     'type': 'Measurement Recorder'
                 };
-                axios.post('/api/v1/user-log', jsonLog)
+                axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
                     .then(function (resp) {
                         console.log('userLog resp', resp);
                     })
@@ -606,7 +606,7 @@
                 app.editFlag = false;
                 app.detailsFlag = false;
 
-//                axios.get('/api/v1/character/' + characterId)
+//                axios.get('/mr/individual/public/api/v1/character/' + characterId)
 //                    .then(function(resp) {
 //                        console.log('getCharacter resp', resp);
 //                        var newCharacter = resp.data;
@@ -624,7 +624,7 @@
             enhance(characterId) {
                 var app = this;
                 sessionStorage.setItem('viewFlag', false);
-                axios.get('/api/v1/character/' + characterId)
+                axios.get('/mr/individual/public/api/v1/character/' + characterId)
                     .then(function(resp) {
                         console.log('getCharacter resp', resp);
                         var newCharacter = resp.data;
@@ -654,7 +654,7 @@
                     'action_detail': '',
                     'type': 'Measurement Recorder'
                 };
-                axios.post('/api/v1/user-log', jsonLog)
+                axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
                     .then(function (resp) {
                         console.log('userLog resp', resp);
                     })
@@ -692,7 +692,7 @@
                 if (checkFields) {
                     this.detailsFlag = false;
                     this.updatedFlag = false;
-                    axios.get('/api/v1/character/all')
+                    axios.get('/mr/individual/public/api/v1/character/all')
                         .then(function (resp) {
                             console.log('get name resp', resp);
                             var checkName = true;
@@ -739,7 +739,7 @@
                                     default:
                                         break;
                                 }
-                                axios.post('/api/v1/user-log', jsonUserLog)
+                                axios.post('/mr/individual/public/api/v1/user-log', jsonUserLog)
                                     .then(function(resp) {
                                         console.log('userLog resp', resp);
                                     })
@@ -748,7 +748,7 @@
                                     });
 
                                 if (app.term == app.character.name) {
-                                    axios.post('/api/v1/character/create', app.character)
+                                    axios.post('/mr/individual/public/api/v1/character/create', app.character)
                                         .then(function (resp) {
                                             console.log("resp", resp);
                                             app.characters = resp.data.characters;
@@ -776,7 +776,7 @@
                                                     jsonRequest.character_id = app.character.id;
                                                     jsonRequest.username = app.user.name;
                                                     jsonRequest.description = 'updated method';
-                                                    axios.post('/api/v1/meta-log', jsonRequest)
+                                                    axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                         .then(function(resp) {
                                                             console.log("update metalog", resp);
                                                             if (app.unitUpdateFlag) {
@@ -786,7 +786,7 @@
                                                                 jsonRequest.character_id = app.character.id;
                                                                 jsonRequest.username = app.user.name;
                                                                 jsonRequest.description = 'updated unit';
-                                                                axios.post('/api/v1/meta-log', jsonRequest)
+                                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                     .then(function(resp) {
                                                                         console.log("update metalog", resp);
                                                                         if (app.semanticsUpdateFlag) {
@@ -796,7 +796,7 @@
                                                                             jsonRequest.character_id = app.character.id;
                                                                             jsonRequest.username = app.user.name;
                                                                             jsonRequest.description = 'updated semantics';
-                                                                            axios.post('/api/v1/meta-log', jsonRequest)
+                                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                                 .then(function(resp) {
                                                                                     console.log("update metalog", resp);
                                                                                     if (app.creatorUpdateFlag) {
@@ -806,7 +806,7 @@
                                                                                         jsonRequest.character_id = app.character.id;
                                                                                         jsonRequest.username = app.user.name;
                                                                                         jsonRequest.description = 'updated creator';
-                                                                                        axios.post('/api/v1/meta-log', jsonRequest)
+                                                                                        axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                                             .then(function(resp) {
                                                                                                 console.log("update metalog", resp);
                                                                                             })
@@ -839,7 +839,7 @@
                                                     jsonRequest.character_id = app.character.id;
                                                     jsonRequest.username = app.user.name;
                                                     jsonRequest.description = 'updated unit';
-                                                    axios.post('/api/v1/meta-log', jsonRequest)
+                                                    axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                         .then(function(resp) {
                                                             console.log("update metalog", resp);
                                                             if (app.semanticsUpdateFlag) {
@@ -849,7 +849,7 @@
                                                                 jsonRequest.character_id = app.character.id;
                                                                 jsonRequest.username = app.user.name;
                                                                 jsonRequest.description = 'updated semantics';
-                                                                axios.post('/api/v1/meta-log', jsonRequest)
+                                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                     .then(function(resp) {
                                                                         console.log("update metalog", resp);
                                                                         if (app.creatorUpdateFlag) {
@@ -859,7 +859,7 @@
                                                                             jsonRequest.character_id = app.character.id;
                                                                             jsonRequest.username = app.user.name;
                                                                             jsonRequest.description = 'updated creator';
-                                                                            axios.post('/api/v1/meta-log', jsonRequest)
+                                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                                 .then(function(resp) {
                                                                                     console.log("update metalog", resp);
                                                                                 })
@@ -886,7 +886,7 @@
                                                     jsonRequest.character_id = app.character.id;
                                                     jsonRequest.username = app.user.name;
                                                     jsonRequest.description = 'updated semantics';
-                                                    axios.post('/api/v1/meta-log', jsonRequest)
+                                                    axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                         .then(function(resp) {
                                                             console.log("update metalog", resp);
                                                             if (app.creatorUpdateFlag) {
@@ -896,7 +896,7 @@
                                                                 jsonRequest.character_id = app.character.id;
                                                                 jsonRequest.username = app.user.name;
                                                                 jsonRequest.description = 'updated creator';
-                                                                axios.post('/api/v1/meta-log', jsonRequest)
+                                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                     .then(function(resp) {
                                                                         console.log("update metalog", resp);
                                                                     })
@@ -917,7 +917,7 @@
                                                     jsonRequest.character_id = app.character.id;
                                                     jsonRequest.username = app.user.name;
                                                     jsonRequest.description = 'updated creator';
-                                                    axios.post('/api/v1/meta-log', jsonRequest)
+                                                    axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                         .then(function(resp) {
                                                             console.log("update metalog", resp);
                                                         })
@@ -928,7 +928,7 @@
                                                 }
                                             } else {
                                                 if (app.cloneFlag == true) {
-                                                    axios.get('/api/v1/character/' + app.item)
+                                                    axios.get('/mr/individual/public/api/v1/character/' + app.item)
                                                         .then(function(resp) {
                                                             var jsonRequest = {
 
@@ -936,7 +936,7 @@
                                                             jsonRequest.character_id = app.character.id;
                                                             jsonRequest.username = '';
                                                             jsonRequest.description = 'cloned by ' + resp.data.username;
-                                                            axios.post('/api/v1/meta-log', jsonRequest)
+                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                 .then(function(resp) {
                                                                     console.log("create metalog", resp);
                                                                 })
@@ -955,7 +955,7 @@
                                                     jsonRequest.character_id = app.character.id;
                                                     jsonRequest.username = app.user.name;
                                                     jsonRequest.description = 'created';
-                                                    axios.post('/api/v1/meta-log', jsonRequest)
+                                                    axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                         .then(function(resp) {
                                                             console.log("create metalog", resp);
                                                         })
@@ -988,7 +988,7 @@
                                                 .catch(function(resp) {
 
                                                 });
-                                            axios.post('/api/v1/character/create', app.character)
+                                            axios.post('/mr/individual/public/api/v1/character/create', app.character)
                                                 .then(function (resp) {
                                                     console.log("resp", resp);
                                                     app.characters = resp.data.characters;
@@ -1016,7 +1016,7 @@
                                                             jsonRequest.character_id = app.character.id;
                                                             jsonRequest.username = app.user.name;
                                                             jsonRequest.description = 'updated method';
-                                                            axios.post('/api/v1/meta-log', jsonRequest)
+                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                 .then(function(resp) {
                                                                     console.log("update metalog", resp);
                                                                     if (app.unitUpdateFlag) {
@@ -1026,7 +1026,7 @@
                                                                         jsonRequest.character_id = app.character.id;
                                                                         jsonRequest.username = app.user.name;
                                                                         jsonRequest.description = 'updated unit';
-                                                                        axios.post('/api/v1/meta-log', jsonRequest)
+                                                                        axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                             .then(function(resp) {
                                                                                 console.log("update metalog", resp);
                                                                                 if (app.semanticsUpdateFlag) {
@@ -1036,7 +1036,7 @@
                                                                                     jsonRequest.character_id = app.character.id;
                                                                                     jsonRequest.username = app.user.name;
                                                                                     jsonRequest.description = 'updated semantics';
-                                                                                    axios.post('/api/v1/meta-log', jsonRequest)
+                                                                                    axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                                         .then(function(resp) {
                                                                                             console.log("update metalog", resp);
                                                                                             if (app.creatorUpdateFlag) {
@@ -1046,7 +1046,7 @@
                                                                                                 jsonRequest.character_id = app.character.id;
                                                                                                 jsonRequest.username = app.user.name;
                                                                                                 jsonRequest.description = 'updated creator';
-                                                                                                axios.post('/api/v1/meta-log', jsonRequest)
+                                                                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                                                     .then(function(resp) {
                                                                                                         console.log("update metalog", resp);
                                                                                                     })
@@ -1079,7 +1079,7 @@
                                                             jsonRequest.character_id = app.character.id;
                                                             jsonRequest.username = app.user.name;
                                                             jsonRequest.description = 'updated unit';
-                                                            axios.post('/api/v1/meta-log', jsonRequest)
+                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                 .then(function(resp) {
                                                                     console.log("update metalog", resp);
                                                                     if (app.semanticsUpdateFlag) {
@@ -1089,7 +1089,7 @@
                                                                         jsonRequest.character_id = app.character.id;
                                                                         jsonRequest.username = app.user.name;
                                                                         jsonRequest.description = 'updated semantics';
-                                                                        axios.post('/api/v1/meta-log', jsonRequest)
+                                                                        axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                             .then(function(resp) {
                                                                                 console.log("update metalog", resp);
                                                                                 if (app.creatorUpdateFlag) {
@@ -1099,7 +1099,7 @@
                                                                                     jsonRequest.character_id = app.character.id;
                                                                                     jsonRequest.username = app.user.name;
                                                                                     jsonRequest.description = 'updated creator';
-                                                                                    axios.post('/api/v1/meta-log', jsonRequest)
+                                                                                    axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                                         .then(function(resp) {
                                                                                             console.log("update metalog", resp);
                                                                                         })
@@ -1126,7 +1126,7 @@
                                                             jsonRequest.character_id = app.character.id;
                                                             jsonRequest.username = app.user.name;
                                                             jsonRequest.description = 'updated semantics';
-                                                            axios.post('/api/v1/meta-log', jsonRequest)
+                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                 .then(function(resp) {
                                                                     console.log("update metalog", resp);
                                                                     if (app.creatorUpdateFlag) {
@@ -1136,7 +1136,7 @@
                                                                         jsonRequest.character_id = app.character.id;
                                                                         jsonRequest.username = app.user.name;
                                                                         jsonRequest.description = 'updated creator';
-                                                                        axios.post('/api/v1/meta-log', jsonRequest)
+                                                                        axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                             .then(function(resp) {
                                                                                 console.log("update metalog", resp);
                                                                             })
@@ -1157,7 +1157,7 @@
                                                             jsonRequest.character_id = app.character.id;
                                                             jsonRequest.username = app.user.name;
                                                             jsonRequest.description = 'updated creator';
-                                                            axios.post('/api/v1/meta-log', jsonRequest)
+                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                 .then(function(resp) {
                                                                     console.log("update metalog", resp);
                                                                 })
@@ -1168,7 +1168,7 @@
                                                         }
                                                     } else {
                                                         if (app.cloneFlag == true) {
-                                                            axios.get('/api/v1/character/' + app.item)
+                                                            axios.get('/mr/individual/public/api/v1/character/' + app.item)
                                                                 .then(function(resp) {
                                                                     var jsonRequest = {
 
@@ -1176,7 +1176,7 @@
                                                                     jsonRequest.character_id = app.character.id;
                                                                     jsonRequest.username = '';
                                                                     jsonRequest.description = 'cloned by ' + resp.data.username;
-                                                                    axios.post('/api/v1/meta-log', jsonRequest)
+                                                                    axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                         .then(function(resp) {
                                                                             console.log("create metalog", resp);
                                                                         })
@@ -1195,7 +1195,7 @@
                                                             jsonRequest.character_id = app.character.id;
                                                             jsonRequest.username = app.user.name;
                                                             jsonRequest.description = 'created';
-                                                            axios.post('/api/v1/meta-log', jsonRequest)
+                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                 .then(function(resp) {
                                                                     console.log("create metalog", resp);
                                                                 })
@@ -1222,7 +1222,7 @@
                                     'action': 'clicked on Save for "' + app.character.name + '"',
                                     'type': 'Measurement Recorder'
                                 };
-                                axios.post('/api/v1/user-log', jsonRequest)
+                                axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
                                     .then(function(resp) {
                                         console.log("userLog resp", resp);
                                     })
@@ -1246,7 +1246,7 @@
                         'abnormal_system_response': 'need to fill Method and Unit sections',
                         'type': 'Measurement Recorder',
                     };
-                    axios.post('/api/v1/user-log', jsonLog)
+                    axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
                         .then(function (resp) {
                             console.log('user-log resp', resp);
                         });
@@ -1268,7 +1268,7 @@
                     'action': 'clicked on Cancel for "' + app.character.name + '"',
                     'type': 'Measurement Recorder'
                 };
-                axios.post('/api/v1/user-log', jsonRequest)
+                axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
                     .then(function(resp) {
                         console.log('userLog resp', resp);
                     })
@@ -1285,7 +1285,7 @@
             },
             saveHeader: function() {
                 var app = this;
-                axios.get('/api/v1/character/all')
+                axios.get('/mr/individual/public/api/v1/character/all')
                     .then(function(resp) {
                         var headerData = resp.data.headers;
                         var tpFlag = true;
@@ -1296,7 +1296,7 @@
                         }
 
                         if (tpFlag) {
-                            axios.post('/api/v1/character/add-header', app.newHeader)
+                            axios.post('/mr/individual/public/api/v1/character/add-header', app.newHeader)
                                 .then(function (resp) {
                                     console.log("createHeader resp", resp);
 //                        $('.measure-table thead tr th:last-child').before("<th><input class='th-input' value='" + resp.data.header + "' /></th>");
@@ -1321,7 +1321,7 @@
                                     app.actionLog.action_type = "create_header";
                                     app.actionLog.model_id = resp.data.characters[0][resp.data.characters[0].length - 1].header_id;
                                     app.actionLog.model_name = "header";
-                                    axios.post('/api/v1/log', app.actionLog)
+                                    axios.post('/mr/individual/public/api/v1/log', app.actionLog)
                                         .then(function (resp) {
                                             console.log("successful log character !!!");
                                         })
@@ -1335,7 +1335,7 @@
                                         'action_detail': app.newHeader.header,
                                         'type': 'Measurement Recorder'
                                     };
-                                    axios.post('/api/v1/user-log', jsonRequest)
+                                    axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
                                         .then(function (resp) {
                                             console.log('userLog resp', resp);
                                         })
@@ -1359,7 +1359,7 @@
             deleteHeader: function(headerId, headerName) {
                 var app = this;
                 console.log("headerId", headerId);
-                axios.post('/api/v1/character/delete-header/' + headerId)
+                axios.post('/mr/individual/public/api/v1/character/delete-header/' + headerId)
                     .then(function(resp) {
                         console.log('deleteHeader resp', resp);
                         app.headers = resp.data.headers;
@@ -1381,7 +1381,7 @@
                         app.actionLog.action_type = "delete_header";
                         app.actionLog.model_id = resp.data.characters[0][resp.data.characters[0].length - 1].header_id;
                         app.actionLog.model_name = "header";
-                        axios.post('/api/v1/log', app.actionLog)
+                        axios.post('/mr/individual/public/api/v1/log', app.actionLog)
                             .then(function (resp) {
                                 console.log("successful log header !!!");
                             })
@@ -1394,7 +1394,7 @@
                             'action': 'removed a column "' + headerName + '"',
                             'type': 'Measurement Recorder'
                         };
-                        axios.post('/api/v1/user-log', jsonRequest)
+                        axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
                             .then(function(resp) {
                                 console.log('userLog resp', resp);
                             })
@@ -1426,7 +1426,7 @@
                             if (headerCount[i] > 0) {
                                 averageValue[i] = (totalSum[i] / headerCount[i]).toFixed(2);
                                 app.characters[i][app.characters[i].length - 2].value = (totalSum[i] / headerCount[i]).toFixed(2);
-                                axios.post('/api/v1/character/update', app.characters[i][app.characters[i].length - 2])
+                                axios.post('/mr/individual/public/api/v1/character/update', app.characters[i][app.characters[i].length - 2])
                                     .then(function (resp) {
                                         console.log('update average', resp);
                                     })
@@ -1452,7 +1452,7 @@
                                     }
                                 }
                                 app.characters[i][app.characters[i].length - 3].value = deviationValue[i];
-                                axios.post('/api/v1/character/update', app.characters[i][app.characters[i].length - 3])
+                                axios.post('/mr/individual/public/api/v1/character/update', app.characters[i][app.characters[i].length - 3])
                                     .then(function (resp) {
                                         console.log('update deviation', resp);
                                     })
@@ -1511,7 +1511,7 @@
                         'action_detail': app.character.name,
                         'type': 'Measurement Recorder'
                     };
-                    axios.post('/api/v1/user-log', jsonRequest)
+                    axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
                         .then(function(resp) {
                             console.log('userLog resp', resp);
                         })
@@ -1539,7 +1539,7 @@
                         'type': 'Measurement Recorder',
                         'abnormal_system_response': 'error: character name must contain "of"'
                     };
-                    axios.post('/api/v1/user-log', jsonRequest)
+                    axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
                         .then(function(resp) {
                            console.log('userLog resp', resp);
                             alert("The header name should contain 'of' or 'between' word.");
@@ -1560,7 +1560,7 @@
                     alert("Value should be only positive value.");
                     item.value = '';
                 } else {
-                    axios.post('/api/v1/character/update', item)
+                    axios.post('/mr/individual/public/api/v1/character/update', item)
                         .then(function (resp) {
                             console.log("update item", resp.data);
                             console.log('characters', app.characters);
@@ -1578,7 +1578,7 @@
                                                     'type': 'Measurement Recorder'
                                                 };
 
-                                                axios.post('/api/v1/user-log', jsonRequest)
+                                                axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
                                                     .then(function(resp) {
                                                         console.log('userLog resp', resp);
                                                     })
@@ -1593,7 +1593,7 @@
                                                     'type': 'Measurement Recorder'
                                                 };
 
-                                                axios.post('/api/v1/user-log', jsonRequest)
+                                                axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
                                                     .then(function(resp) {
                                                         console.log('userLog resp', resp);
                                                     })
@@ -1611,7 +1611,7 @@
                             app.actionLog.action_type = "update";
                             app.actionLog.model_id = resp.data.character_id;
                             app.actionLog.model_name = "value";
-                            axios.post('/api/v1/log', app.actionLog)
+                            axios.post('/mr/individual/public/api/v1/log', app.actionLog)
                                 .then(function (resp) {
                                     console.log("successful log character !!!");
                                 })
@@ -1651,7 +1651,7 @@
                                 app.characters[characterIndex][app.characters[characterIndex].length - 2].value = (totalSum / headerCount).toFixed(2);
                             }
 
-                            axios.post('/api/v1/character/update', app.characters[characterIndex][app.characters[characterIndex].length - 2])
+                            axios.post('/mr/individual/public/api/v1/character/update', app.characters[characterIndex][app.characters[characterIndex].length - 2])
                                 .then(function (resp) {
                                     console.log('update average', resp);
                                 })
@@ -1682,7 +1682,7 @@
 
                             app.characters[characterIndex][app.characters[characterIndex].length - 3].value = deviationValue;
 
-                            axios.post('/api/v1/character/update', app.characters[characterIndex][app.characters[characterIndex].length - 3])
+                            axios.post('/mr/individual/public/api/v1/character/update', app.characters[characterIndex][app.characters[characterIndex].length - 3])
                                 .then(function (resp) {
                                     console.log('update deviation', resp);
                                 })
@@ -1709,7 +1709,7 @@
                                 }
                             }
                             app.characters[characterIndex][app.characters[characterIndex].length - 4].value = minVal + '-' + maxVal;
-                            axios.post('/api/v1/character/update', app.characters[characterIndex][app.characters[characterIndex].length - 4])
+                            axios.post('/mr/individual/public/api/v1/character/update', app.characters[characterIndex][app.characters[characterIndex].length - 4])
                                 .then(function (resp) {
                                     console.log('update deviation', resp);
                                 })
@@ -1729,7 +1729,7 @@
                 var tpData = {
                     character_id: character_id
                 };
-                axios.post('/api/v1/character/delete', tpData)
+                axios.post('/mr/individual/public/api/v1/character/delete', tpData)
                     .then(function (resp) {
                         console.log("resp", resp);
                         app.arrayCharacters = resp.data.arrayCharacters;
@@ -1740,7 +1740,7 @@
                                     'action': 'Trashed "' + app.characters[i][app.characters[i].length - 1].value + '"',
                                     'type': 'Measurement Recorder'
                                 };
-                                axios.post('/api/v1/user-log', jsonRequest)
+                                axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
                                     .then(function(resp) {
                                         console.log('userLog resp', resp);
                                     })
@@ -1766,7 +1766,7 @@
                         app.actionLog.action_type = "delete";
                         app.actionLog.model_id = tpData.character_id;
                         app.actionLog.model_name = "character";
-                        axios.post('/api/v1/log', app.actionLog)
+                        axios.post('/mr/individual/public/api/v1/log', app.actionLog)
                             .then(function (resp) {
                                 console.log("successful log character !!!");
                             })
@@ -1821,7 +1821,7 @@
                 ontologies: 'exp'
             };
 
-            axios.get('/api/v1/character/all')
+            axios.get('/mr/individual/public/api/v1/character/all')
                 .then(function (resp) {
                     console.log('all resp', resp);
                     app.headers = resp.data.headers;

@@ -343,7 +343,7 @@
                     'action_detail': setting + '=' + app.newTerm,
                     'type': 'Measurement Recorder',
                 };
-                axios.post('/api/v1/user-log', jsonRequest)
+                axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
                     .then(function (resp) {
                         console.log('user-log resp', resp);
                     });
@@ -360,7 +360,7 @@
                     'action_detail': setting + '=' + app.newTerm,
                     'type': 'Measurement Recorder',
                 };
-                axios.post('/api/v1/user-log', jsonRequest)
+                axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
                     .then(function (resp) {
                         console.log('user-log resp', resp);
                     });
@@ -375,7 +375,7 @@
                     'action_detail': 'term=' + app.newTerm + ', definition=' + definition,
                     'type': 'Measurement Recorder',
                 };
-                axios.post('/api/v1/user-log', jsonLog)
+                axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
                     .then(function (resp) {
                         console.log('user-log resp', resp);
                     });
@@ -458,7 +458,7 @@
                             'action_detail': 'term=' + jsonRequest.term,
                             'type': 'Measurement Recorder',
                         };
-                        axios.post('/api/v1/user-log', jsonLog)
+                        axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
                             .then(function (resp) {
                                 console.log('user-log resp', resp);
                             });
@@ -485,7 +485,7 @@
                         'action_detail': 'term=' + jsonRequest.term + ', synonym=' + value.term,
                         'type': 'Measurement Recorder',
                     };
-                    axios.post('/api/v1/user-log', jsonLog)
+                    axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
                         .then(function (resp) {
                             console.log('user-log resp', resp);
                         });
@@ -515,7 +515,7 @@
                     'action_detail': value,
                     'type': 'Measurement Recorder',
                 };
-                axios.post('/api/v1/user-log', jsonLog)
+                axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
                     .then(function (resp) {
                         console.log('user-log resp', resp);
                     });
@@ -570,7 +570,7 @@
                     default:
                         break;
                 }
-                axios.post('/api/v1/user-log', jsonLog)
+                axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
                     .then(function (resp) {
                         console.log('user-log resp', resp);
                     });
@@ -617,7 +617,7 @@
                     'action_detail': '',
                     'type': 'Measurement Recorder',
                 };
-                axios.post('/api/v1/user-log', jsonLog)
+                axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
                     .then(function (resp) {
                         console.log('user-log resp', resp);
                     });
@@ -838,7 +838,7 @@
                                 'action_detail': 'term=' + jsonClass.term,
                                 'type': 'Measurement Recorder',
                             };
-                            axios.post('/api/v1/user-log', jsonLog)
+                            axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
                                 .then(function (resp) {
                                     console.log('user-log resp', resp);
                                 });
@@ -898,7 +898,7 @@
                                 'action_detail': 'term=' + jsonClass.term,
                                 'type': 'Measurement Recorder',
                             };
-                            axios.post('/api/v1/user-log', jsonLog)
+                            axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
                                 .then(function (resp) {
                                     console.log('user-log resp', resp);
                                 });
