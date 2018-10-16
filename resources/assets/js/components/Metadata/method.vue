@@ -69,7 +69,7 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">To:</label>
-                    <input :disabled="viewFlag == true v-on:blur="userLog('To')" class="col-md-8" v-model="methodTo"/>
+                    <input :disabled="viewFlag == true" v-on:blur="userLog('To')" class="col-md-8" v-model="methodTo"/>
                     <p v-if="toId != null || greenTick.to == true" style="color: green;">&#10004;</p>
                     <a v-if="toNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.to }"
                        v-on:click="needMore('to')">Need info on new terms:</a>
@@ -102,7 +102,7 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Include:</label>
-                    <input :disabled="viewFlag == true v-on:blur="userLog('Include')" class="col-md-8" v-model="methodInclude"/>
+                    <input :disabled="viewFlag == true" v-on:blur="userLog('Include')" class="col-md-8" v-model="methodInclude"/>
                     <p v-if="includeId != null || greenTick.include == true" style="color: green;">&#10004;</p>
                     <a v-if="includeNeedMore == true" class="red col-md-12"
                        v-bind:class="{ green: needMoreGreen.include }" v-on:click="needMore('include')">Need info on new
@@ -136,7 +136,7 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Exclude:</label>
-                    <input :disabled="viewFlag == true v-on:blur="userLog('Exclude')" class="col-md-8" v-model="methodExclude"/>
+                    <input :disabled="viewFlag == true" v-on:blur="userLog('Exclude')" class="col-md-8" v-model="methodExclude"/>
                     <p v-if="excludeId != null || greenTick.exclude == true" style="color: green;">&#10004;</p>
                     <a v-if="excludeNeedMore == true" class="red col-md-12"
                        v-bind:class="{ green: needMoreGreen.exclude }" v-on:click="needMore('exclude')">Need info on new
@@ -170,7 +170,7 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">At:</label>
-                    <input :disabled="viewFlag == true v-on:blur="userLog('At')" class="col-md-8" v-model="methodAt"/>
+                    <input :disabled="viewFlag == true" v-on:blur="userLog('At')" class="col-md-8" v-model="methodAt"/>
                     <p v-if="atId != null || greenTick.at == true" style="color: green;">&#10004;</p>
                     <a v-if="atNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.at }"
                        v-on:click="needMore('at')">Need info on new terms:</a>
