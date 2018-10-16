@@ -574,9 +574,54 @@
                 sessionStorage.setItem('viewFlag', false);
                 for (var i = 0; i < app.arrayCharacters.length; i++) {
                     if (app.arrayCharacters[i].id == characterId) {
-                        if (app.arrayCharacters[i].show_flag == false) {
+                        var tempFlag = true;
+                        for (var j = 0; j < app.arrayCharacters.length; j++) {
+                            if (app.arrayCharacters[j].name == app.arrayCharacters[i].name && app.arrayCharacters[j].username == app.user.name) {
+                                tempFlag = false;
+                            }
+                        }
+                        if (tempFlag == false) {
+                            alert('The character is already exist!');
+                            var jsonLog = {
+                                'user_id': app.user.id,
+                                'action': 'failed to use character',
+                                'action_detail': '',
+                                'type': 'Measurement Recorder',
+                                'abnormal_system_response': 'Character already exist',
+                            };
+                            axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
+                                .then(function (resp) {
+                                    console.log('userLog resp', resp);
+                                })
+                                .catch(function(resp) {
+                                    console.log('userLog error', resp);
+                                });
+                        } else {
+                            console.log('---', app.arrayCharacters[i]);
                             app.arrayCharacters[i].show_flag = true;
-                            axios.post('/mr/individual/public/api/v1/character/create', app.arrayCharacters[i])
+                            console.log('+++', app.arrayCharacters[i]);
+                            app.arrayCharacters[i].username = app.user.name;
+                            var tempObj = {
+                                name: app.arrayCharacters[i].name,
+                                method_from: app.arrayCharacters[i].method_from,
+                                method_to: app.arrayCharacters[i].method_to,
+                                method_as: app.arrayCharacters[i].method_as,
+                                method_include: app.arrayCharacters[i].method_include,
+                                method_exclude: app.arrayCharacters[i].method_exclude,
+                                method_at: app.arrayCharacters[i].method_at,
+                                unit: app.arrayCharacters[i].unit,
+                                measure_semantic: app.arrayCharacters[i].measure_semantic,
+                                entity_semantic: app.arrayCharacters[i].entity_semantic,
+                                semantics: app.arrayCharacters[i].semantics,
+                                creator: app.arrayCharacters[i].creator,
+                                usage: [],
+                                history: [],
+                                username: app.arrayCharacters[i].username,
+                                usage_count: 0,
+                                show_flag: app.arrayCharacters[i].show_flag,
+                            };
+
+                            axios.post('/mr/individual/public/api/v1/character/create', tempObj)
                                 .then(function(resp) {
                                     console.log('use resp', resp);
                                     app.characters = resp.data.characters;
@@ -585,8 +630,18 @@
                                         app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
                                         app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
                                     }
+                                    app.arraySearch = [];
+                                    for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
+                                        var temp = {
+
+                                        };
+                                        temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
+                                        temp.value = resp.data.arrayCharacters[i].id;
+                                        app.arraySearch.push(temp);
+                                    }
                                 });
                         }
+
                     }
                 }
                 var jsonLog = {
@@ -1567,7 +1622,7 @@
                             console.log('headers', app.headers);
 
                             for (var i = 0; i < app.characters.length; i++) {
-                                if (app.characters[i][app.characters.length - 1].character_id == resp.data.character_id) {
+                                if (app.characters[i][app.characters[i].length - 1].character_id == resp.data.character_id) {
                                     for (var j = 0; j < app.headers.length; j++) {
                                         if (app.headers[j].id == resp.data.header_id) {
                                             if (item.value != '') {
