@@ -576,7 +576,7 @@
                     if (app.arrayCharacters[i].id == characterId) {
                         var tempFlag = true;
                         for (var j = 0; j < app.arrayCharacters.length; j++) {
-                            if (app.arrayCharacters[j].name == app.arrayCharacters[i].name && app.arrayCharacters[j].username == app.user.name) {
+                            if (app.arrayCharacters[j].name == app.arrayCharacters[i].name && app.arrayCharacters[j].username == app.user.name && app.arrayCharacters[j].show_flag == true) {
                                 tempFlag = false;
                             }
                         }
