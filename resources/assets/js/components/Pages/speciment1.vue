@@ -745,7 +745,7 @@
                 var app = this;
                 console.log('save character', this.character);
                 console.log('edit Flag', this.editFlag);
-
+                app.show_flag = true;
 
 
                 var checkFields = true;
