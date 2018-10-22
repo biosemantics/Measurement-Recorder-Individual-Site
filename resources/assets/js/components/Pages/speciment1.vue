@@ -26,7 +26,7 @@
                         <a v-on:click="addHeader()" class="btn btn-primary"
                            style="height: 28px; line-height: 28px; font-size: 50px; padding: 0 5px;">+</a>
                         <br/>
-                        Add a column
+                        Add a column <br/> for measurements
                     </div>
                     <div class="col-md-12" style="margin-top: 10px;">
                         Character List
@@ -36,8 +36,8 @@
                             <table class="table table-bordered table-responsive measure-table">
                                 <thead>
                                 <tr v-if="headers.length > 0">
-                                    <th class="actions" style="min-width: 250px;">
-                                        <input class="th-input" value="Character" />
+                                    <th class="actions" style="min-width: 250px; text-align:center; line-height: 45px;">
+                                        Character
                                         <!--<a class="btn btn-add display-block" v-on:click="addHeader()"><span class="glyphicon glyphicon-plus"></span></a>-->
                                     </th>
                                     <!-- Average and Deviation column start -->
@@ -46,13 +46,13 @@
                                     <!--<th style="min-width: 150px;"><input class="th-input" value="Deviation" /></th>-->
 
                                     <!-- Average and Deviation column end -->
-                                    <th style="min-width: 150px;"><input class="th-input" value="Range" /></th>
+                                    <th style="min-width: 150px; text-align:center; line-height: 45px;">Range</th>
 
                                     <th v-if="header.id > 4" v-for="header in headers" style="min-width: 200px;">
                                         <input class="th-input" v-bind:value="header.header" />
                                         <a class="btn btn-add display-block" v-on:click="deleteHeader(header.id, header.header)"><span class="glyphicon glyphicon-remove"></span></a>
                                     </th>
-                                    <th class="actions display-none" style="min-width: 150px;">
+                                    <th class="actions display-none" style="min-width: 250px;">
                                         <input style="width: 50%;" id="new-header" class="th-input" v-model="newHeader.header" name="header" autofocus/>
                                         <a class="btn btn-success btn-save" v-on:click="saveHeader()"><span class="glyphicon glyphicon-floppy-disk"></span></a>
                                         <a class="btn btn-danger btn-cancel" v-on:click="cancelHeader()"><span class="glyphicon glyphicon-remove-circle"></span></a>
@@ -747,6 +747,7 @@
                 console.log('edit Flag', this.editFlag);
 
 
+
                 var checkFields = true;
 
 //                for (var key in this.character) {
@@ -825,6 +826,7 @@
                                     .catch(function(resp) {
                                         console.log('userLog error', resp);
                                     });
+                                console.log('app.term', app.term);
 
                                 if (app.term == app.character.name) {
                                     axios.post('/mr/individual/public/api/v1/character/create', app.character)
@@ -958,37 +960,6 @@
                                                             console.log('error', resp);
                                                             alert('Error Occurred while meta logging.')
                                                         });
-                                                } else if (app.semanticsUpdateFlag) {
-                                                    var jsonRequest = {
-
-                                                    };
-                                                    jsonRequest.character_id = app.character.id;
-                                                    jsonRequest.username = app.user.name;
-                                                    jsonRequest.description = 'updated semantics';
-                                                    axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                        .then(function(resp) {
-                                                            console.log("update metalog", resp);
-                                                            if (app.creatorUpdateFlag) {
-                                                                var jsonRequest = {
-
-                                                                };
-                                                                jsonRequest.character_id = app.character.id;
-                                                                jsonRequest.username = app.user.name;
-                                                                jsonRequest.description = 'updated creator';
-                                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                    .then(function(resp) {
-                                                                        console.log("update metalog", resp);
-                                                                    })
-                                                                    .catch(function(resp) {
-                                                                        console.log('error', resp);
-                                                                        alert('Error Occurred while meta logging.')
-                                                                    });
-                                                            }
-                                                        })
-                                                        .catch(function(resp) {
-                                                            console.log('error', resp);
-                                                            alert('Error Occurred while meta logging.')
-                                                        });
                                                 } else if (app.creatorUpdateFlag) {
                                                     var jsonRequest = {
 
@@ -1051,249 +1022,271 @@
                                             alert("Error Occured !");
                                         });
                                 } else {
-                                    var jsonEsynonym = {
-                                        user: app.user.name,
-                                        ontology: 'exp',
-                                        term: app.term,
-                                        classIRI: app.termValue
-                                    };
-                                    axios.post('http://shark.sbs.arizona.edu:8080/esynonym', jsonEsynonym)
-                                        .then(function(resp) {
-                                            console.log('esynonym resp', resp);
-                                            axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.user.name, "ontology": 'exp'})
-                                                .then(function(resp) {
-                                                    console.log('save resp', resp);
-                                                })
-                                                .catch(function(resp) {
+                                    if (app.term == null || app.term == '') {
+                                        axios.post('/mr/individual/public/api/v1/character/create', app.character)
+                                            .then(function (resp) {
+                                                console.log("resp", resp);
+                                                app.characters = resp.data.characters;
+                                                app.character = resp.data.character;
+                                                app.arrayCharacters = resp.data.arrayCharacters;
+                                                for (var i = 0; i < app.characters.length; i++) {
+                                                    app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
+                                                    app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
+                                                }
+                                                app.arraySearch = [];
+                                                for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
+                                                    var temp = {
 
-                                                });
-                                            axios.post('/mr/individual/public/api/v1/character/create', app.character)
-                                                .then(function (resp) {
-                                                    console.log("resp", resp);
-                                                    app.characters = resp.data.characters;
-                                                    app.character = resp.data.character;
-                                                    app.arrayCharacters = resp.data.arrayCharacters;
-                                                    for (var i = 0; i < app.characters.length; i++) {
-                                                        app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
-                                                        app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
-                                                    }
-                                                    app.arraySearch = [];
-                                                    for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
-                                                        var temp = {
+                                                    };
+                                                    temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
+                                                    temp.value = resp.data.arrayCharacters[i].id;
+                                                    app.arraySearch.push(temp);
+                                                }
+
+                                                if (app.editFlag) {
+                                                    if (app.methodUpdateFlag) {
+                                                        var jsonRequest = {
 
                                                         };
-                                                        temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
-                                                        temp.value = resp.data.arrayCharacters[i].id;
-                                                        app.arraySearch.push(temp);
-                                                    }
-
-                                                    if (app.editFlag) {
-                                                        if (app.methodUpdateFlag) {
-                                                            var jsonRequest = {
-
-                                                            };
-                                                            jsonRequest.character_id = app.character.id;
-                                                            jsonRequest.username = app.user.name;
-                                                            jsonRequest.description = 'updated method';
-                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                .then(function(resp) {
-                                                                    console.log("update metalog", resp);
-                                                                    if (app.unitUpdateFlag) {
-                                                                        var jsonRequest = {
-
-                                                                        };
-                                                                        jsonRequest.character_id = app.character.id;
-                                                                        jsonRequest.username = app.user.name;
-                                                                        jsonRequest.description = 'updated unit';
-                                                                        axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                            .then(function(resp) {
-                                                                                console.log("update metalog", resp);
-                                                                                if (app.semanticsUpdateFlag) {
-                                                                                    var jsonRequest = {
-
-                                                                                    };
-                                                                                    jsonRequest.character_id = app.character.id;
-                                                                                    jsonRequest.username = app.user.name;
-                                                                                    jsonRequest.description = 'updated semantics';
-                                                                                    axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                                        .then(function(resp) {
-                                                                                            console.log("update metalog", resp);
-                                                                                            if (app.creatorUpdateFlag) {
-                                                                                                var jsonRequest = {
-
-                                                                                                };
-                                                                                                jsonRequest.character_id = app.character.id;
-                                                                                                jsonRequest.username = app.user.name;
-                                                                                                jsonRequest.description = 'updated creator';
-                                                                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                                                    .then(function(resp) {
-                                                                                                        console.log("update metalog", resp);
-                                                                                                    })
-                                                                                                    .catch(function(resp) {
-                                                                                                        console.log('error', resp);
-                                                                                                        alert('Error Occurred while meta logging.')
-                                                                                                    });
-                                                                                            }
-                                                                                        })
-                                                                                        .catch(function(resp) {
-                                                                                            console.log('error', resp);
-                                                                                            alert('Error Occurred while meta logging.')
-                                                                                        });
-                                                                                }
-                                                                            })
-                                                                            .catch(function(resp) {
-                                                                                console.log('error', resp);
-                                                                                alert('Error Occurred while meta logging.')
-                                                                            });
-                                                                    }
-                                                                })
-                                                                .catch(function(resp) {
-                                                                    console.log('error', resp);
-                                                                    alert('Error Occurred while meta logging.')
-                                                                });
-                                                        } else if (app.unitUpdateFlag) {
-                                                            var jsonRequest = {
-
-                                                            };
-                                                            jsonRequest.character_id = app.character.id;
-                                                            jsonRequest.username = app.user.name;
-                                                            jsonRequest.description = 'updated unit';
-                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                .then(function(resp) {
-                                                                    console.log("update metalog", resp);
-                                                                    if (app.semanticsUpdateFlag) {
-                                                                        var jsonRequest = {
-
-                                                                        };
-                                                                        jsonRequest.character_id = app.character.id;
-                                                                        jsonRequest.username = app.user.name;
-                                                                        jsonRequest.description = 'updated semantics';
-                                                                        axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                            .then(function(resp) {
-                                                                                console.log("update metalog", resp);
-                                                                                if (app.creatorUpdateFlag) {
-                                                                                    var jsonRequest = {
-
-                                                                                    };
-                                                                                    jsonRequest.character_id = app.character.id;
-                                                                                    jsonRequest.username = app.user.name;
-                                                                                    jsonRequest.description = 'updated creator';
-                                                                                    axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                                        .then(function(resp) {
-                                                                                            console.log("update metalog", resp);
-                                                                                        })
-                                                                                        .catch(function(resp) {
-                                                                                            console.log('error', resp);
-                                                                                            alert('Error Occurred while meta logging.')
-                                                                                        });
-                                                                                }
-                                                                            })
-                                                                            .catch(function(resp) {
-                                                                                console.log('error', resp);
-                                                                                alert('Error Occurred while meta logging.')
-                                                                            });
-                                                                    }
-                                                                })
-                                                                .catch(function(resp) {
-                                                                    console.log('error', resp);
-                                                                    alert('Error Occurred while meta logging.')
-                                                                });
-                                                        } else if (app.semanticsUpdateFlag) {
-                                                            var jsonRequest = {
-
-                                                            };
-                                                            jsonRequest.character_id = app.character.id;
-                                                            jsonRequest.username = app.user.name;
-                                                            jsonRequest.description = 'updated semantics';
-                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                .then(function(resp) {
-                                                                    console.log("update metalog", resp);
-                                                                    if (app.creatorUpdateFlag) {
-                                                                        var jsonRequest = {
-
-                                                                        };
-                                                                        jsonRequest.character_id = app.character.id;
-                                                                        jsonRequest.username = app.user.name;
-                                                                        jsonRequest.description = 'updated creator';
-                                                                        axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                            .then(function(resp) {
-                                                                                console.log("update metalog", resp);
-                                                                            })
-                                                                            .catch(function(resp) {
-                                                                                console.log('error', resp);
-                                                                                alert('Error Occurred while meta logging.')
-                                                                            });
-                                                                    }
-                                                                })
-                                                                .catch(function(resp) {
-                                                                    console.log('error', resp);
-                                                                    alert('Error Occurred while meta logging.')
-                                                                });
-                                                        } else if (app.creatorUpdateFlag) {
-                                                            var jsonRequest = {
-
-                                                            };
-                                                            jsonRequest.character_id = app.character.id;
-                                                            jsonRequest.username = app.user.name;
-                                                            jsonRequest.description = 'updated creator';
-                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                .then(function(resp) {
-                                                                    console.log("update metalog", resp);
-                                                                })
-                                                                .catch(function(resp) {
-                                                                    console.log('error', resp);
-                                                                    alert('Error Occurred while meta logging.')
-                                                                });
-                                                        }
-                                                    } else {
-                                                        if (app.cloneFlag == true) {
-                                                            axios.get('/mr/individual/public/api/v1/character/' + app.item)
-                                                                .then(function(resp) {
+                                                        jsonRequest.character_id = app.character.id;
+                                                        jsonRequest.username = app.user.name;
+                                                        jsonRequest.description = 'updated method';
+                                                        axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                            .then(function(resp) {
+                                                                console.log("update metalog", resp);
+                                                                if (app.unitUpdateFlag) {
                                                                     var jsonRequest = {
 
                                                                     };
                                                                     jsonRequest.character_id = app.character.id;
-                                                                    jsonRequest.username = '';
-                                                                    jsonRequest.description = 'cloned by ' + resp.data.username;
+                                                                    jsonRequest.username = app.user.name;
+                                                                    jsonRequest.description = 'updated unit';
                                                                     axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
                                                                         .then(function(resp) {
-                                                                            console.log("create metalog", resp);
+                                                                            console.log("update metalog", resp);
                                                                         })
                                                                         .catch(function(resp) {
                                                                             console.log('error', resp);
                                                                             alert('Error Occurred while meta logging.')
                                                                         });
-                                                                })
-                                                                .catch(function(resp) {
-                                                                    console.log('getCharacter error', resp);
-                                                                });
-                                                        }  else {
-                                                            var jsonRequest = {
+                                                                }
+                                                            })
+                                                            .catch(function(resp) {
+                                                                console.log('error', resp);
+                                                                alert('Error Occurred while meta logging.')
+                                                            });
+                                                    } else if (app.unitUpdateFlag) {
+                                                        var jsonRequest = {
+
+                                                        };
+                                                        jsonRequest.character_id = app.character.id;
+                                                        jsonRequest.username = app.user.name;
+                                                        jsonRequest.description = 'updated unit';
+                                                        axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                            .then(function(resp) {
+                                                                console.log("update metalog", resp);
+                                                            })
+                                                            .catch(function(resp) {
+                                                                console.log('error', resp);
+                                                                alert('Error Occurred while meta logging.')
+                                                            });
+                                                    }
+                                                } else {
+                                                    if (app.cloneFlag == true) {
+                                                        axios.get('/mr/individual/public/api/v1/character/' + app.item)
+                                                            .then(function(resp) {
+                                                                var jsonRequest = {
+
+                                                                };
+                                                                jsonRequest.character_id = app.character.id;
+                                                                jsonRequest.username = '';
+                                                                jsonRequest.description = 'cloned by ' + resp.data.username;
+                                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                                    .then(function(resp) {
+                                                                        console.log("create metalog", resp);
+                                                                    })
+                                                                    .catch(function(resp) {
+                                                                        console.log('error', resp);
+                                                                        alert('Error Occurred while meta logging.')
+                                                                    });
+                                                            })
+                                                            .catch(function(resp) {
+                                                                console.log('getCharacter error', resp);
+                                                            });
+                                                    }  else {
+                                                        var jsonRequest = {
+
+                                                        };
+                                                        jsonRequest.character_id = app.character.id;
+                                                        jsonRequest.username = app.user.name;
+                                                        jsonRequest.description = 'created';
+                                                        axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                            .then(function(resp) {
+                                                                console.log("create metalog", resp);
+                                                            })
+                                                            .catch(function(resp) {
+                                                                console.log('error', resp);
+                                                                alert('Error Occurred while meta logging.')
+                                                            });
+                                                    }
+
+                                                }
+                                            })
+                                            .catch(function (resp) {
+                                                console.log(resp);
+                                                alert("Error Occured !");
+                                            });
+                                    } else {
+                                        var jsonEsynonym = {
+                                            user: app.user.name,
+                                            ontology: 'exp',
+                                            term: app.term,
+                                            classIRI: app.termValue
+                                        };
+                                        axios.post('http://shark.sbs.arizona.edu:8080/esynonym', jsonEsynonym)
+                                            .then(function(resp) {
+                                                console.log('esynonym resp', resp);
+                                                axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.user.name, "ontology": 'exp'})
+                                                    .then(function(resp) {
+                                                        console.log('save resp', resp);
+                                                    })
+                                                    .catch(function(resp) {
+
+                                                    });
+                                                axios.post('/mr/individual/public/api/v1/character/create', app.character)
+                                                    .then(function (resp) {
+                                                        console.log("resp", resp);
+                                                        app.characters = resp.data.characters;
+                                                        app.character = resp.data.character;
+                                                        app.arrayCharacters = resp.data.arrayCharacters;
+                                                        for (var i = 0; i < app.characters.length; i++) {
+                                                            app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
+                                                            app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
+                                                        }
+                                                        app.arraySearch = [];
+                                                        for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
+                                                            var temp = {
 
                                                             };
-                                                            jsonRequest.character_id = app.character.id;
-                                                            jsonRequest.username = app.user.name;
-                                                            jsonRequest.description = 'created';
-                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                .then(function(resp) {
-                                                                    console.log("create metalog", resp);
-                                                                })
-                                                                .catch(function(resp) {
-                                                                    console.log('error', resp);
-                                                                    alert('Error Occurred while meta logging.')
-                                                                });
+                                                            temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
+                                                            temp.value = resp.data.arrayCharacters[i].id;
+                                                            app.arraySearch.push(temp);
                                                         }
 
-                                                    }
-                                                })
-                                                .catch(function (resp) {
-                                                    console.log(resp);
-                                                    alert("Error Occured !");
-                                                });
-                                        })
-                                        .catch(function(resp) {
-                                            console.log('esysnoym error resp', resp);
-                                        });
+                                                        if (app.editFlag) {
+                                                            if (app.methodUpdateFlag) {
+                                                                var jsonRequest = {
+
+                                                                };
+                                                                jsonRequest.character_id = app.character.id;
+                                                                jsonRequest.username = app.user.name;
+                                                                jsonRequest.description = 'updated method';
+                                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                                    .then(function(resp) {
+                                                                        console.log("update metalog", resp);
+                                                                        if (app.unitUpdateFlag) {
+                                                                            var jsonRequest = {
+
+                                                                            };
+                                                                            jsonRequest.character_id = app.character.id;
+                                                                            jsonRequest.username = app.user.name;
+                                                                            jsonRequest.description = 'updated unit';
+                                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                                                .then(function(resp) {
+                                                                                    console.log("update metalog", resp);
+                                                                                })
+                                                                                .catch(function(resp) {
+                                                                                    console.log('error', resp);
+                                                                                    alert('Error Occurred while meta logging.')
+                                                                                });
+                                                                        }
+                                                                    })
+                                                                    .catch(function(resp) {
+                                                                        console.log('error', resp);
+                                                                        alert('Error Occurred while meta logging.')
+                                                                    });
+                                                            } else if (app.unitUpdateFlag) {
+                                                                var jsonRequest = {
+
+                                                                };
+                                                                jsonRequest.character_id = app.character.id;
+                                                                jsonRequest.username = app.user.name;
+                                                                jsonRequest.description = 'updated unit';
+                                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                                    .then(function(resp) {
+                                                                        console.log("update metalog", resp);
+                                                                    })
+                                                                    .catch(function(resp) {
+                                                                        console.log('error', resp);
+                                                                        alert('Error Occurred while meta logging.')
+                                                                    });
+                                                            } else if (app.creatorUpdateFlag) {
+                                                                var jsonRequest = {
+
+                                                                };
+                                                                jsonRequest.character_id = app.character.id;
+                                                                jsonRequest.username = app.user.name;
+                                                                jsonRequest.description = 'updated creator';
+                                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                                    .then(function(resp) {
+                                                                        console.log("update metalog", resp);
+                                                                    })
+                                                                    .catch(function(resp) {
+                                                                        console.log('error', resp);
+                                                                        alert('Error Occurred while meta logging.')
+                                                                    });
+                                                            }
+                                                        } else {
+                                                            if (app.cloneFlag == true) {
+                                                                axios.get('/mr/individual/public/api/v1/character/' + app.item)
+                                                                    .then(function(resp) {
+                                                                        var jsonRequest = {
+
+                                                                        };
+                                                                        jsonRequest.character_id = app.character.id;
+                                                                        jsonRequest.username = '';
+                                                                        jsonRequest.description = 'cloned by ' + resp.data.username;
+                                                                        axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                                            .then(function(resp) {
+                                                                                console.log("create metalog", resp);
+                                                                            })
+                                                                            .catch(function(resp) {
+                                                                                console.log('error', resp);
+                                                                                alert('Error Occurred while meta logging.')
+                                                                            });
+                                                                    })
+                                                                    .catch(function(resp) {
+                                                                        console.log('getCharacter error', resp);
+                                                                    });
+                                                            }  else {
+                                                                var jsonRequest = {
+
+                                                                };
+                                                                jsonRequest.character_id = app.character.id;
+                                                                jsonRequest.username = app.user.name;
+                                                                jsonRequest.description = 'created';
+                                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                                    .then(function(resp) {
+                                                                        console.log("create metalog", resp);
+                                                                    })
+                                                                    .catch(function(resp) {
+                                                                        console.log('error', resp);
+                                                                        alert('Error Occurred while meta logging.')
+                                                                    });
+                                                            }
+
+                                                        }
+                                                    })
+                                                    .catch(function (resp) {
+                                                        console.log(resp);
+                                                        alert("Error Occured !");
+                                                    });
+                                            })
+                                            .catch(function(resp) {
+                                                console.log('esysnoym error resp', resp);
+                                            });
+                                    }
+
                                 }
 
                                 var jsonRequest = {
@@ -1361,6 +1354,8 @@
                 $('th.actions.display-none').removeClass('display-none').addClass('display-block');
                 $('th.actions > .btn-add.display-block').removeClass('display-block').addClass('display-none');
                 $('#new-header').focus();
+                var app = this;
+                app.newHeader.header = 'measurements';
             },
             saveHeader: function() {
                 var app = this;

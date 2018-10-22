@@ -33,6 +33,9 @@
                         Open Image Segment
                     </a>
                 </div>
+                <div class="col-md-12">
+                    Fill the relevant part for the character
+                </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">From:</label>
                     <input :disabled="viewFlag == true" v-on:blur="userLog('From')" class="col-md-8" v-model="methodFrom"/>
