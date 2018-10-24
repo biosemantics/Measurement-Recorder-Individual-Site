@@ -17,7 +17,7 @@
                         <!--</list-select>-->
                         <model-select :options="arraySearch"
                                       v-model="item"
-                                      placeholder="Find or create a character"
+                                      placeholder="Type in here to find or create a character"
                                       @searchchange="printSearchText"
                                       @select="onSelect">
                         </model-select>
