@@ -598,14 +598,12 @@
                                     console.log('userLog error', resp);
                                 });
                         } else {
-                            if (app.user.name == app.arrayCharacters[i].username) {
-                                app.arrayCharacters[i].show_flag = true;
-                            } else {
-                                console.log('---', app.arrayCharacters[i]);
-                                app.arrayCharacters[i].show_flag = true;
-                                console.log('+++', app.arrayCharacters[i]);
-                                console.log('+++++', app.characters);
-                                // app.arrayCharacters[i].username = app.user.name;
+                            app.arrayCharacters[i].show_flag = true;
+                            axios.post('/mr/individual/public/api/v1/character/undelete', {
+                                    character_id: app.arrayCharacters[i].id
+                                });
+                                /* if (app.user.name == app.arrayCharacters[i].username)
+                                // app.arrayCharacters[i].username = app.user.name; */
                                 /* var tempObj = {
                                     name: app.arrayCharacters[i].name,
                                     method_from: app.arrayCharacters[i].method_from,
@@ -645,7 +643,6 @@
                                         }
                                         app.addLastItemToDropdown();
                                     }); */
-                            }
                         }
 
                     }
@@ -1788,12 +1785,14 @@
             },
             deleteCharacter: function(character_id) {
                 var app = this;
+                console.log('character id to be deleted --->', character_id);
                 var tpData = {
                     character_id: character_id
                 };
                 axios.post('/mr/individual/public/api/v1/character/delete', tpData)
                     .then(function (resp) {
                         console.log("resp", resp);
+                        console.log("app.characters", app.characters);
                         app.arrayCharacters = resp.data.arrayCharacters;
                         for (var i = 0; i < app.characters.length; i++) {
                             if (app.characters[i][app.characters[i].length - 1].character_id == character_id) {

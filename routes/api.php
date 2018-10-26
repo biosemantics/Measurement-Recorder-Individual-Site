@@ -37,6 +37,6 @@ Route::group([
         Route::post('update',                   ['as' => 'update',                      'uses' => 'HomeController@update']);
         Route::post('delete',                   ['as' => 'delete',                      'uses' => 'HomeController@delete']);
         Route::post('delete-header/{headerId}', ['as' => 'delete-header',               'uses' => 'HomeController@deleteHeader']);
-
+        Route::post('undelete',                 ['as' => 'undelete',                    'uses' => 'HomeController@undelete']);
     });
 });

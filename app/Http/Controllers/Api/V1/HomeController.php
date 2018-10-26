@@ -273,6 +273,11 @@ class HomeController extends Controller
         return $data;
     }
 
+    public function undelete(Request $request) {
+        $character_id = $request->input('character_id');
+        Character::find($character_id)->update(['show_flag'=>true]);
+    }
+
     public function activity_log(Request $request) {
         
         $actLog = ActivityLog::create($request->all());
