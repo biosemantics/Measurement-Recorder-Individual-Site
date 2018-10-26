@@ -4,7 +4,7 @@
             <div class="tab-pane" id="">
                 <form class="row" autocomplete="off">
                     <div class="col-md-4">
-                        Find or create character<br>Include 'of' in character name, e.g., 'diameter of ball'.
+                        Find or create character<br>Include 'of' or 'between' in character name, e.g., 'diameter of ball'.
                     </div>
                     <div class="col-md-4">
                         <!--<input placeholder="Measure of Entity (e.g: length of leaf)" style="width: 100%;" v-model="character.name" name="text"/>-->
@@ -60,8 +60,8 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr v-for="eachCharacter in characters" v-if="getCharacterUsingId(eachCharacter[0].character_id).show_flag == true && getCharacterUsingId(eachCharacter[0].character_id).username == user.name">
-
+                                <tr v-for="eachCharacter in characters" v-if="getCharacterUsingId(eachCharacter[0].character_id).show_flag == true">
+                                    <!-- && getCharacterUsingId(eachCharacter[0].character_id).username == user.name -->
                                     <td class="text-center" v-if="item.header_id == 1" v-for="item in eachCharacter">
                                         <div>
                                             {{ item.value }} ({{ item.username }})<br> ({{ item.unit }})
@@ -180,13 +180,13 @@
 
     Vue.component('modal', modal);
 
-//    import { ModelSelect } from 'vue-search-select'
+    /* import { ModelSelect } from 'vue-search-select' */
     import { ListSelect } from '../vue-search-select-lib'
     import { ModelSelect } from '../vue-search-select-lib'
     Vue.use({ListSelect});
     Vue.use({ModelSelect});
-//    import vSelect from 'vue-select';
-//    Vue.component('v-select', vSelect);
+    /* import vSelect from 'vue-select';
+    Vue.component('v-select', vSelect); */
 
     export default {
         props: [
@@ -260,8 +260,8 @@
                 $('.' + this.metadataFlag).addClass('back-median-green');
                 switch (this.metadataFlag) {
                     case 'method':
-//                        this.character.method_from = event[0];
-//                        this.character.method_to = event[1];
+                        /* this.character.method_from = event[0];
+                        this.character.method_to = event[1]; */
                         this.character.method_as = event[0];
                         app.term = event[1];
                         app.termValue = event[2];
@@ -273,16 +273,16 @@
                         this.parentData = event;
                         this.methodUpdateFlag = true;
                         console.log("method return", event);
-//                        var jsonRequest = {
-//                            'user_id': app.user.id,
-//                            'action': 'clicked method image for "' + app.character.name + '"',
-//                            'type': 'Measurement Recorder',
-//                            'action_detail': app.character.method_as
-//                        };
-//                        axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
-//                            .then(function(resp) {
-//                                console.log("userLog resp", resp);
-//                            });
+                        /* var jsonRequest = {
+                            'user_id': app.user.id,
+                            'action': 'clicked method image for "' + app.character.name + '"',
+                            'type': 'Measurement Recorder',
+                            'action_detail': app.character.method_as
+                        };
+                        axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
+                            .then(function(resp) {
+                                console.log("userLog resp", resp);
+                            }); */
                         break;
                     case 'unit':
                         this.character.unit = event;
@@ -352,7 +352,7 @@
                 axios.get("/mr/individual/public/api/v1/character/" + character.character_id)
                     .then(function (resp) {
                         console.log("get Character", resp);
-//                        app.metadataFlag = 'method';
+                        /* app.metadataFlag = 'method'; */
                         app.metadataFlag = metadataFlag;
                         app.character = resp.data;
                         if (metadataFlag != '') {
@@ -360,15 +360,15 @@
                             app.character.username = app.user.name;
                         }
 
-//                        app.parentData = [];
-//                        app.parentData.push(app.character.method_from);
-//                        app.parentData.push(app.character.method_to);
-//                        app.parentData[2] = app.character.method_as;
+                        /* app.parentData = [];
+                        app.parentData.push(app.character.method_from);
+                        app.parentData.push(app.character.method_to);
+                        app.parentData[2] = app.character.method_as; */
                         switch (metadataFlag) {
                             case 'method':
                                 app.parentData = [];
-//                                app.parentData.push(app.character.method_from);
-//                                app.parentData.push(app.character.method_to);
+                                /* app.parentData.push(app.character.method_from);
+                                app.parentData.push(app.character.method_to); */
                                 app.parentData.push(app.character.method_as);
                                 app.parentData[3] = app.user;
                                 app.parentData[4] = app.character.method_from;
@@ -406,8 +406,8 @@
                                 break;
                             default:
                                 app.parentData = [];
-//                                app.parentData.push(app.character.method_from);
-//                                app.parentData.push(app.character.method_to);
+                                /* app.parentData.push(app.character.method_from);
+                                app.parentData.push(app.character.method_to); */
                                 app.parentData.push(app.character.method_as);
                                 app.parentData[3] = app.user;
                                 app.parentData[4] = app.character.method_from;
@@ -419,8 +419,8 @@
                                 app.currentMetadata = method;
                                 break;
                         }
-//                        app.currentMetadata = metadataFlag;
-//                        app.currentMetadata = null;
+                        /* app.currentMetadata = metadataFlag;
+                        app.currentMetadata = null; */
                         app.detailsFlag = true;
                         var jsonRequest = {
                             'user_id': app.user.id,
@@ -473,8 +473,8 @@
                 switch (metadata) {
                     case 'method':
                         this.parentData = [];
-//                        this.parentData.push(this.character.method_from);
-//                        this.parentData.push(this.character.method_to);
+                        /* this.parentData.push(this.character.method_from);
+                        this.parentData.push(this.character.method_to); */
                         this.parentData[0] = this.character.method_as;
                         app.parentData[3] = app.user;
                         app.parentData[4] = app.character.method_from;
@@ -514,43 +514,43 @@
                         break;
                 }
 
-//                if (previousMetadata != null) {
-//                    var jsonRequest = {
-//                        'user_id': app.user.id,
-//                        'type': 'Measurement Recorder',
-//                        'action': 'entered ' + previousMetadata + ' for "' + app.character.name + '"',
-//                        'action_detail': ' '
-//                    };
-//                    console.log('previousMetadata', previousMetadata);
-//
-//                    switch(previousMetadata) {
-//                        case '':
-//                            break;
-//                        case 'method':
-////                            if (app.character.method_as != null) {
-////                                jsonRequest.action_detail = jsonRequest.action_detail + 'As: ' + app.character.method_as + '; ';
-////                            }
-////                            if (app.character.method_from != null) {
-////                                jsonRequest.action_detail = jsonRequest.action_detail + 'From: ' + app.character.method_from + '; ';
-////                            }
-////                            if (app.character.method_to != null) {
-////                                jsonRequest.action_detail = jsonRequest.action_detail + 'To: ' + app.character.method_to + '; ';
-////                            }
-//                            break;
-//                        case 'unit':
-//                            jsonRequest.action_detail = app.character.unit;
-//                            break;
-//                        default:
-//                            break;
-//                    }
-//                    axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
-//                        .then(function(resp) {
-//                            console.log('userLog resp', resp);
-//                        })
-//                        .catch(function(resp) {
-//                            console.log('userLog error', resp);
-//                        });
-//                }
+             /*    if (previousMetadata != null) {
+                    var jsonRequest = {
+                        'user_id': app.user.id,
+                        'type': 'Measurement Recorder',
+                        'action': 'entered ' + previousMetadata + ' for "' + app.character.name + '"',
+                        'action_detail': ' '
+                    };
+                    console.log('previousMetadata', previousMetadata);
+
+                    switch(previousMetadata) {
+                        case '':
+                            break;
+                        case 'method':
+                            if (app.character.method_as != null) {
+                                jsonRequest.action_detail = jsonRequest.action_detail + 'As: ' + app.character.method_as + '; ';
+                            }
+                            if (app.character.method_from != null) {
+                                jsonRequest.action_detail = jsonRequest.action_detail + 'From: ' + app.character.method_from + '; ';
+                            }
+                            if (app.character.method_to != null) {
+                                jsonRequest.action_detail = jsonRequest.action_detail + 'To: ' + app.character.method_to + '; ';
+                            }
+                            break;
+                        case 'unit':
+                            jsonRequest.action_detail = app.character.unit;
+                            break;
+                        default:
+                            break;
+                    }
+                    axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
+                        .then(function(resp) {
+                            console.log('userLog resp', resp);
+                        })
+                        .catch(function(resp) {
+                            console.log('userLog error', resp);
+                        });
+                } */
 
                 if (metadata != '') {
                     var jsonRequest = {
@@ -600,31 +600,13 @@
                         } else {
                             if (app.user.name == app.arrayCharacters[i].username) {
                                 app.arrayCharacters[i].show_flag = true;
-                                axios.post('/mr/individual/public/api/v1/character/create', tempObj)
-                                    .then(function(resp) {
-                                        console.log('use resp', resp);
-                                        app.characters = resp.data.characters;
-                                        app.arrayCharacters = resp.data.arrayCharacters;
-                                        for (var i = 0; i < app.characters.length; i++) {
-                                            app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
-                                            app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
-                                        }
-                                        app.arraySearch = [];
-                                        for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
-                                            var temp = {
-
-                                            };
-                                            temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
-                                            temp.value = resp.data.arrayCharacters[i].id;
-                                            app.arraySearch.push(temp);
-                                        }
-                                    });
                             } else {
                                 console.log('---', app.arrayCharacters[i]);
                                 app.arrayCharacters[i].show_flag = true;
                                 console.log('+++', app.arrayCharacters[i]);
-                                app.arrayCharacters[i].username = app.user.name;
-                                var tempObj = {
+                                console.log('+++++', app.characters);
+                                // app.arrayCharacters[i].username = app.user.name;
+                                /* var tempObj = {
                                     name: app.arrayCharacters[i].name,
                                     method_from: app.arrayCharacters[i].method_from,
                                     method_to: app.arrayCharacters[i].method_to,
@@ -643,7 +625,6 @@
                                     usage_count: 0,
                                     show_flag: app.arrayCharacters[i].show_flag,
                                 };
-
                                 axios.post('/mr/individual/public/api/v1/character/create', tempObj)
                                     .then(function(resp) {
                                         console.log('use resp', resp);
@@ -662,7 +643,8 @@
                                             temp.value = resp.data.arrayCharacters[i].id;
                                             app.arraySearch.push(temp);
                                         }
-                                    });
+                                        app.addLastItemToDropdown();
+                                    }); */
                             }
                         }
 
@@ -685,20 +667,20 @@
                 app.editFlag = false;
                 app.detailsFlag = false;
 
-//                axios.get('/mr/individual/public/api/v1/character/' + characterId)
-//                    .then(function(resp) {
-//                        console.log('getCharacter resp', resp);
-//                        var newCharacter = resp.data;
-//                        newCharacter.username = app.user.name;
-//                        app.viewFlag = false;
-//                        app.editFlag = false;
-//                        app.character = newCharacter;
-//                        app.saveCharacter();
-//
-//                    })
-//                    .catch(function(resp) {
-//                        console.log("getCharacter error", resp);
-//                    });
+                /* axios.get('/mr/individual/public/api/v1/character/' + characterId)
+                    .then(function(resp) {
+                        console.log('getCharacter resp', resp);
+                        var newCharacter = resp.data;
+                        newCharacter.username = app.user.name;
+                        app.viewFlag = false;
+                        app.editFlag = false;
+                        app.character = newCharacter;
+                        app.saveCharacter();
+
+                    })
+                    .catch(function(resp) {
+                        console.log("getCharacter error", resp);
+                    }); */
             },
             enhance(characterId) {
                 var app = this;
@@ -722,7 +704,7 @@
                                 }
                             }
                         }
-//                        app.editCharacter(app.character);
+                        /* app.editCharacter(app.character); */
                     })
                     .catch(function(resp) {
                         console.log('getCharacter error', resp);
@@ -750,12 +732,12 @@
 
                 var checkFields = true;
 
-//                for (var key in this.character) {
-//                    if (key != 'confirmed' && key != 'method_as' && key != 'method_from' && key != 'method_to' && key != 'method_include' && key != 'method_exclude' && key != 'method_at' && key != 'usage' && key != 'history' && (this.character[key] == null || this.character[key] == '')) {
-//                        console.log(key);
-//                        checkFields = false;
-//                    }
-//                }
+                /* for (var key in this.character) {
+                    if (key != 'confirmed' && key != 'method_as' && key != 'method_from' && key != 'method_to' && key != 'method_include' && key != 'method_exclude' && key != 'method_at' && key != 'usage' && key != 'history' && (this.character[key] == null || this.character[key] == '')) {
+                        console.log(key);
+                        checkFields = false;
+                    }
+                } */
                 if ((this.character['method_as'] == null || this.character['method_as'] == '') &&
                     (this.character['method_from'] == null || this.character['method_from'] == '') &&
                     (this.character['method_to'] == null || this.character['method_to'] == '') &&
@@ -803,12 +785,12 @@
                                         if (app.character.method_as != null) {
                                             jsonUserLog.action_detail = jsonUserLog.action_detail + 'As: ' + app.character.method_as + '; ';
                                         }
-//                                        if (app.character.method_from != null) {
-//                                            jsonUserLog.action_detail = jsonUserLog.action_detail + 'From: ' + app.character.method_from + '; ';
-//                                        }
-//                                        if (app.character.method_to != null) {
-//                                            jsonUserLog.action_detail = jsonUserLog.action_detail + 'To: ' + app.character.method_to + '; ';
-//                                        }
+                                        /* if (app.character.method_from != null) {
+                                            jsonUserLog.action_detail = jsonUserLog.action_detail + 'From: ' + app.character.method_from + '; ';
+                                        }
+                                        if (app.character.method_to != null) {
+                                            jsonUserLog.action_detail = jsonUserLog.action_detail + 'To: ' + app.character.method_to + '; ';
+                                        } */
                                         break;
                                     case 'unit':
                                         jsonUserLog.action_detail = app.character.unit;
@@ -848,6 +830,7 @@
                                                 temp.value = resp.data.arrayCharacters[i].id;
                                                 app.arraySearch.push(temp);
                                             }
+                                            app.addLastItemToDropdown();
 
                                             if (app.editFlag) {
                                                 if (app.methodUpdateFlag) {
@@ -1042,6 +1025,7 @@
                                                     temp.value = resp.data.arrayCharacters[i].id;
                                                     app.arraySearch.push(temp);
                                                 }
+                                                app.addLastItemToDropdown();
 
                                                 if (app.editFlag) {
                                                     if (app.methodUpdateFlag) {
@@ -1172,6 +1156,7 @@
                                                             temp.value = resp.data.arrayCharacters[i].id;
                                                             app.arraySearch.push(temp);
                                                         }
+                                                        app.addLastItemToDropdown();
 
                                                         if (app.editFlag) {
                                                             if (app.methodUpdateFlag) {
@@ -1308,7 +1293,7 @@
                         .catch(function (resp) {
                             console.log(resp);
                         });
-//
+
 
                 } else {
                     var jsonLog = {
@@ -1350,7 +1335,7 @@
                 this.character.name = '';
             },
             addHeader: function() {
-//                $('.measure-table > thead > tr > th:last-child').before('<th></th>')
+                /* $('.measure-table > thead > tr > th:last-child').before('<th></th>') */
                 $('th.actions.display-none').removeClass('display-none').addClass('display-block');
                 $('th.actions > .btn-add.display-block').removeClass('display-block').addClass('display-none');
                 $('#new-header').focus();
@@ -1373,7 +1358,7 @@
                             axios.post('/mr/individual/public/api/v1/character/add-header', app.newHeader)
                                 .then(function (resp) {
                                     console.log("createHeader resp", resp);
-//                        $('.measure-table thead tr th:last-child').before("<th><input class='th-input' value='" + resp.data.header + "' /></th>");
+                                    /* $('.measure-table thead tr th:last-child').before("<th><input class='th-input' value='" + resp.data.header + "' /></th>"); */
                                     app.headers = resp.data.headers;
                                     app.characters = resp.data.characters;
                                     app.arrayCharacters = resp.data.arrayCharacters;
@@ -1390,6 +1375,8 @@
                                         temp.value = resp.data.arrayCharacters[i].id;
                                         app.arraySearch.push(temp);
                                     }
+                                    app.addLastItemToDropdown();
+
                                     $('th.actions.display-block').removeClass('display-block').addClass('display-none');
                                     $('th.actions > .btn-add.display-none').removeClass('display-none').addClass('display-block');
                                     app.actionLog.action_type = "create_header";
@@ -1452,6 +1439,8 @@
                             temp.value = resp.data.arrayCharacters[i].id;
                             app.arraySearch.push(temp);
                         }
+                        app.addLastItemToDropdown();
+
                         app.actionLog.action_type = "delete_header";
                         app.actionLog.model_id = resp.data.characters[0][resp.data.characters[0].length - 1].header_id;
                         app.actionLog.model_name = "header";
@@ -1546,8 +1535,7 @@
                 $('th.actions.display-block').removeClass('display-block').addClass('display-none');
                 $('th.actions > .btn-add.display-none').removeClass('display-none').addClass('display-block');
             },
-            swapComponent: function(component)
-            {
+            swapComponent: function(component) {
                 this.currentComponent = component;
             },
             storeCharacter() {
@@ -1837,6 +1825,8 @@
                             temp.value = resp.data.arrayCharacters[i].id;
                             app.arraySearch.push(temp);
                         }
+                        app.addLastItemToDropdown();
+
                         app.actionLog.action_type = "delete";
                         app.actionLog.model_id = tpData.character_id;
                         app.actionLog.model_name = "character";
@@ -1879,6 +1869,16 @@
                     app.character.name = item;
                     app.newCharacterFlag= true;
                 }
+                if (item === null) app.item = '';
+            },
+            addLastItemToDropdown() {
+                var app = this;
+                if (app.arraySearch.length > 0) {
+                    app.arraySearch.push({
+                        value: null,
+                        text: 'Nothing useful, create new'
+                    });
+                }
             },
             printSearchText (searchText) {
                 this.searchText = searchText
@@ -1915,6 +1915,7 @@
                         temp.value = resp.data.arrayCharacters[i].id;
                         app.arraySearch.push(temp);
                     }
+                    app.addLastItemToDropdown();
                 })
                 .catch(function (resp) {
                     console.log(resp);

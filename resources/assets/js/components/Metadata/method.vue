@@ -61,12 +61,12 @@
                             </div>
                             <a class="btn btn-primary col-md-4" v-on:click="addTerm('from', methodFrom)"
                                style="padding: 3px 8px;"> {{ methodFrom }} </a>
-                            <div class="col-md-7"
+                            <!-- <div class="col-md-7"
                                  style="border: 1px solid grey; border-radius: 4px; margin-left: 10px;">
                                 <input v-model="definition.from" style="max-width: 120px;"/>
                                 <a class="btn btn-primary" v-on:click="addUserSynonym('from', definition.from)"
                                    style="padding: 1px 4px;">Add</a>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -94,12 +94,12 @@
                             </div>
                             <a class="btn btn-primary col-md-4" v-on:click="addTerm('to', methodTo)"
                                style="padding: 3px 8px;"> {{ methodTo }} </a>
-                            <div class="col-md-7"
+                            <!-- <div class="col-md-7"
                                  style="border: 1px solid grey; border-radius: 4px; margin-left: 10px;">
                                 <input v-model="definition.to" style="max-width: 120px;"/>
                                 <a class="btn btn-primary" v-on:click="addUserSynonym('to', definition.to)"
                                    style="padding: 1px 4px;">Add</a>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -128,12 +128,12 @@
                             </div>
                             <a class="btn btn-primary col-md-4" v-on:click="addTerm('include', methodInclude)"
                                style="padding: 3px 8px;"> {{ methodInclude }} </a>
-                            <div class="col-md-7"
+                            <!-- <div class="col-md-7"
                                  style="border: 1px solid grey; border-radius: 4px; margin-left: 10px;">
                                 <input v-model="definition.include" style="max-width: 120px;"/>
                                 <a class="btn btn-primary" v-on:click="addUserSynonym('from', definition.include)"
                                    style="padding: 1px 4px;">Add</a>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -162,12 +162,12 @@
                             </div>
                             <a class="btn btn-primary col-md-4" v-on:click="addTerm('exclude', methodExclude)"
                                style="padding: 3px 8px;"> {{ methodExclude }} </a>
-                            <div class="col-md-7"
+                            <!-- <div class="col-md-7"
                                  style="border: 1px solid grey; border-radius: 4px; margin-left: 10px;">
                                 <input v-model="definition.exclude" style="max-width: 120px;"/>
                                 <a class="btn btn-primary" v-on:click="addUserSynonym('from', definition.exclude)"
                                    style="padding: 1px 4px;">Add</a>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -195,12 +195,12 @@
                             </div>
                             <a class="btn btn-primary col-md-4" v-on:click="addTerm('at', methodAt)"
                                style="padding: 3px 8px;"> {{ methodAt }} </a>
-                            <div class="col-md-7"
+                            <!-- <div class="col-md-7"
                                  style="border: 1px solid grey; border-radius: 4px; margin-left: 10px;">
                                 <input v-model="definition.at" style="max-width: 120px;"/>
                                 <a class="btn btn-primary" v-on:click="addUserSynonym('at', definition.at)"
                                    style="padding: 1px 4px;">Add</a>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
