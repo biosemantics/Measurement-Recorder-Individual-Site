@@ -581,7 +581,6 @@
                             }
                         }
                         if (tempFlag == false) {
-
                             alert('The character is already exist!');
                             var jsonLog = {
                                 'user_id': app.user.id,
@@ -599,9 +598,14 @@
                                 });
                         } else {
                             app.arrayCharacters[i].show_flag = true;
-                            axios.post('/mr/individual/public/api/v1/character/undelete', {
+                            axios.post('/mr/individual/public/api/v1/character/set-charashow', {
+                                character_id: app.arrayCharacters[i].id,
+                                user_id: app.user.id,
+                                show_flag: 1
+                            });
+                            /* axios.post('/mr/individual/public/api/v1/character/undelete', {
                                     character_id: app.arrayCharacters[i].id
-                                });
+                                }); */
                                 /* if (app.user.name == app.arrayCharacters[i].username)
                                 // app.arrayCharacters[i].username = app.user.name; */
                                 /* var tempObj = {

@@ -10,19 +10,29 @@ use App\ActionLog;
 use App\ActivityLog;
 use App\MetaLog;
 use App\UserLog;
+use App\CharaUser;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
 
 class HomeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->only(['getArrayCharacters', 'delete', 'addHeader', 'deleteHeader', 'getHeaders']);
+    }
     public function getValuesByCharacter()
     {
         $all = Character::all();
+        $headers = $this->getHeaders();
         $characters = [];
-        foreach ($all as $each) {
-            $tpValues = Value::where('character_id', '=', $each->id)->orderBy('header_id', 'dec')->get();
-            $characters []= $tpValues;
+        foreach ($all as $c) {
+            $value_array = [];
+            foreach ($headers as $h) {
+                $v = Value::where(['character_id'=>$c->id, 'header_id'=>$h->id])->first();
+                array_push($value_array, $v);
+            }
+            array_push($characters, $value_array);
         }
 
         return $characters;
@@ -72,7 +82,6 @@ class HomeController extends Controller
                 'usage_count' => $request->input('usage_count'),
                 'show_flag' => $request->input('show_flag'),
             ]);
-//            $headers = Header::orderBy('created_at', 'dec')->get();
             $headers = Header::all();
             foreach ($headers as $header) {
                 Value::create([
@@ -89,15 +98,7 @@ class HomeController extends Controller
         $value->save();
 
         $characters = $this->getValuesByCharacter();
-        $arrayCharacters = Character::all();
-
-//        foreach ($arrayCharacters as $each) {
-//            $usageCount = Value::where('character_id', '=', $each->id)
-//                ->where('header_id', '>', 4)
-//                ->where('value', '<>', '')
-//                ->count();
-//            $each->usageCount = $usageCount;
-//        }
+        $arrayCharacters = $this->getArrayCharacters();
 
         $data = [
             'character'  => $character,
@@ -162,18 +163,9 @@ class HomeController extends Controller
 
     public function all(Request $request)
     {
-        $headers = Header::orderBy('created_at', 'dec')->get();
-//        $headers = Header::all();
+        $headers = $this->getHeaders();
         $characters = $this->getValuesByCharacter();
-        $arrayCharacters = Character::all();
-
-        foreach ($arrayCharacters as $each) {
-            $usageCount = Value::where('character_id', '=', $each->id)
-                ->where('header_id', '>', 4)
-                ->where('value', '<>', '')
-                ->count();
-            $each->usageCount = $usageCount;
-        }
+        $arrayCharacters = $this->getArrayCharacters();
 
         $data = [
             'headers'               => $headers,
@@ -185,7 +177,12 @@ class HomeController extends Controller
     }
 
     public function addHeader(Request $request) {
-        $header = Header::create($request->all());
+        $user_id = Auth::id();
+        $header = new Header;
+        $header->header = $request->input('header');
+        $header->user_id = $user_id;
+        $header->save();
+
         $characters = Character::all();
         foreach ($characters as $character) {
             Value::create([
@@ -195,18 +192,9 @@ class HomeController extends Controller
             ]);
         }
 
-        $headers = Header::orderBy('created_at', 'dec')->get();
-//        $headers = Header::all();
+        $headers = $this->getHeaders();
         $characters = $this->getValuesByCharacter();
-        $arrayCharacters = Character::all();
-
-        foreach ($arrayCharacters as $each) {
-            $usageCount = Value::where('character_id', '=', $each->id)
-                ->where('header_id', '>', 4)
-                ->where('value', '<>', '')
-                ->count();
-            $each->usageCount = $usageCount;
-        }
+        $arrayCharacters = $this->getArrayCharacters();
 
         $data = [
             'headers'       => $headers,
@@ -220,18 +208,10 @@ class HomeController extends Controller
     public function deleteHeader(Request $request, $headerId) {
         Header::where('id', '=', $headerId)->delete();
         Value::where('header_id', '=', $headerId)->delete();
+
         $characters = $this->getValuesByCharacter();
-        $arrayCharacters = Character::all();
-
-        foreach ($arrayCharacters as $each) {
-            $usageCount = Value::where('character_id', '=', $each->id)
-                ->where('header_id', '>', 4)
-                ->where('value', '<>', '')
-                ->count();
-            $each->usageCount = $usageCount;
-        }
-
-        $headers = Header::orderBy('created_at', 'dec')->get();
+        $arrayCharacters = $this->getArrayCharacters();
+        $headers = $this->getHeaders();
 
         $data = [
             'headers'               => $headers,
@@ -252,18 +232,13 @@ class HomeController extends Controller
 
     public function delete(Request $request) {
         $character_id = $request->input('character_id');
-        Character::where('id', '=', $character_id)->update(['show_flag' => false]);
-//        Value::where('character_id', '=', $character_id)->delete();
-        $arrayCharacters = Character::all();
-
-        foreach ($arrayCharacters as $each) {
-            $usageCount = Value::where('character_id', '=', $each->id)
-                ->where('header_id', '>', 4)
-                ->where('value', '<>', '')
-                ->count();
-            $each->usageCount = $usageCount;
-        }
-
+        
+        $charauser = CharaUser::firstOrNew(['character_id'=>$character_id, 'user_id'=>Auth::id()]);
+        $charauser->show_flag = 0;
+        $charauser->save();
+        // Character::where('id', '=', $character_id)->update(['show_flag' => false]);
+        // Value::where('character_id', '=', $character_id)->delete();
+        $arrayCharacters = $this->getArrayCharacters();
         $characters = $this->getValuesByCharacter();
         $data = [
             'characters'    => $characters,
@@ -271,6 +246,31 @@ class HomeController extends Controller
         ];
 
         return $data;
+    }
+
+    public function getArrayCharacters() {
+        $user_id = Auth::id();
+        $arrayCharacters = Character::all();        
+        foreach ($arrayCharacters as $c) {
+            $charauser = CharaUser::where(['character_id'=>$c->id, 'user_id'=>$user_id])->first();
+            if ($charauser) {
+                $c->show_flag = $charauser->show_flag;
+            } else {
+                $c->show_flag = 0;
+            }
+            $usageCount = Value::where('character_id', '=', $c->id)
+                ->where('header_id', '>', 4)
+                ->where('value', '<>', '')
+                ->count();
+            $c->usageCount = $usageCount;
+        }
+        return $arrayCharacters;
+    }
+
+    public function getHeaders() {
+        return Header::where('user_id', Auth::id())
+                ->orWhere('user_id', NULL)
+                ->orderBy('id', 'desc')->get();
     }
 
     public function undelete(Request $request) {
@@ -306,5 +306,14 @@ class HomeController extends Controller
         ];
 
         return $data;
+    }
+
+    public function setCharashow(Request $request) {
+        $character_id = $request->input('character_id');
+        $user_id = $request->input('user_id');
+        $show_flag = $request->input('show_flag');
+        $record = CharaUser::firstOrNew(['character_id'=>$character_id, 'user_id'=>$user_id]);
+        $record->show_flag = $show_flag;
+        $record->save();
     }
 }

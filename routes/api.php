@@ -38,5 +38,6 @@ Route::group([
         Route::post('delete',                   ['as' => 'delete',                      'uses' => 'HomeController@delete']);
         Route::post('delete-header/{headerId}', ['as' => 'delete-header',               'uses' => 'HomeController@deleteHeader']);
         Route::post('undelete',                 ['as' => 'undelete',                    'uses' => 'HomeController@undelete']);
+        Route::post('set-charashow',            ['as' => 'set_charashow',               'uses' => 'HomeController@setCharashow']);
     });
 });
