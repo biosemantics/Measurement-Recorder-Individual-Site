@@ -19,7 +19,7 @@ class HomeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->only(['getArrayCharacters', 'delete', 'addHeader', 'deleteHeader', 'getHeaders']);
+        $this->middleware('auth')->only(['getArrayCharacters', 'delete', 'addHeader', 'deleteHeader', 'getHeaders', 'store']);
     }
     public function getValuesByCharacter()
     {
@@ -47,7 +47,9 @@ class HomeController extends Controller
 
     public function store(Request $request)
     {
+        $charauser = NULL;
         if ($request->has('id')) {
+            $charauser = CharaUser::firstOrNew(['character_id'=>$request->input('id'), 'user_id'=>Auth::id()]);
             $character = Character::where('id', '=', $request->input('id'))->first();
             $character->name = $request->input('name');
             $character->method_as = $request->input('method_as');
@@ -64,8 +66,8 @@ class HomeController extends Controller
             $character->usage_count = $request->input('usage_count');
             $character->show_flag = $request->input('show_flag');
             $character->save();
-
         } else {
+            $charauser = new CharaUser;
             $character = Character::create([
                 'name' => $request->input('name'),
                 'method_as' => $request->input('method_as'),
@@ -82,6 +84,9 @@ class HomeController extends Controller
                 'usage_count' => $request->input('usage_count'),
                 'show_flag' => $request->input('show_flag'),
             ]);
+            $charauser->character_id = $character->id;
+            $charauser->user_id = Auth::id();
+
             $headers = Header::all();
             foreach ($headers as $header) {
                 Value::create([
@@ -91,6 +96,9 @@ class HomeController extends Controller
                 ]);
             }
         }
+
+        $charauser->show_flag = 1;
+        $charauser->save();
 
         // update character header in Value Model
         $value = Value::where('character_id', '=', $character->id)->where('header_id', '=', 1)->first();
