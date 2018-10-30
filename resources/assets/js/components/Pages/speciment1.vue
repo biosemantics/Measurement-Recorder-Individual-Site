@@ -46,9 +46,8 @@
                                     <!--<th style="min-width: 150px;"><input class="th-input" value="Deviation" /></th>-->
 
                                     <!-- Average and Deviation column end -->
-                                    <th style="min-width: 150px; text-align:center; line-height: 45px;">Range</th>
 
-                                    <th v-if="header.id > 4" v-for="header in headers" style="min-width: 200px;">
+                                    <th v-if="header.id >= 4" v-for="header in headers" style="min-width: 200px;">
                                         <input class="th-input" v-bind:value="header.header" />
                                         <a class="btn btn-add display-block" v-on:click="deleteHeader(header.id, header.header)"><span class="glyphicon glyphicon-remove"></span></a>
                                     </th>
@@ -71,10 +70,7 @@
                                         </div>
                                     </td>
 
-                                    <td class="text-center" v-if="item.header_id == 4" v-for="item in eachCharacter" style="line-height: 43px;">
-                                        {{ item.value }}
-                                    </td>
-                                    <td v-if="item.header_id > 4" v-for="item in eachCharacter">
+                                    <td v-if="item.header_id >= 4" v-for="item in eachCharacter">
                                         <input v-if="item.header_id >= 4" class="td-input" v-model="item.value" v-on:blur="saveItem(item)"/>
                                     </td>
 
@@ -818,10 +814,6 @@
                                             app.characters = resp.data.characters;
                                             app.character = resp.data.character;
                                             app.arrayCharacters = resp.data.arrayCharacters;
-                                            for (var i = 0; i < app.characters.length; i++) {
-                                                app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
-                                                app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
-                                            }
                                             app.arraySearch = [];
                                             for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
                                                 var temp = {
@@ -1013,10 +1005,6 @@
                                                 app.characters = resp.data.characters;
                                                 app.character = resp.data.character;
                                                 app.arrayCharacters = resp.data.arrayCharacters;
-                                                for (var i = 0; i < app.characters.length; i++) {
-                                                    app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
-                                                    app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
-                                                }
                                                 app.arraySearch = [];
                                                 for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
                                                     var temp = {
@@ -1144,10 +1132,6 @@
                                                         app.characters = resp.data.characters;
                                                         app.character = resp.data.character;
                                                         app.arrayCharacters = resp.data.arrayCharacters;
-                                                        for (var i = 0; i < app.characters.length; i++) {
-                                                            app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
-                                                            app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
-                                                        }
                                                         app.arraySearch = [];
                                                         for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
                                                             var temp = {
@@ -1363,10 +1347,6 @@
                                     app.headers = resp.data.headers;
                                     app.characters = resp.data.characters;
                                     app.arrayCharacters = resp.data.arrayCharacters;
-                                    for (var i = 0; i < app.characters.length; i++) {
-                                        app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
-                                        app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
-                                    }
                                     app.arraySearch = [];
                                     for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
                                         var temp = {
@@ -1427,10 +1407,6 @@
                         app.headers = resp.data.headers;
                         app.characters = resp.data.characters;
                         app.arrayCharacters = resp.data.arrayCharacters;
-                        for (var i = 0; i < app.characters.length; i++) {
-                            app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
-                            app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
-                        }
                         app.arraySearch = [];
                         for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
                             var temp = {
@@ -1682,104 +1658,6 @@
                                     console.log(resp);
                                     alert("Error Occured !");
                                 });
-
-                            var totalSum = 0;
-                            var characterIndex = 0;
-                            var headerCount = 0;
-                            var averageValue = 0;
-
-                            for (var i = 0; i < app.characters.length; i++) {
-                                for (var j = 0; j < app.characters[i].length; j++){
-                                    if (app.characters[i][j].character_id == updatedCharacter.character_id) {
-                                        characterIndex = i;
-                                        if (app.characters[i][j].header_id == updatedCharacter.header_id) {
-                                            app.characters[i][j].value = updatedCharacter.value;
-                                        }
-                                        if (app.characters[i][j].header_id > 4) {
-                                            console.log("value", parseFloat(app.characters[i][j].value));
-                                            console.log("check if NaN", isNaN(parseFloat(app.characters[i][j].value)));
-                                            if (isNaN(parseFloat(app.characters[i][j].value)) == false) {
-                                                headerCount++;
-                                                totalSum = totalSum + parseFloat(app.characters[i][j].value);
-                                            }
-                                        }
-                                    } else {
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (headerCount > 0) {
-                                averageValue = (totalSum / headerCount).toFixed(2);
-                                app.characters[characterIndex][app.characters[characterIndex].length - 2].value = (totalSum / headerCount).toFixed(2);
-                            }
-
-                            axios.post('/mr/individual/public/api/v1/character/update', app.characters[characterIndex][app.characters[characterIndex].length - 2])
-                                .then(function (resp) {
-                                    console.log('update average', resp);
-                                })
-                                .catch(function (resp) {
-                                    console.log(resp);
-                                    alert("Error Occured !");
-                                });
-
-                            var deviationSum = 0;
-                            var deviationValue = 0;
-
-                            if (headerCount > 1) {
-                                for (var i = 0; i < (app.characters[characterIndex].length - 4); i++) {
-                                    console.log("check value for deviation", app.characters[characterIndex][i].value);
-                                    console.log("check of parse for deviation", isNaN(parseFloat(app.characters[characterIndex][i].value)));
-                                    if (isNaN(parseFloat(app.characters[characterIndex][i].value)) == false) {
-                                        deviationSum = deviationSum + Math.pow((parseFloat(app.characters[characterIndex][i].value) - averageValue), 2);
-                                    }
-                                }
-                                deviationValue = Math.pow((deviationSum / (headerCount - 1)), 0.5).toFixed(2);
-                            } else if (headerCount == 1) {
-                                for (var i = 0; i < (app.characters[characterIndex].length - 4); i++) {
-                                    if (isNaN(parseFloat(app.characters[characterIndex][i].value)) == false) {
-                                        deviationValue = parseFloat(app.characters[characterIndex][i].value).toFixed(2);
-                                    }
-                                }
-                            }
-
-                            app.characters[characterIndex][app.characters[characterIndex].length - 3].value = deviationValue;
-
-                            axios.post('/mr/individual/public/api/v1/character/update', app.characters[characterIndex][app.characters[characterIndex].length - 3])
-                                .then(function (resp) {
-                                    console.log('update deviation', resp);
-                                })
-                                .catch(function (resp) {
-                                    console.log(resp);
-                                    alert("Error Occured !");
-                                });
-
-
-                            var minVal = 0;
-                            for (var i = 0; i < app.characters[characterIndex].length - 4; i++) {
-                                if (!isNaN(parseFloat(app.characters[characterIndex][i].value))) {
-                                    minVal = parseFloat(app.characters[characterIndex][i].value);
-                                    break;
-                                }
-                            }
-                            var maxVal = 0;
-                            for (var i = 0; i < app.characters[characterIndex].length - 4; i++) {
-                                if (!isNaN(parseFloat(app.characters[characterIndex][i].value)) && parseFloat(minVal) >= parseFloat(app.characters[characterIndex][i].value)) {
-                                    minVal = app.characters[characterIndex][i].value;
-                                }
-                                if (!isNaN(parseFloat(app.characters[characterIndex][i].value)) && parseFloat(maxVal) <= parseFloat(app.characters[characterIndex][i].value)) {
-                                    maxVal = app.characters[characterIndex][i].value;
-                                }
-                            }
-                            app.characters[characterIndex][app.characters[characterIndex].length - 4].value = minVal + '-' + maxVal;
-                            axios.post('/mr/individual/public/api/v1/character/update', app.characters[characterIndex][app.characters[characterIndex].length - 4])
-                                .then(function (resp) {
-                                    console.log('update deviation', resp);
-                                })
-                                .catch(function (resp) {
-                                    console.log(resp);
-                                    alert("Error Occured !");
-                                });
                         })
                         .catch(function (resp) {
                             console.log(resp);
@@ -1815,10 +1693,6 @@
                             }
                         }
                         app.characters = resp.data.characters;
-                        for (var i = 0; i < app.characters.length; i++) {
-                            app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
-                            app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
-                        }
                         app.arraySearch = [];
                         for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
                             var temp = {
@@ -1905,15 +1779,9 @@
                     app.characters = resp.data.characters;
                     app.arrayCharacters = resp.data.arrayCharacters;
 
-                    for (var i = 0; i < app.characters.length; i++) {
-                        app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
-                        app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
-                    }
                     app.arraySearch = [];
                     for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
-                        var temp = {
-
-                        };
+                        var temp = {};
                         temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
                         temp.value = resp.data.arrayCharacters[i].id;
                         app.arraySearch.push(temp);

@@ -30,6 +30,8 @@ class HomeController extends Controller
             $value_array = [];
             foreach ($headers as $h) {
                 $v = Value::where(['character_id'=>$c->id, 'header_id'=>$h->id])->first();
+                $v->username = $c->username;
+                $v->unit = $c->unit;
                 array_push($value_array, $v);
             }
             array_push($characters, $value_array);
@@ -138,7 +140,7 @@ class HomeController extends Controller
     public function usage(Request $request, $characterId)
     {
         $values = Value::where('character_id', '=', $characterId)
-            ->where('header_id', '>', 4)
+            ->where('header_id', '>=', 4)
             ->where('value', '<>', '')
             ->get();
 
@@ -267,7 +269,7 @@ class HomeController extends Controller
                 $c->show_flag = 0;
             }
             $usageCount = Value::where('character_id', '=', $c->id)
-                ->where('header_id', '>', 4)
+                ->where('header_id', '>=', 4)
                 ->where('value', '<>', '')
                 ->count();
             $c->usageCount = $usageCount;
@@ -278,7 +280,7 @@ class HomeController extends Controller
     public function getHeaders() {
         return Header::where('user_id', Auth::id())
                 ->orWhere('user_id', NULL)
-                ->orderBy('id', 'desc')->get();
+                ->orderBy('id', 'asc')->get();
     }
 
     public function undelete(Request $request) {
