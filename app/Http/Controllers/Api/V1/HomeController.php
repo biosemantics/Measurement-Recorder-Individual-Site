@@ -28,12 +28,28 @@ class HomeController extends Controller
         $characters = [];
         foreach ($all as $c) {
             $value_array = [];
+            $min = -1; $max = 0;
+            $range_exist = false;
             foreach ($headers as $h) {
                 $v = Value::where(['character_id'=>$c->id, 'header_id'=>$h->id])->first();
+                
+                if ($h->id >= 4 && is_numeric($v->value)) {
+                    $range_exist = true;
+                    if ($min < 0 || $min > $v->value) $min = $v->value;
+                    if ($max < $v->value) $max = $v->value;
+                }
+
                 $v->username = $c->username;
                 $v->unit = $c->unit;
                 array_push($value_array, $v);
             }
+            array_push($value_array, [
+                'character_id' => $c->id, 
+                'header_id' => 0,
+                'username' => $c->username,
+                'unit' => $c->unit,
+                'value' => $range_exist ? ($min.' - '.$max) : '0 - 0'
+            ]);
             array_push($characters, $value_array);
         }
 
@@ -70,6 +86,15 @@ class HomeController extends Controller
             $character->save();
         } else {
             $charauser = new CharaUser;
+            $tmp_username = '';
+            if ($request->has('clone_id')) {
+                $original_username = Character::find($request->input('clone_id'))->username;
+                if (!empty($original_username))
+                    $tmp_username = $original_username.','.$request->input('username');
+            }
+            if (empty($tmp_username))
+                $tmp_username = $request->input('username');
+
             $character = Character::create([
                 'name' => $request->input('name'),
                 'method_as' => $request->input('method_as'),
@@ -82,7 +107,7 @@ class HomeController extends Controller
                 'measure_semantic' => $request->input('measure_semantic'),
                 'entity_semantic' => $request->input('entity_semantic'),
                 'creator' => $request->input('creator'),
-                'username' => $request->input('username'),
+                'username' => $tmp_username,
                 'usage_count' => $request->input('usage_count'),
                 'show_flag' => $request->input('show_flag'),
             ]);
@@ -237,7 +262,14 @@ class HomeController extends Controller
         $value->value = $request->input('value');
         $value->save();
 
-        return $value;
+        $characters = $this->getValuesByCharacter();
+        $arrayCharacters = $this->getArrayCharacters();
+
+        return [
+            'updatedCharacter' => $value,
+            'characters' => $characters,
+            'arrayCharacters' => $arrayCharacters
+        ];
     }
 
     public function delete(Request $request) {
@@ -272,7 +304,7 @@ class HomeController extends Controller
                 ->where('header_id', '>=', 4)
                 ->where('value', '<>', '')
                 ->count();
-            $c->usageCount = $usageCount;
+            $c->usage_count = $usageCount;
         }
         return $arrayCharacters;
     }
@@ -280,7 +312,7 @@ class HomeController extends Controller
     public function getHeaders() {
         return Header::where('user_id', Auth::id())
                 ->orWhere('user_id', NULL)
-                ->orderBy('id', 'asc')->get();
+                ->orderBy('id', 'desc')->get();
     }
 
     public function undelete(Request $request) {

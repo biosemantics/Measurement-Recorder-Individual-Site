@@ -40,11 +40,10 @@
                                         Character
                                         <!--<a class="btn btn-add display-block" v-on:click="addHeader()"><span class="glyphicon glyphicon-plus"></span></a>-->
                                     </th>
+                                    <th style="min-width: 150px; text-align: center; line-height: 45px;">Range</th>
                                     <!-- Average and Deviation column start -->
-
                                     <!--<th style="min-width: 150px;"><input class="th-input" value="Average" /></th>-->
                                     <!--<th style="min-width: 150px;"><input class="th-input" value="Deviation" /></th>-->
-
                                     <!-- Average and Deviation column end -->
 
                                     <th v-if="header.id >= 4" v-for="header in headers" style="min-width: 200px;">
@@ -68,6 +67,9 @@
                                             <a class="btn" v-on:click="deleteCharacter(eachCharacter[0].character_id)"><span class="glyphicon glyphicon-trash"></span></a>
 
                                         </div>
+                                    </td>
+                                    <td class="text-center" v-if="item.header_id==0" v-for="item in eachCharacter" style="line-height: 45px;">
+                                        {{ item.value }}
                                     </td>
 
                                     <td v-if="item.header_id >= 4" v-for="item in eachCharacter">
@@ -565,33 +567,27 @@
 
             },
             use(characterId) {
-                var app = this;
                 console.log('characterId', characterId);
+                var app = this;
+                let used_character_name = '';
                 sessionStorage.setItem('viewFlag', false);
                 for (var i = 0; i < app.arrayCharacters.length; i++) {
                     if (app.arrayCharacters[i].id == characterId) {
-                        var tempFlag = true;
+                        /* var tempFlag = true;
                         for (var j = 0; j < app.arrayCharacters.length; j++) {
-                            if (app.arrayCharacters[j].name == app.arrayCharacters[i].name && app.arrayCharacters[j].username == app.user.name && app.arrayCharacters[j].show_flag == true) {
+                            if (app.arrayCharacters[j].name == app.arrayCharacters[i].name && app.arrayCharacters[j].show_flag == true) {
                                 tempFlag = false;
                             }
-                        }
-                        if (tempFlag == false) {
+                        } */
+                        if (app.arrayCharacters[i].show_flag) {
                             alert('The character is already exist!');
-                            var jsonLog = {
+                            app.log('/mr/individual/public/api/v1/user-log', {
                                 'user_id': app.user.id,
                                 'action': 'failed to use character',
                                 'action_detail': '',
                                 'type': 'Measurement Recorder',
                                 'abnormal_system_response': 'Character already exist',
-                            };
-                            axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
-                                .then(function (resp) {
-                                    console.log('userLog resp', resp);
-                                })
-                                .catch(function(resp) {
-                                    console.log('userLog error', resp);
-                                });
+                            });
                         } else {
                             app.arrayCharacters[i].show_flag = true;
                             axios.post('/mr/individual/public/api/v1/character/set-charashow', {
@@ -644,22 +640,15 @@
                                         app.addLastItemToDropdown();
                                     }); */
                         }
-
+                        used_character_name = app.arrayCharacters[i].name;
                     }
                 }
-                var jsonLog = {
+                app.log('/mr/individual/public/api/v1/user-log', {
                     'user_id': app.user.id,
                     'action': 'clicked the "Use This" button',
-                    'action_detail': '',
+                    'action_detail': used_character_name,
                     'type': 'Measurement Recorder'
-                };
-                axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
-                    .then(function (resp) {
-                        console.log('userLog resp', resp);
-                    })
-                    .catch(function(resp) {
-                        console.log('userLog error', resp);
-                    });
+                });
                 app.viewFlag = false;
                 app.editFlag = false;
                 app.detailsFlag = false;
@@ -706,19 +695,12 @@
                     .catch(function(resp) {
                         console.log('getCharacter error', resp);
                     });
-                var jsonLog = {
+                app.log('/mr/individual/public/api/v1/user-log', {
                     'user_id': app.user.id,
                     'action': 'clicked the "Clone and Enhance" button',
                     'action_detail': '',
                     'type': 'Measurement Recorder'
-                };
-                axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
-                    .then(function (resp) {
-                        console.log('userLog resp', resp);
-                    })
-                    .catch(function(resp) {
-                        console.log('userLog error', resp);
-                    });
+                });
             },
             saveCharacter (currentMetadata = null) {
                 var app = this;
@@ -726,15 +708,7 @@
                 console.log('edit Flag', this.editFlag);
                 app.show_flag = true;
 
-
                 var checkFields = true;
-
-                /* for (var key in this.character) {
-                    if (key != 'confirmed' && key != 'method_as' && key != 'method_from' && key != 'method_to' && key != 'method_include' && key != 'method_exclude' && key != 'method_at' && key != 'usage' && key != 'history' && (this.character[key] == null || this.character[key] == '')) {
-                        console.log(key);
-                        checkFields = false;
-                    }
-                } */
                 if ((this.character['method_as'] == null || this.character['method_as'] == '') &&
                     (this.character['method_from'] == null || this.character['method_from'] == '') &&
                     (this.character['method_to'] == null || this.character['method_to'] == '') &&
@@ -744,7 +718,7 @@
                     checkFields = false;
                 }
 
-                if (app.character['unit'] == null || app.character['unit'] == '') {
+                if (!app.character['unit']) {
                     checkFields = false;
                 }
 
@@ -757,7 +731,8 @@
                             var checkName = true;
 
                             for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
-                                if ((app.character.name == resp.data.arrayCharacters[i].name) && (resp.data.arrayCharacters[i].username == app.character.username)) {
+                                const character_creators = resp.data.arrayCharacters[i].username.split(',');
+                                if ((app.character.name == resp.data.arrayCharacters[i].name) && (character_creators.indexOf(app.character.username)>-1)) {
                                     console.log('character username', app.character.username);
                                     console.log('resp username', resp.data.arrayCharacters[i].username);
                                     checkName = false;
@@ -778,16 +753,9 @@
                                 };
                                 switch (currentMetadata) {
                                     case 'method':
-
                                         if (app.character.method_as != null) {
                                             jsonUserLog.action_detail = jsonUserLog.action_detail + 'As: ' + app.character.method_as + '; ';
                                         }
-                                        /* if (app.character.method_from != null) {
-                                            jsonUserLog.action_detail = jsonUserLog.action_detail + 'From: ' + app.character.method_from + '; ';
-                                        }
-                                        if (app.character.method_to != null) {
-                                            jsonUserLog.action_detail = jsonUserLog.action_detail + 'To: ' + app.character.method_to + '; ';
-                                        } */
                                         break;
                                     case 'unit':
                                         jsonUserLog.action_detail = app.character.unit;
@@ -798,13 +766,7 @@
                                     default:
                                         break;
                                 }
-                                axios.post('/mr/individual/public/api/v1/user-log', jsonUserLog)
-                                    .then(function(resp) {
-                                        console.log('userLog resp', resp);
-                                    })
-                                    .catch(function(resp) {
-                                        console.log('userLog error', resp);
-                                    });
+                                app.log('/mr/individual/public/api/v1/user-log', jsonUserLog);
                                 console.log('app.term', app.term);
 
                                 if (app.term == app.character.name) {
@@ -814,16 +776,7 @@
                                             app.characters = resp.data.characters;
                                             app.character = resp.data.character;
                                             app.arrayCharacters = resp.data.arrayCharacters;
-                                            app.arraySearch = [];
-                                            for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
-                                                var temp = {
-
-                                                };
-                                                temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
-                                                temp.value = resp.data.arrayCharacters[i].id;
-                                                app.arraySearch.push(temp);
-                                            }
-                                            app.addLastItemToDropdown();
+                                            app.updateArraySearch();
 
                                             if (app.editFlag) {
                                                 if (app.methodUpdateFlag) {
@@ -999,28 +952,20 @@
                                         });
                                 } else {
                                     if (app.term == null || app.term == '') {
+                                        if (app.cloneFlag && !!app.item) {
+                                            app.character.clone_id = app.item;
+                                        }
                                         axios.post('/mr/individual/public/api/v1/character/create', app.character)
                                             .then(function (resp) {
                                                 console.log("resp", resp);
                                                 app.characters = resp.data.characters;
                                                 app.character = resp.data.character;
                                                 app.arrayCharacters = resp.data.arrayCharacters;
-                                                app.arraySearch = [];
-                                                for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
-                                                    var temp = {
-
-                                                    };
-                                                    temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
-                                                    temp.value = resp.data.arrayCharacters[i].id;
-                                                    app.arraySearch.push(temp);
-                                                }
-                                                app.addLastItemToDropdown();
+                                                app.updateArraySearch();
 
                                                 if (app.editFlag) {
                                                     if (app.methodUpdateFlag) {
-                                                        var jsonRequest = {
-
-                                                        };
+                                                        var jsonRequest = {};
                                                         jsonRequest.character_id = app.character.id;
                                                         jsonRequest.username = app.user.name;
                                                         jsonRequest.description = 'updated method';
@@ -1087,9 +1032,7 @@
                                                                 console.log('getCharacter error', resp);
                                                             });
                                                     }  else {
-                                                        var jsonRequest = {
-
-                                                        };
+                                                        var jsonRequest = {};
                                                         jsonRequest.character_id = app.character.id;
                                                         jsonRequest.username = app.user.name;
                                                         jsonRequest.description = 'created';
@@ -1102,13 +1045,13 @@
                                                                 alert('Error Occurred while meta logging.')
                                                             });
                                                     }
-
                                                 }
                                             })
                                             .catch(function (resp) {
                                                 console.log(resp);
                                                 alert("Error Occured !");
                                             });
+                                            
                                     } else {
                                         var jsonEsynonym = {
                                             user: app.user.name,
@@ -1132,16 +1075,7 @@
                                                         app.characters = resp.data.characters;
                                                         app.character = resp.data.character;
                                                         app.arrayCharacters = resp.data.arrayCharacters;
-                                                        app.arraySearch = [];
-                                                        for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
-                                                            var temp = {
-
-                                                            };
-                                                            temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
-                                                            temp.value = resp.data.arrayCharacters[i].id;
-                                                            app.arraySearch.push(temp);
-                                                        }
-                                                        app.addLastItemToDropdown();
+                                                        app.updateArraySearch();
 
                                                         if (app.editFlag) {
                                                             if (app.methodUpdateFlag) {
@@ -1259,18 +1193,12 @@
 
                                 }
 
-                                var jsonRequest = {
+                                app.log('/mr/individual/public/api/v1/user-log', {
                                     'user_id': app.user.id,
                                     'action': 'clicked on Save for "' + app.character.name + '"',
+                                    'action_detail': app.character.name,
                                     'type': 'Measurement Recorder'
-                                };
-                                axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
-                                    .then(function(resp) {
-                                        console.log("userLog resp", resp);
-                                    })
-                                    .catch(function(resp) {
-                                        console.log('userLog error', resp);
-                                    });
+                                });
                             } else {
                                 alert("You can not create new character with the same name of existing character !");
                             }
@@ -1278,24 +1206,16 @@
                         .catch(function (resp) {
                             console.log(resp);
                         });
-
-
                 } else {
-                    var jsonLog = {
+                    app.log('/mr/individual/public/api/v1/user-log', {
                         'user_id': app.user.id,
                         'action': 'Failed to save character',
                         'action_detail': '',
                         'abnormal_system_response': 'need to fill Method and Unit sections',
                         'type': 'Measurement Recorder',
-                    };
-                    axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
-                        .then(function (resp) {
-                            console.log('user-log resp', resp);
-                        });
+                    });
                     alert("You need to fill Method and Unit sections!");
                 }
-
-
             },
             cancelCharacter () {
                 var app = this;
@@ -1347,16 +1267,7 @@
                                     app.headers = resp.data.headers;
                                     app.characters = resp.data.characters;
                                     app.arrayCharacters = resp.data.arrayCharacters;
-                                    app.arraySearch = [];
-                                    for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
-                                        var temp = {
-
-                                        };
-                                        temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
-                                        temp.value = resp.data.arrayCharacters[i].id;
-                                        app.arraySearch.push(temp);
-                                    }
-                                    app.addLastItemToDropdown();
+                                    app.updateArraySearch();
 
                                     $('th.actions.display-block').removeClass('display-block').addClass('display-none');
                                     $('th.actions > .btn-add.display-none').removeClass('display-none').addClass('display-block');
@@ -1407,16 +1318,7 @@
                         app.headers = resp.data.headers;
                         app.characters = resp.data.characters;
                         app.arrayCharacters = resp.data.arrayCharacters;
-                        app.arraySearch = [];
-                        for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
-                            var temp = {
-
-                            };
-                            temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
-                            temp.value = resp.data.arrayCharacters[i].id;
-                            app.arraySearch.push(temp);
-                        }
-                        app.addLastItemToDropdown();
+                        app.updateArraySearch();
 
                         app.actionLog.action_type = "delete_header";
                         app.actionLog.model_id = resp.data.characters[0][resp.data.characters[0].length - 1].header_id;
@@ -1462,46 +1364,6 @@
                                     }
                                 }
                             }
-
-                            if (headerCount[i] > 0) {
-                                averageValue[i] = (totalSum[i] / headerCount[i]).toFixed(2);
-                                app.characters[i][app.characters[i].length - 2].value = (totalSum[i] / headerCount[i]).toFixed(2);
-                                axios.post('/mr/individual/public/api/v1/character/update', app.characters[i][app.characters[i].length - 2])
-                                    .then(function (resp) {
-                                        console.log('update average', resp);
-                                    })
-                                    .catch(function (resp) {
-                                        console.log(resp);
-                                        alert("Error Occured !");
-                                    });
-
-                                console.log("headerCount ", headerCount[i]);
-                                if (headerCount[i] > 1) {
-                                    for (var j = 0; j < (app.characters[i].length - 3); j++) {
-                                        console.log('check for deviation', isNaN(parseFloat(app.characters[i][j].value)));
-                                        if (isNaN(parseFloat(app.characters[i][j].value)) == false) {
-                                            deviationSum[i] = deviationSum[i] + Math.pow((parseFloat(app.characters[i][j].value) - averageValue[i]), 2);
-                                        }
-                                    }
-                                    deviationValue[i] = Math.pow((deviationSum[i] / (headerCount[i] - 1)), 0.5).toFixed(2);
-                                } else if (headerCount[i] == 1) {
-                                    for (var j = 0; j < (app.characters[i].length - 3); j++) {
-                                        if (isNaN(parseFloat(app.characters[i][j].value)) == false) {
-                                            deviationValue[i] = parseFloat(app.characters[i][j].value).toFixed(2);
-                                        }
-                                    }
-                                }
-                                app.characters[i][app.characters[i].length - 3].value = deviationValue[i];
-                                axios.post('/mr/individual/public/api/v1/character/update', app.characters[i][app.characters[i].length - 3])
-                                    .then(function (resp) {
-                                        console.log('update deviation', resp);
-                                    })
-                                    .catch(function (resp) {
-                                        console.log(resp);
-                                        alert("Error Occured !");
-                                    });
-
-                            }
                         }
                     })
                     .catch(function(resp) {
@@ -1517,6 +1379,7 @@
             },
             storeCharacter() {
                 var app = this;
+                if (!this.character.name) return;
                 var tpArray = this.character.name.split(' ');
                 this.character.method_from = null;
                 this.character.method_to = null;
@@ -1572,20 +1435,13 @@
                     app.editFlag = false;
                     app.metadataFlag = "method";
                 } else {
-                    var jsonRequest = {
+                    alert("The header name should contain 'of' or 'between' word.");
+                    app.log('/mr/individual/public/api/v1/user-log', {
                         'user_id': app.user.id,
                         'action': 'new character',
                         'type': 'Measurement Recorder',
                         'abnormal_system_response': 'error: character name must contain "of"'
-                    };
-                    axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
-                        .then(function(resp) {
-                           console.log('userLog resp', resp);
-                            alert("The header name should contain 'of' or 'between' word.");
-                        })
-                        .catch(function(resp) {
-                            console.log('userLog error', resp);
-                        });
+                    });
                 }
 
             },
@@ -1601,67 +1457,45 @@
                 } else {
                     axios.post('/mr/individual/public/api/v1/character/update', item)
                         .then(function (resp) {
-                            console.log("update item", resp.data);
-                            console.log('characters', app.characters);
-                            console.log('headers', app.headers);
+                            console.log('/mr/individual/public/api/v1/character/update post --->');
+                            app.characters = resp.data.characters;
+                            app.arrayCharacters = resp.data.arrayCharacters;
+                            app.updateArraySearch();
+                            var updatedCharacter = resp.data.updatedCharacter;
 
                             for (var i = 0; i < app.characters.length; i++) {
-                                if (app.characters[i][app.characters[i].length - 1].character_id == resp.data.character_id) {
+                                if (app.characters[i][app.characters[i].length - 1].character_id == updatedCharacter.character_id) {
                                     for (var j = 0; j < app.headers.length; j++) {
-                                        if (app.headers[j].id == resp.data.header_id) {
-                                            if (item.value != '') {
-                                                var jsonRequest = {
+                                        if (app.headers[j].id == updatedCharacter.header_id) {
+                                            if (!!item.value) {
+                                                app.log('/mr/individual/public/api/v1/user-log', {
                                                     'user_id': app.user.id,
-                                                    'action': 'added "' + app.characters[i][app.characters[i].length - 1].value + '" value for "' + app.headers[j].header + '"',
-                                                    'action_detail': 'value=' + resp.data.value,
+                                                    'action': 'added "' + updatedCharacter.value + '" value for "' + app.headers[j].header + '"',
+                                                    'action_detail': 'value=' + updatedCharacter.value,
                                                     'type': 'Measurement Recorder'
-                                                };
-
-                                                axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
-                                                    .then(function(resp) {
-                                                        console.log('userLog resp', resp);
-                                                    })
-                                                    .catch(function(resp) {
-                                                        console.log('userLog error', resp);
-                                                    });
+                                                });
                                             } else {
-                                                var jsonRequest = {
+                                                app.log('/mr/individual/public/api/v1/user-log', {
                                                     'user_id': app.user.id,
-                                                    'action': 'removed "' + app.characters[i][app.characters[i].length - 1].value + '" value for "' + app.headers[j].header + '"',
-                                                    'action_detail': 'value=' + resp.data.value,
+                                                    'action': 'removed value for "' + app.headers[j].header + '"',
+                                                    'action_detail': 'value=' + updatedCharacter.value,
                                                     'type': 'Measurement Recorder'
-                                                };
-
-                                                axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
-                                                    .then(function(resp) {
-                                                        console.log('userLog resp', resp);
-                                                    })
-                                                    .catch(function(resp) {
-                                                        console.log('userLog error', resp);
-                                                    });
+                                                });
                                             }
                                         }
                                     }
                                 }
                             }
 
-                            var updatedCharacter = resp.data;
 
                             app.actionLog.action_type = "update";
-                            app.actionLog.model_id = resp.data.character_id;
+                            app.actionLog.model_id = updatedCharacter.character_id;
                             app.actionLog.model_name = "value";
-                            axios.post('/mr/individual/public/api/v1/log', app.actionLog)
-                                .then(function (resp) {
-                                    console.log("successful log character !!!");
-                                })
-                                .catch(function (resp) {
-                                    console.log(resp);
-                                    alert("Error Occured !");
-                                });
+                            app.log('/mr/individual/public/api/v1/log', app.actionLog);
                         })
                         .catch(function (resp) {
                             console.log(resp);
-                            alert("Error Occured !");
+                            alert("Error Occured in update character!");
                         });
                 }
             },
@@ -1693,16 +1527,7 @@
                             }
                         }
                         app.characters = resp.data.characters;
-                        app.arraySearch = [];
-                        for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
-                            var temp = {
-
-                            };
-                            temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
-                            temp.value = resp.data.arrayCharacters[i].id;
-                            app.arraySearch.push(temp);
-                        }
-                        app.addLastItemToDropdown();
+                        app.updateArraySearch();
 
                         app.actionLog.action_type = "delete";
                         app.actionLog.model_id = tpData.character_id;
@@ -1748,14 +1573,34 @@
                 }
                 if (item === null) app.item = '';
             },
+            updateArraySearch() {
+                var app = this;
+                app.arraySearch = [];
+                for (var i = 0; i < app.arrayCharacters.length; i++) {
+                    var temp = {};
+                    temp.text = app.arrayCharacters[i].name + ' by ' + app.arrayCharacters[i].username + ' (' + app.arrayCharacters[i].usage_count + ')';
+                    temp.value = app.arrayCharacters[i].id;
+                    app.arraySearch.push(temp);
+                }
+                app.addLastItemToDropdown();
+            },
             addLastItemToDropdown() {
                 var app = this;
                 if (app.arraySearch.length > 0) {
                     app.arraySearch.push({
                         value: null,
-                        text: 'Nothing useful, create new'
+                        text: 'Create a new character'
                     });
                 }
+            },
+            log(url, logdata) {
+                axios.post(url, logdata)
+                    .then(function (resp) {
+                        console.log("successful log character !!!");
+                    })
+                    .catch(function (resp) {
+                        console.log('Logging Error'+url+': ', resp);
+                    });
             },
             printSearchText (searchText) {
                 this.searchText = searchText

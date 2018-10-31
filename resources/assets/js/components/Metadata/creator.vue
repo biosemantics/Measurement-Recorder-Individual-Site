@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-12" style="font-size: 20px;">
-            {{ character_name }} was created by
+            "{{ character_name }}" was created by
         </div>
         <div class="col-md-12">
             <input disabled v-if="viewFlag == false" style="width: 100%;" v-model="childData" @change="handleDataFc()"/>

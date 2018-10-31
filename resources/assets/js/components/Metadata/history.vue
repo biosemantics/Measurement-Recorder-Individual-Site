@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-12" style="font-size: 20px;">
-            {{ character_name }} has gone through the following changes since its creation:
+            "{{ character_name }}" has gone through the following changes since its creation:
         </div>
         <div class="col-md-12">
             <select style="width: 100%; height: 300px;" multiple>

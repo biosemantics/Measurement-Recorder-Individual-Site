@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-12" style="font-size: 15px;">
-            <b>Method: Please explain how to measure the item. e.g. from top to the bottom.</b>
+            <b>Method: Please explain how you would measure the item. e.g., from the bottom to the top.</b>
             <br/>
         </div>
         <div class="col-md-12" v-if="methodEntry == null">
@@ -34,7 +34,7 @@
                     </a>
                 </div>
                 <div class="col-md-12">
-                    Fill the relevant part for the character
+                    Fill the relevant parts below:
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">From:</label>
