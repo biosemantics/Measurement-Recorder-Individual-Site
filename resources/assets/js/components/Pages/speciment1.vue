@@ -1510,24 +1510,18 @@
                         console.log("resp", resp);
                         console.log("app.characters", app.characters);
                         app.arrayCharacters = resp.data.arrayCharacters;
-                        for (var i = 0; i < app.characters.length; i++) {
-                            if (app.characters[i][app.characters[i].length - 1].character_id == character_id) {
-                                var jsonRequest = {
-                                    'user_id': app.user.id,
-                                    'action': 'Trashed "' + app.characters[i][app.characters[i].length - 1].value + '"',
-                                    'type': 'Measurement Recorder'
-                                };
-                                axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
-                                    .then(function(resp) {
-                                        console.log('userLog resp', resp);
-                                    })
-                                    .catch(function(resp) {
-                                        console.log('userLog error', resp);
-                                    });
-                            }
-                        }
                         app.characters = resp.data.characters;
                         app.updateArraySearch();
+
+                        const deleted_character = app.arrayCharacters.find(c => {
+                            return c.id == character_id
+                        });
+                        app.log('/mr/individual/public/api/v1/user-log', {
+                                'user_id': app.user.id,
+                                'action': 'Trashed "' + deleted_character.name + '"',
+                                'action_detail': deleted_character.name, 
+                                'type': 'Measurement Recorder'
+                            });
 
                         app.actionLog.action_type = "delete";
                         app.actionLog.model_id = tpData.character_id;
@@ -1607,6 +1601,14 @@
             },
             cancelNewCharacter() {
                 this.newCharacterFlag = false;
+            },
+            beforeunloadHandler() {
+                this.log('/mr/individual/public/api/v1/user-log', {
+                        'user_id': app.user.id,
+                        'action': 'close the page',
+                        'action_detail': '', 
+                        'type': 'Measurement Recorder'
+                    });
             }
         },
         created() {
@@ -1637,6 +1639,7 @@
                     console.log(resp);
                 });
 
+            document.addEventListener('beforeunload', this.beforeunloadHandler);
         },
         mounted() {
         },
