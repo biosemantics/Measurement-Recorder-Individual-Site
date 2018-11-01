@@ -40,7 +40,10 @@
                                         Character
                                         <!--<a class="btn btn-add display-block" v-on:click="addHeader()"><span class="glyphicon glyphicon-plus"></span></a>-->
                                     </th>
-                                    <th style="min-width: 150px; text-align: center; line-height: 45px;">Range</th>
+                                    <th style="min-width: 150px; text-align: center; line-height: 45px;">
+                                        <p style="margin-bottom:0px">Value Range</p>
+                                        <p style="margin-top:-20px;margin-bottom:-8px">(auto computed)</p>
+                                    </th>
                                     <!-- Average and Deviation column start -->
                                     <!--<th style="min-width: 150px;"><input class="th-input" value="Average" /></th>-->
                                     <!--<th style="min-width: 150px;"><input class="th-input" value="Deviation" /></th>-->
@@ -63,7 +66,7 @@
                                     <td class="text-center" v-if="item.header_id == 1" v-for="item in eachCharacter">
                                         <div>
                                             {{ item.value }} ({{ item.username }})<br> ({{ item.unit }})
-                                            <a class="btn" v-on:click="editCharacter(eachCharacter[eachCharacter.length - 1])"><span class="glyphicon glyphicon-edit"></span></a>
+                                            <a class="btn" v-on:click="editCharacter(eachCharacter[eachCharacter.length - 2])"><span class="glyphicon glyphicon-edit"></span></a>
                                             <a class="btn" v-on:click="deleteCharacter(eachCharacter[0].character_id)"><span class="glyphicon glyphicon-trash"></span></a>
 
                                         </div>
@@ -344,7 +347,7 @@
                 this.semanticsUpdateFlag = false;
                 this.creatorUpdateFlag = false;
                 this.editFlag = editFlag;
-                console.log("character", character);
+                console.log("character log in edit character", character);
                 sessionStorage.setItem("characterName", character.value);
                 var app = this;
                 axios.get("/mr/individual/public/api/v1/character/" + character.character_id)

@@ -343,7 +343,7 @@
                 var jsonRequest = {
                     'user_id': app.childData[3].id,
                     'action': 'In Method, added ' + setting,
-                    'action_detail': setting + '=' + app.newTerm,
+                    'action_detail': setting + '=' + app.newTerm +' in "'+app.character_name+'"',
                     'type': 'Measurement Recorder',
                 };
                 axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
@@ -360,7 +360,7 @@
                 var jsonRequest = {
                     'user_id': app.childData[3].id,
                     'action': 'In Method, add new ' + setting,
-                    'action_detail': setting + '=' + app.newTerm,
+                    'action_detail': setting + '=' + app.newTerm +' in "'+app.character_name+'"',
                     'type': 'Measurement Recorder',
                 };
                 axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
@@ -375,7 +375,7 @@
                 var jsonLog = {
                     'user_id': app.childData[3].id,
                     'action': 'In Method, add definition for term',
-                    'action_detail': 'term=' + app.newTerm + ', definition=' + definition,
+                    'action_detail': 'term=' + app.newTerm + ', definition=' + definition +' in "'+app.character_name+'"',
                     'type': 'Measurement Recorder',
                 };
                 axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
@@ -458,7 +458,7 @@
                         var jsonLog = {
                             'user_id': app.childData[3].id,
                             'action': 'In Method, add new term',
-                            'action_detail': 'term=' + jsonRequest.term,
+                            'action_detail': 'term=' + jsonRequest.term +' in "'+app.character_name+'"',
                             'type': 'Measurement Recorder',
                         };
                         axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
@@ -485,7 +485,7 @@
                     var jsonLog = {
                         'user_id': app.childData[3].id,
                         'action': 'In Method, add synonym',
-                        'action_detail': 'term=' + jsonRequest.term + ', synonym=' + value.term,
+                        'action_detail': 'term=' + jsonRequest.term + ', synonym=' + value.term +' in "'+app.character_name+'"',
                         'type': 'Measurement Recorder',
                     };
                     axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
@@ -516,7 +516,7 @@
                     var jsonLog = {
                         'user_id': app.childData[3].id,
                         'action': 'In Method, clicked Illustrator',
-                        'action_detail': value,
+                        'action_detail': value +' in "'+app.character_name+'"',
                         'type': 'Measurement Recorder',
                     };
                     axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
@@ -551,35 +551,40 @@
             },
             userLog(setting) {
                 var app = this;
-                var jsonLog = {
-                    'user_id': app.childData[3].id,
-                    'action': 'In Method, added' + setting,
-                    'action_detail': '',
-                    'type': 'Measurement Recorder',
-                };
+                let t_action_detail = '';
                 switch (setting) {
                     case 'From':
-                        jsonLog.action_detail = app.methodFrom;
+                        t_action_detail = app.methodFrom;
                         break;
                     case 'To':
-                        jsonLog.action_detail = app.methodTo;
+                        t_action_detail = app.methodTo;
                         break;
                     case 'Include':
-                        jsonLog.action_detail = app.methodInclude;
+                        t_action_detail = app.methodInclude;
                         break;
                     case 'Exclude':
-                        jsonLog.action_detail = app.methodExclude;
+                        t_action_detail = app.methodExclude;
                         break;
                     case 'At':
-                        jsonLog.action_detail = app.methodAt;
+                        t_action_detail = app.methodAt;
                         break;
                     default:
                         break;
                 }
-                axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
-                    .then(function (resp) {
-                        console.log('user-log resp', resp);
-                    });
+
+                if (!!t_action_detail) {
+                    var jsonLog = {
+                        'user_id': app.childData[3].id,
+                        'action': 'In Method, added ' + setting,
+                        'action_detail': '',
+                        'type': 'Measurement Recorder',
+                    };
+                    jsonLog.action_detail = t_action_detail+' in "'+app.character_name+'"';
+                    axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
+                        .then(function (resp) {
+                            console.log('user-log resp', resp);
+                        });
+                }
             },
             checkDictionary() {
                 var app = this;
@@ -621,7 +626,7 @@
                     var jsonLog = {
                         'user_id': app.childData[3].id,
                         'action': 'In Method, clicked on "Check" button',
-                        'action_detail': '',
+                        'action_detail': app.character_name,
                         'type': 'Measurement Recorder',
                     };
                     axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
@@ -842,7 +847,7 @@
                                 var jsonLog = {
                                     'user_id': app.childData[3].id,
                                     'action': 'In Method, add new term to ontology',
-                                    'action_detail': 'term=' + jsonClass.term,
+                                    'action_detail': 'term=' + jsonClass.term +' in "'+app.character_name+'"',
                                     'type': 'Measurement Recorder',
                                 };
                                 axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
@@ -902,7 +907,7 @@
                                 var jsonLog = {
                                     'user_id': app.childData[3].id,
                                     'action': 'In Method, add new term to ontology',
-                                    'action_detail': 'term=' + jsonClass.term,
+                                    'action_detail': 'term=' + jsonClass.term +' in "'+app.character_name+'"',
                                     'type': 'Measurement Recorder',
                                 };
                                 axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
