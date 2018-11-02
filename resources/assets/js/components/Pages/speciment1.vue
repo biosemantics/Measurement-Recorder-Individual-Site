@@ -1586,7 +1586,7 @@
                 if (app.arraySearch.length > 0) {
                     app.arraySearch.push({
                         value: null,
-                        text: 'Create a new character'
+                        text: 'Click here to create a new character'
                     });
                 }
             },

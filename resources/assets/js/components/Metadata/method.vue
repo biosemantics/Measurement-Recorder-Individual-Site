@@ -41,7 +41,7 @@
                     <input :disabled="viewFlag == true" v-on:blur="userLog('From')" class="col-md-8" v-model="methodFrom"/>
                     <p v-if="fromId != null || greenTick.from == true" style="color: green;">&#10004;</p>
                     <a v-if="fromNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.from }"
-                       v-on:click="needMore('from')">Need info on new terms:</a>
+                       v-on:mouseover="needMore('from')">Need info on new terms:</a>
                     <div class="col-md-12" v-if="formViewFlag.from == true">
                         <div class="col-md-12" v-if="fromSynonyms.length > 0">
                             {{ methodFrom }}: is a synonym of
@@ -75,7 +75,7 @@
                     <input :disabled="viewFlag == true" v-on:blur="userLog('To')" class="col-md-8" v-model="methodTo"/>
                     <p v-if="toId != null || greenTick.to == true" style="color: green;">&#10004;</p>
                     <a v-if="toNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.to }"
-                       v-on:click="needMore('to')">Need info on new terms:</a>
+                       v-on:mouseover="needMore('to')">Need info on new terms:</a>
                     <div class="col-md-12" v-if="formViewFlag.to == true">
                         <div class="col-md-12" v-if="toSynonyms.length > 0">
                             {{ methodTo }}: is a synonym of
@@ -108,7 +108,7 @@
                     <input :disabled="viewFlag == true" v-on:blur="userLog('Include')" class="col-md-8" v-model="methodInclude"/>
                     <p v-if="includeId != null || greenTick.include == true" style="color: green;">&#10004;</p>
                     <a v-if="includeNeedMore == true" class="red col-md-12"
-                       v-bind:class="{ green: needMoreGreen.include }" v-on:click="needMore('include')">Need info on new
+                       v-bind:class="{ green: needMoreGreen.include }" v-on:mouseover="needMore('include')">Need info on new
                         terms:</a>
                     <div class="col-md-12" v-if="formViewFlag.include == true">
                         <div class="col-md-12" v-if="includeSynonyms.length > 0">
@@ -142,7 +142,7 @@
                     <input :disabled="viewFlag == true" v-on:blur="userLog('Exclude')" class="col-md-8" v-model="methodExclude"/>
                     <p v-if="excludeId != null || greenTick.exclude == true" style="color: green;">&#10004;</p>
                     <a v-if="excludeNeedMore == true" class="red col-md-12"
-                       v-bind:class="{ green: needMoreGreen.exclude }" v-on:click="needMore('exclude')">Need info on new
+                       v-bind:class="{ green: needMoreGreen.exclude }" v-on:mouseover="needMore('exclude')">Need info on new
                         terms:</a>
                     <div class="col-md-12" v-if="formViewFlag.exclude == true">
                         <div class="col-md-12" v-if="excludeSynonyms.length > 0">
@@ -176,7 +176,7 @@
                     <input :disabled="viewFlag == true" v-on:blur="userLog('At')" class="col-md-8" v-model="methodAt"/>
                     <p v-if="atId != null || greenTick.at == true" style="color: green;">&#10004;</p>
                     <a v-if="atNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.at }"
-                       v-on:click="needMore('at')">Need info on new terms:</a>
+                       v-on:mouseover="needMore('at')">Need info on new terms:</a>
                     <div class="col-md-12" v-if="formViewFlag.at == true">
                         <div class="col-md-12" v-if="atSynonyms.length > 0">
                             {{ methodAt }}: is a synonym of
@@ -334,7 +334,7 @@
             },
             needMore: function (setting) {
                 var app = this;
-                app.formViewFlag[setting] = !(app.formViewFlag[setting]);
+                app.formViewFlag[setting] = true; //!(app.formViewFlag[setting]);
             },
             addTerm: function (setting, value) {
                 var app = this;
