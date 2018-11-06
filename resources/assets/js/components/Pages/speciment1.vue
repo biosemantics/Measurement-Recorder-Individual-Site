@@ -76,7 +76,7 @@
                                     </td>
 
                                     <td v-if="item.header_id >= 4" v-for="item in eachCharacter">
-                                        <input v-if="item.header_id >= 4" class="td-input" v-model="item.value" v-on:blur="saveItem(item)"/>
+                                        <input v-if="item.header_id >= 4" class="td-input" v-model="item.value" v-on:blur="saveItem($event, item)"/>
                                     </td>
 
                                 </tr>
@@ -1451,7 +1451,7 @@
             detailComponent: function(componentId) {
                 console.log("componentId", componentId);
             },
-            saveItem: function(item) {
+            saveItem: function(event, item) {
                 console.log('updated item', item);
                 var app = this;
                 if (item.value < 0) {
@@ -1460,41 +1460,43 @@
                 } else {
                     axios.post('/mr/individual/public/api/v1/character/update', item)
                         .then(function (resp) {
-                            console.log('/mr/individual/public/api/v1/character/update post --->');
-                            app.characters = resp.data.characters;
-                            app.arrayCharacters = resp.data.arrayCharacters;
-                            app.updateArraySearch();
-                            var updatedCharacter = resp.data.updatedCharacter;
+                            if (resp.data.error_input == 1) {
+                                event.target.style.color = 'red';
+                            } else {
+                                event.target.style.color = 'black';
+                                app.characters = resp.data.characters;
+                                app.arrayCharacters = resp.data.arrayCharacters;
+                                app.updateArraySearch();
+                                var updatedCharacter = resp.data.updatedCharacter;
 
-                            for (var i = 0; i < app.characters.length; i++) {
-                                if (app.characters[i][app.characters[i].length - 1].character_id == updatedCharacter.character_id) {
-                                    for (var j = 0; j < app.headers.length; j++) {
-                                        if (app.headers[j].id == updatedCharacter.header_id) {
-                                            if (!!item.value) {
-                                                app.log('/mr/individual/public/api/v1/user-log', {
-                                                    'user_id': app.user.id,
-                                                    'action': 'added "' + updatedCharacter.value + '" value for "' + app.headers[j].header + '"',
-                                                    'action_detail': 'value=' + updatedCharacter.value,
-                                                    'type': 'Measurement Recorder'
-                                                });
-                                            } else {
-                                                app.log('/mr/individual/public/api/v1/user-log', {
-                                                    'user_id': app.user.id,
-                                                    'action': 'removed value for "' + app.headers[j].header + '"',
-                                                    'action_detail': 'value=' + updatedCharacter.value,
-                                                    'type': 'Measurement Recorder'
-                                                });
+                                for (var i = 0; i < app.characters.length; i++) {
+                                    if (app.characters[i][app.characters[i].length - 1].character_id == updatedCharacter.character_id) {
+                                        for (var j = 0; j < app.headers.length; j++) {
+                                            if (app.headers[j].id == updatedCharacter.header_id) {
+                                                if (!!item.value) {
+                                                    app.log('/mr/individual/public/api/v1/user-log', {
+                                                        'user_id': app.user.id,
+                                                        'action': 'added "' + updatedCharacter.value + '" value for "' + app.headers[j].header + '"',
+                                                        'action_detail': 'value=' + updatedCharacter.value,
+                                                        'type': 'Measurement Recorder'
+                                                    });
+                                                } else {
+                                                    app.log('/mr/individual/public/api/v1/user-log', {
+                                                        'user_id': app.user.id,
+                                                        'action': 'removed value for "' + app.headers[j].header + '"',
+                                                        'action_detail': 'value=' + updatedCharacter.value,
+                                                        'type': 'Measurement Recorder'
+                                                    });
+                                                }
                                             }
                                         }
                                     }
                                 }
+                                app.actionLog.action_type = "update";
+                                app.actionLog.model_id = updatedCharacter.character_id;
+                                app.actionLog.model_name = "value";
+                                app.log('/mr/individual/public/api/v1/log', app.actionLog);
                             }
-
-
-                            app.actionLog.action_type = "update";
-                            app.actionLog.model_id = updatedCharacter.character_id;
-                            app.actionLog.model_name = "value";
-                            app.log('/mr/individual/public/api/v1/log', app.actionLog);
                         })
                         .catch(function (resp) {
                             console.log(resp);

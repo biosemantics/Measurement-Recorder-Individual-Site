@@ -259,13 +259,30 @@ class HomeController extends Controller
 
     public function update(Request $request) {
         $value = Value::where('id', '=', $request->input('id'))->first();
-        $value->value = $request->input('value');
+        
+        $v = $request->input('value');
+
+        if (is_numeric($v)) {
+            $value->value = $v;
+        } else {
+            $varr = preg_split('/(?<=[0-9])(?=[a-z]+)/i',$v);
+            if (count($varr)==2 && is_numeric($varr[0])) {
+                $c = Character::find($value->character_id);
+                if ($c->unit == $varr[1]) {
+                    $value->value = $varr[0];
+                } else {
+                    return ['error_input' => 1];
+                }
+            }
+        }
+
         $value->save();
 
         $characters = $this->getValuesByCharacter();
         $arrayCharacters = $this->getArrayCharacters();
 
         return [
+            'error_input' => 0,
             'updatedCharacter' => $value,
             'characters' => $characters,
             'arrayCharacters' => $arrayCharacters
