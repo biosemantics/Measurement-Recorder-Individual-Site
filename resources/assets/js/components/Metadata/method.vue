@@ -38,7 +38,8 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">From:</label>
-                    <input :disabled="viewFlag == true" v-on:blur="userLog('From')" class="col-md-8" v-model="methodFrom"/>
+                    <input :disabled="viewFlag == true" v-on:blur="userLog('From')" class="col-md-8" v-model="methodFrom"
+                        @keyup="saveMeasureItems" name="methodFrom"/>
                     <p v-if="fromId != null || greenTick.from == true" style="color: green;">&#10004;</p>
                     <a v-if="fromNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.from }"
                        v-on:mouseover="needMore('from')">Need info on new terms:</a>
@@ -72,7 +73,7 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">To:</label>
-                    <input :disabled="viewFlag == true" v-on:blur="userLog('To')" class="col-md-8" v-model="methodTo"/>
+                    <input :disabled="viewFlag == true" v-on:blur="userLog('To')" class="col-md-8" v-model="methodTo" @keyup="saveMeasureItems" name="methodTo"/>
                     <p v-if="toId != null || greenTick.to == true" style="color: green;">&#10004;</p>
                     <a v-if="toNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.to }"
                        v-on:mouseover="needMore('to')">Need info on new terms:</a>
@@ -105,7 +106,7 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Include:</label>
-                    <input :disabled="viewFlag == true" v-on:blur="userLog('Include')" class="col-md-8" v-model="methodInclude"/>
+                    <input :disabled="viewFlag == true" v-on:blur="userLog('Include')" class="col-md-8" v-model="methodInclude" @keyup="saveMeasureItems" name="methodInclude"/>
                     <p v-if="includeId != null || greenTick.include == true" style="color: green;">&#10004;</p>
                     <a v-if="includeNeedMore == true" class="red col-md-12"
                        v-bind:class="{ green: needMoreGreen.include }" v-on:mouseover="needMore('include')">Need info on new
@@ -139,7 +140,7 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Exclude:</label>
-                    <input :disabled="viewFlag == true" v-on:blur="userLog('Exclude')" class="col-md-8" v-model="methodExclude"/>
+                    <input :disabled="viewFlag == true" v-on:blur="userLog('Exclude')" class="col-md-8" v-model="methodExclude" @keyup="saveMeasureItems" name="methodExclude"/>
                     <p v-if="excludeId != null || greenTick.exclude == true" style="color: green;">&#10004;</p>
                     <a v-if="excludeNeedMore == true" class="red col-md-12"
                        v-bind:class="{ green: needMoreGreen.exclude }" v-on:mouseover="needMore('exclude')">Need info on new
@@ -173,7 +174,7 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">At:</label>
-                    <input :disabled="viewFlag == true" v-on:blur="userLog('At')" class="col-md-8" v-model="methodAt"/>
+                    <input :disabled="viewFlag == true" v-on:blur="userLog('At')" class="col-md-8" v-model="methodAt" @keyup="saveMeasureItems" name="methodAt"/>
                     <p v-if="atId != null || greenTick.at == true" style="color: green;">&#10004;</p>
                     <a v-if="atNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.at }"
                        v-on:mouseover="needMore('at')">Need info on new terms:</a>
@@ -935,6 +936,9 @@
                         });
                 }
 
+            },
+            saveMeasureItems: function(event) {
+                localStorage.setItem(event.target.name, event.target.value);
             }
         },
         beforeMount () {
@@ -948,6 +952,18 @@
             app.methodInclude = app.childData[6];
             app.methodExclude = app.childData[7];
             app.methodAt = app.childData[8];
+            
+            const prev_methodFrom = localStorage.getItem('methodFrom');
+            const prev_methodTo = localStorage.getItem('methodTo');
+            const prev_methodInclude = localStorage.getItem('methodInclude');
+            const prev_methodExclude = localStorage.getItem('methodExclude');
+            const prev_methodAt = localStorage.getItem('methodAt');
+            if (!!prev_methodFrom) app.methodFrom = prev_methodFrom;
+            if (!!prev_methodTo) app.methodTo = prev_methodTo;
+            if (!!prev_methodInclude) app.methodInclude = prev_methodInclude;
+            if (!!prev_methodExclude) app.methodExclude = prev_methodExclude;
+            if (!!prev_methodAt) app.methodAt = prev_methodAt;
+
             axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.character_name)
                 .then(function (resp) {
                     console.log('exp search resp', resp);

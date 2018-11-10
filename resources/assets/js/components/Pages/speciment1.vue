@@ -423,6 +423,7 @@
                         /* app.currentMetadata = metadataFlag;
                         app.currentMetadata = null; */
                         app.detailsFlag = true;
+                        localStorage.clear();
                         var jsonRequest = {
                             'user_id': app.user.id,
                             'action': 'clicked on "Edit Icon" on "' + character.value + '"',
@@ -1435,6 +1436,7 @@
                     app.parentData[8] = app.character.method_at;
                     app.currentMetadata = method;
                     app.detailsFlag = true;
+                    localStorage.clear();
                     app.editFlag = false;
                     app.metadataFlag = "method";
                 } else {
