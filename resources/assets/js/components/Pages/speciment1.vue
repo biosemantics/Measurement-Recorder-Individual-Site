@@ -458,6 +458,17 @@
             },
             showDetails(metadata, previousMetadata = null) {
                 var app = this;
+                const prev_methodFrom = localStorage.getItem('methodFrom');
+                const prev_methodTo = localStorage.getItem('methodTo');
+                const prev_methodInclude = localStorage.getItem('methodInclude');
+                const prev_methodExclude = localStorage.getItem('methodExclude');
+                const prev_methodAt = localStorage.getItem('methodAt');
+                if (metadata !== 'method' && !app.methodUpdateFlag && 
+                    (!!prev_methodFrom || !!prev_methodTo ||
+                    !!prev_methodInclude || !!prev_methodExclude || !!prev_methodAt)) {
+                    alert('Please check input by pressing CHECK button');
+                    return;
+                }
                 console.log("metadata", metadata);
                 console.log("character", this.character);
                 this.metadataFlag = metadata;
@@ -466,11 +477,6 @@
                         this.parentData = [];
                         /* this.parentData.push(this.character.method_from);
                         this.parentData.push(this.character.method_to); */
-                        const prev_methodFrom = localStorage.getItem('methodFrom');
-                        const prev_methodTo = localStorage.getItem('methodTo');
-                        const prev_methodInclude = localStorage.getItem('methodInclude');
-                        const prev_methodExclude = localStorage.getItem('methodExclude');
-                        const prev_methodAt = localStorage.getItem('methodAt');
                         if (!app.character.method_from && !!prev_methodFrom) app.character.method_from = prev_methodFrom;
                         if (!app.character.method_to && !!prev_methodTo) app.character.method_to = prev_methodTo;
                         if (!app.character.method_include && !!prev_methodInclude) app.character.method_include = prev_methodInclude;
