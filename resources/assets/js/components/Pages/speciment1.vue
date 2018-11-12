@@ -255,6 +255,7 @@
 
         methods: {
             handleFcAfterDateBack (event) {
+                console.log('hadleFcAfterDateBack function inited');
                 var app = this;
                 this.updatedFlag = true;
                 $('.center').addClass('back-yellow');
@@ -314,19 +315,7 @@
                     default:
                         break;
                 }
-                if (((this.character.method_from != null && this.character.method_from != '') ||
-                    (this.character.method_to != null && this.character.method_to != '') ||
-                    (this.character.method_as != null && this.character.method_as != '') ||
-                    (this.character.method_include != null && this.character.method_include != '') ||
-                    (this.character.method_exclude != null && this.character.method_exclude != '') ||
-                    (this.character.method_at != null && this.character.method_at != '')) &&
-                    (this.character.unit != null && this.character.unit != '')) {
-                    this.saveDisabled = false;
-                    console.log("enabled");
-                } else {
-                    this.saveDisabled = true;
-                    console.log("disabled");
-                }
+                app.setSaveDisabled();
                 console.log('data after child handle: ', event); // get the data after child dealing
             },
             getCharacterUsingId(id) {
@@ -467,7 +456,7 @@
                     });
 
             },
-            showDetails (metadata, previousMetadata = null) {
+            showDetails(metadata, previousMetadata = null) {
                 var app = this;
                 console.log("metadata", metadata);
                 console.log("character", this.character);
@@ -477,6 +466,17 @@
                         this.parentData = [];
                         /* this.parentData.push(this.character.method_from);
                         this.parentData.push(this.character.method_to); */
+                        const prev_methodFrom = localStorage.getItem('methodFrom');
+                        const prev_methodTo = localStorage.getItem('methodTo');
+                        const prev_methodInclude = localStorage.getItem('methodInclude');
+                        const prev_methodExclude = localStorage.getItem('methodExclude');
+                        const prev_methodAt = localStorage.getItem('methodAt');
+                        if (!app.character.method_from && !!prev_methodFrom) app.character.method_from = prev_methodFrom;
+                        if (!app.character.method_to && !!prev_methodTo) app.character.method_to = prev_methodTo;
+                        if (!app.character.method_include && !!prev_methodInclude) app.character.method_include = prev_methodInclude;
+                        if (!app.character.method_exclude && !!prev_methodExclude) app.character.method_exclude = prev_methodExclude;
+                        if (!app.character.method_at && !!prev_methodAt) app.character.method_at = prev_methodAt;
+
                         this.parentData[0] = this.character.method_as;
                         app.parentData[3] = app.user;
                         app.parentData[4] = app.character.method_from;
@@ -484,6 +484,7 @@
                         app.parentData[6] = app.character.method_include;
                         app.parentData[7] = app.character.method_exclude;
                         app.parentData[8] = app.character.method_at;
+                        app.setSaveDisabled();
                         this.currentMetadata = method;
                         break;
                     case 'unit':
@@ -1616,6 +1617,21 @@
                         'action_detail': '', 
                         'type': 'Measurement Recorder'
                     });
+            },
+            setSaveDisabled() {
+                if (((this.character.method_from != null && this.character.method_from != '') ||
+                    (this.character.method_to != null && this.character.method_to != '') ||
+                    (this.character.method_as != null && this.character.method_as != '') ||
+                    (this.character.method_include != null && this.character.method_include != '') ||
+                    (this.character.method_exclude != null && this.character.method_exclude != '') ||
+                    (this.character.method_at != null && this.character.method_at != '')) &&
+                    (this.character.unit != null && this.character.unit != '')) {
+                    this.saveDisabled = false;
+                    console.log("enabled");
+                } else {
+                    this.saveDisabled = true;
+                    console.log("disabled");
+                }
             }
         },
         created() {

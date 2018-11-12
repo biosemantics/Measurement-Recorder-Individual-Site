@@ -953,17 +953,6 @@
             app.methodExclude = app.childData[7];
             app.methodAt = app.childData[8];
             
-            const prev_methodFrom = localStorage.getItem('methodFrom');
-            const prev_methodTo = localStorage.getItem('methodTo');
-            const prev_methodInclude = localStorage.getItem('methodInclude');
-            const prev_methodExclude = localStorage.getItem('methodExclude');
-            const prev_methodAt = localStorage.getItem('methodAt');
-            if (!!prev_methodFrom) app.methodFrom = prev_methodFrom;
-            if (!!prev_methodTo) app.methodTo = prev_methodTo;
-            if (!!prev_methodInclude) app.methodInclude = prev_methodInclude;
-            if (!!prev_methodExclude) app.methodExclude = prev_methodExclude;
-            if (!!prev_methodAt) app.methodAt = prev_methodAt;
-
             axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.character_name)
                 .then(function (resp) {
                     console.log('exp search resp', resp);
