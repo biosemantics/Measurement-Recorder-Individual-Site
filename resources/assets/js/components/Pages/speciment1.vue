@@ -328,6 +328,7 @@
 
             },
             editCharacter (character, metadataFlag = '', editFlag = true) {
+                var app = this;
                 console.log('metadataFlag', metadataFlag);
                 this.saveDisabled = false;
                 this.updatedFlag = false;
@@ -338,7 +339,6 @@
                 this.editFlag = editFlag;
                 console.log("character log in edit character", character);
                 sessionStorage.setItem("characterName", character.value);
-                var app = this;
                 axios.get("/mr/individual/public/api/v1/character/" + character.character_id)
                     .then(function (resp) {
                         console.log("get Character", resp);
@@ -348,6 +348,11 @@
                         if (metadataFlag != '') {
                             app.character.creator = app.user.name + ' via MR';
                             app.character.username = app.user.name;
+                        }
+                        if (app.character.username.indexOf(app.user.name) < 0) {
+                            sessionStorage.setItem('edit_created_other', true);
+                        } else {
+                            sessionStorage.setItem('edit_created_other', false);
                         }
 
                         /* app.parentData = [];

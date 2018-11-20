@@ -38,7 +38,7 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">From:</label>
-                    <input :disabled="viewFlag == true" v-on:blur="userLog('From')" class="col-md-8" v-model="methodFrom"
+                    <input :disabled="viewFlag || edit_created_other" v-on:blur="userLog('From')" class="col-md-8" v-model="methodFrom"
                         @keyup="saveMeasureItems" name="methodFrom"/>
                     <p v-if="fromId != null || greenTick.from == true" style="color: green;">&#10004;</p>
                     <a v-if="fromNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.from }"
@@ -73,7 +73,7 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">To:</label>
-                    <input :disabled="viewFlag == true" v-on:blur="userLog('To')" class="col-md-8" v-model="methodTo" @keyup="saveMeasureItems" name="methodTo"/>
+                    <input :disabled="viewFlag || edit_created_other" v-on:blur="userLog('To')" class="col-md-8" v-model="methodTo" @keyup="saveMeasureItems" name="methodTo"/>
                     <p v-if="toId != null || greenTick.to == true" style="color: green;">&#10004;</p>
                     <a v-if="toNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.to }"
                        v-on:mouseover="needMore('to')">Need info on new terms:</a>
@@ -106,7 +106,7 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Include:</label>
-                    <input :disabled="viewFlag == true" v-on:blur="userLog('Include')" class="col-md-8" v-model="methodInclude" @keyup="saveMeasureItems" name="methodInclude"/>
+                    <input :disabled="viewFlag || edit_created_other" v-on:blur="userLog('Include')" class="col-md-8" v-model="methodInclude" @keyup="saveMeasureItems" name="methodInclude"/>
                     <p v-if="includeId != null || greenTick.include == true" style="color: green;">&#10004;</p>
                     <a v-if="includeNeedMore == true" class="red col-md-12"
                        v-bind:class="{ green: needMoreGreen.include }" v-on:mouseover="needMore('include')">Need info on new
@@ -140,7 +140,7 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Exclude:</label>
-                    <input :disabled="viewFlag == true" v-on:blur="userLog('Exclude')" class="col-md-8" v-model="methodExclude" @keyup="saveMeasureItems" name="methodExclude"/>
+                    <input :disabled="viewFlag || edit_created_other" v-on:blur="userLog('Exclude')" class="col-md-8" v-model="methodExclude" @keyup="saveMeasureItems" name="methodExclude"/>
                     <p v-if="excludeId != null || greenTick.exclude == true" style="color: green;">&#10004;</p>
                     <a v-if="excludeNeedMore == true" class="red col-md-12"
                        v-bind:class="{ green: needMoreGreen.exclude }" v-on:mouseover="needMore('exclude')">Need info on new
@@ -174,7 +174,7 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">At:</label>
-                    <input :disabled="viewFlag == true" v-on:blur="userLog('At')" class="col-md-8" v-model="methodAt" @keyup="saveMeasureItems" name="methodAt"/>
+                    <input :disabled="viewFlag || edit_created_other" v-on:blur="userLog('At')" class="col-md-8" v-model="methodAt" @keyup="saveMeasureItems" name="methodAt"/>
                     <p v-if="atId != null || greenTick.at == true" style="color: green;">&#10004;</p>
                     <a v-if="atNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.at }"
                        v-on:mouseover="needMore('at')">Need info on new terms:</a>
@@ -245,6 +245,7 @@
                 childData: [],
                 character_name: null,
                 viewFlag: false,
+                edit_created_other: false, 
                 methodEntry: null,
                 noneMethod: false,
                 methodFrom: null,
@@ -945,6 +946,8 @@
             var app = this;
             this.character_name = sessionStorage.getItem("characterName");
             this.viewFlag = (sessionStorage.getItem('viewFlag') == 'true');
+            this.edit_created_other = (sessionStorage.getItem('edit_created_other')=='true');
+            console.log('edit created other -----------------', this.edit_created_other);
             this.childData = this.parentData; // save props data to itself's data and deal with it
             console.log('parentData', app.parentData);
             app.methodFrom = app.childData[4];

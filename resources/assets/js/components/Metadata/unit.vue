@@ -4,7 +4,7 @@
             "{{ character_name }}" uses unit:
         </div>
         <div class="col-md-12">
-            <select v-if="viewFlag == false" style="width: 100%;" v-model="childData" @change="handleDataFc()">
+            <select v-if="viewFlag == false" style="width: 100%;" v-model="childData" @change="handleDataFc()" :disabled="edit_created_other">
                 <option value="m">m</option>
                 <option value="dm">dm</option>
                 <option value="cm">cm</option>
@@ -25,6 +25,7 @@
                 childData: '',
                 character_name: null,
                 viewFlag: false,
+                edit_created_other: false,
             }
         },
         props: {
@@ -45,6 +46,7 @@
             this.character_name = sessionStorage.getItem("characterName");
             this.viewFlag = (sessionStorage.getItem('viewFlag') == 'true');
             this.childData = this.parentData; // save props data to itself's data and deal with it
+            this.edit_created_other = (sessionStorage.getItem('edit_created_other')=='true');
         }
     }
 </script>
