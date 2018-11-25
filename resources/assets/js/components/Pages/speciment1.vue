@@ -50,7 +50,7 @@
                                     <!-- Average and Deviation column end -->
 
                                     <th v-if="header.id >= 4" v-for="header in headers" style="min-width: 200px;">
-                                        <input class="th-input" v-bind:value="header.header" />
+                                        <input class="th-input" v-bind:value="header.header" /> <!-- v-on:blur="saveItem($event, header)" -->
                                         <a class="btn btn-add display-block" v-on:click="deleteHeader(header.id, header.header)"><span class="glyphicon glyphicon-remove"></span></a>
                                     </th>
                                     <th class="actions display-none" style="min-width: 250px;">
@@ -113,7 +113,7 @@
                                     <div class="modal-container">
 
                                         <div class="modal-header">
-                                            <h3>Information about "{{ character.name }}"</h3>
+                                            <h3>Information about "{{ character.name }}" by {{ character.username }}</h3>
                                         </div>
 
                                         <div class="modal-body">
@@ -475,7 +475,7 @@
                     return;
                 }
                 console.log("metadata", metadata);
-                console.log("character", this.character);
+                console.log("this.character=", this.character);
                 this.metadataFlag = metadata;
                 switch (metadata) {
                     case 'method':
@@ -513,7 +513,7 @@
                         this.currentMetadata = semantics;
                         break;
                     case 'creator':
-                        this.parentData = this.character.creator;
+                        this.parentData = this.character.username + ' via MR';//this.character.creator;
                         this.currentMetadata = creator;
                         break;
                     case 'usage':
@@ -653,7 +653,7 @@
                                             temp.value = resp.data.arrayCharacters[i].id;
                                             app.arraySearch.push(temp);
                                         }
-                                        app.addLastItemToDropdown();
+                                        //app.addLastItemToDropdown();
                                     }); */
                         }
                         used_character_name = app.arrayCharacters[i].name;
@@ -747,7 +747,7 @@
                             var checkName = true;
 
                             for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
-                                const character_creators = resp.data.arrayCharacters[i].username.split(',');
+                                const character_creators = resp.data.arrayCharacters[i].username.split(';');
                                 if ((app.character.name == resp.data.arrayCharacters[i].name) && (character_creators.indexOf(app.character.username)>-1)) {
                                     console.log('character username', app.character.username);
                                     console.log('resp username', resp.data.arrayCharacters[i].username);
@@ -1563,11 +1563,13 @@
                 console.log("selectedItem", val);
             },
             onSelect (item) {
+                console.log('Selected Dropdown Item:: ', item);
+                if (!item) {
+                    sessionStorage.setItem('edit_created_other', false);
+                }
                 var app = this;
                 var tempFlag = false;
                 app.item = item;
-                console.log('selectedItem', item);
-
                 for (var i = 0; i < app.characters.length; i++) {
                     for (var j = 0; j < app.characters[i].length; j++) {
                         if (app.characters[i][j].header_id == 1 && app.characters[i][j].character_id == item) {
@@ -1589,23 +1591,23 @@
             updateArraySearch() {
                 var app = this;
                 app.arraySearch = [];
+                //app.addLastItemToDropdown();
                 for (var i = 0; i < app.arrayCharacters.length; i++) {
                     var temp = {};
                     temp.text = app.arrayCharacters[i].name + ' by ' + app.arrayCharacters[i].username + ' (' + app.arrayCharacters[i].usage_count + ')';
                     temp.value = app.arrayCharacters[i].id;
                     app.arraySearch.push(temp);
                 }
-                app.addLastItemToDropdown();
             },
-            addLastItemToDropdown() {
+            /* addLastItemToDropdown() {
                 var app = this;
-                if (app.arraySearch.length > 0) {
+                if (app.arraySearch.length == 0) {
                     app.arraySearch.push({
                         value: null,
                         text: 'Click here to create a new character'
                     });
                 }
-            },
+            }, */
             log(url, logdata) {
                 axios.post(url, logdata)
                     .then(function (resp) {
@@ -1661,13 +1663,13 @@
                     app.arrayCharacters = resp.data.arrayCharacters;
 
                     app.arraySearch = [];
+                    //app.addLastItemToDropdown();
                     for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
                         var temp = {};
                         temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
                         temp.value = resp.data.arrayCharacters[i].id;
                         app.arraySearch.push(temp);
                     }
-                    app.addLastItemToDropdown();
                 })
                 .catch(function (resp) {
                     console.log(resp);

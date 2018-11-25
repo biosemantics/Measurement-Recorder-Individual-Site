@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-12" style="font-size: 15px;">
-            <b>Method: Please explain how you would measure the item. e.g., from the bottom to the top.</b>
+            <b>{{method_description}}</b>
             <br/>
         </div>
         <div class="col-md-12" v-if="methodEntry == null">
@@ -23,7 +23,7 @@
                      v-bind:src="'https://drive.google.com/uc?id=' + each.value.split('id=')[1].substring(0, each.value.split('id=')[1].length - 1)"/>
                 <!--<img class="img-method" v-on:click="clickedMethod(index, each.value.substring(1, each.value.length - 1))" v-bind:id="'img-method-' + index" style="width: 100%;" v-bind:src="'/images/' + each.value.split('id=')[1].substring(0, each.value.split('id=')[1].length - 1) + '.png'"/>-->
             </div>
-            <div v-if="noneMethod == false && methodArray.length > 0" class="col-md-12 text-right">
+            <div v-if="!noneMethod && methodArray.length > 0 && !edit_created_other" class="col-md-12 text-right">
                 <a class="btn btn-primary" v-on:click="noneOfAbove()">None of above</a>
             </div>
             <div v-if="noneMethod == true || methodArray.length == 0">
@@ -315,6 +315,7 @@
                 illustratorProperty: [
 
                 ],
+                method_description: '',
             }
         },
         props: {
@@ -947,6 +948,7 @@
             this.character_name = sessionStorage.getItem("characterName");
             this.viewFlag = (sessionStorage.getItem('viewFlag') == 'true');
             this.edit_created_other = (sessionStorage.getItem('edit_created_other')=='true');
+            this.method_description = this.edit_created_other ? 'Method: The character is defined as' : 'Method: Please explain how you would measure the item. e.g., from the bottom to the top.';
             console.log('edit created other -----------------', this.edit_created_other);
             this.childData = this.parentData; // save props data to itself's data and deal with it
             console.log('parentData', app.parentData);

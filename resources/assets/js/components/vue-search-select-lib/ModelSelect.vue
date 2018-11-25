@@ -27,6 +27,14 @@
          :class="menuClass"
          :style="menuStyle"
          tabindex="-1">
+      <template v-if="filteredOptions.length > 0">
+        <div class="item"
+             @click.stop="selectItem(null)"
+             @mousedown="mousedownItem"
+        >
+          Click here to create a new character
+        </div>
+      </template>
       <template v-for="(option, idx) in filteredOptions">
         <div class="item"
              :class="{ 'selected': option.selected, 'current': pointer === idx }"
@@ -122,9 +130,13 @@
             } catch (e) {
               return true
             }
-          })
+          }).sort(function (a, b) {
+            return a.text < b.text ? -1 : 1;
+          });
         } else {
-          return this.options
+          return this.options.sort(function (a, b) {
+            return a.text < b.text ? -1 : 1;
+          });
         }
       },
       optionValue () {

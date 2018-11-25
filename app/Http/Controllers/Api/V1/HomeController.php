@@ -90,7 +90,7 @@ class HomeController extends Controller
             if ($request->has('clone_id')) {
                 $original_username = Character::find($request->input('clone_id'))->username;
                 if (!empty($original_username))
-                    $tmp_username = $original_username.','.$request->input('username');
+                    $tmp_username = $original_username.';'.$request->input('username');
             }
             if (empty($tmp_username))
                 $tmp_username = $request->input('username');

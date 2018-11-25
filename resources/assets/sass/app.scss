@@ -8,6 +8,6 @@
 // Bootstrap
 @import "~bootstrap-sass/assets/stylesheets/bootstrap";
 
-div.dropdown div.item:last-child {
+div.dropdown div.item:first-child {
     font-weight: 600!important;
 }
