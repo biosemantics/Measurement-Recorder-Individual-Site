@@ -347,7 +347,14 @@
                         app.character = resp.data;
                         if (metadataFlag != '') {
                             app.character.creator = app.user.name + ' via MR';
-                            app.character.username = app.user.name;
+                            let temp_username = '';
+                            if (app.cloneFlag) {
+                                if (app.character.username.split(';').indexOf(app.user.name) < 0) {
+                                    app.character.username += ';' + app.user.name;
+                                }
+                            } else {
+                                app.character.username = app.user.name;
+                            }
                         }
                         if (app.character.username.indexOf(app.user.name) < 0) {
                             sessionStorage.setItem('edit_created_other', true);
@@ -723,7 +730,6 @@
                 console.log('save character', this.character);
                 console.log('edit Flag', this.editFlag);
                 app.show_flag = true;
-
                 var checkFields = true;
                 if ((this.character['method_as'] == null || this.character['method_as'] == '') &&
                     (this.character['method_from'] == null || this.character['method_from'] == '') &&
@@ -922,7 +928,7 @@
                                                         });
                                                 }
                                             } else {
-                                                if (app.cloneFlag == true) {
+                                                if (app.cloneFlag == true && !!app.item) {
                                                     axios.get('/mr/individual/public/api/v1/character/' + app.item)
                                                         .then(function(resp) {
                                                             var jsonRequest = {
@@ -1407,6 +1413,7 @@
                 this.character.measure_semantic = null;
                 this.character.entity_semantic = null;
                 this.character.creator = this.user.name + ' via MR';
+                this.character.username = this.user.name;
                 this.character.usage = [];
                 this.character.history = [];
 
