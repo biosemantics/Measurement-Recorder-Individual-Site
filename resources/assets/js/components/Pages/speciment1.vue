@@ -87,7 +87,7 @@
                     </div>
                     <div v-if="newCharacterFlag" @close="newCharacterFlag = false">
                         <transition name="modal">
-                            <div class="modal-mask">
+                            <div class="modal-mask character-modal">
                                 <div class="modal-wrapper">
                                     <div class="modal-container">
                                         <div class="modal-header">
@@ -95,10 +95,11 @@
                                         </div>
                                         <div class="modal-body">
                                             Character name:
-                                            <input autofocus v-model="character.name" />
+                                            <input autofocus v-model="character.name" v-on:input="checkMsg"/>
+                                            <P>Must include <span style="color: red;font-size: 14px;font-weight: bold;">'of'</span> or <span style="color: red;font-size: 14px;font-weight: bold;">'between'</span> in character name, e.g., 'diameter of ball'.</P>
                                         </div>
                                         <div class="modal-footer">
-                                            <a class="btn btn-primary" v-on:click="storeCharacter()">OK</a>
+                                            <a class="btn btn-primary disabled ok-btn" v-on:click="storeCharacter()"> &nbsp;  &nbsp; OK  &nbsp;  &nbsp; </a>
                                             <a v-on:click="cancelNewCharacter()" class="btn btn-danger">Cancel</a>
                                         </div>
                                     </div>
@@ -145,7 +146,8 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12 text-right" style="margin-top: 15px;">
-                                                    <a v-if="viewFlag == false" :disabled="saveDisabled == true" v-on:click="saveCharacter(metadataFlag)" class="btn btn-primary">Save</a>
+                                                    <a v-if="nextFlag == false" :disabled="nextDisabled == true" v-on:click="nextCharacter(nextCharacter)" class="btn btn-success">Next</a>
+                                                    <a v-if="saveFlag == false" :disabled="saveDisabled == true" v-on:click="saveCharacter(metadataFlag)" class="btn btn-primary">Save</a>
                                                     <a v-if="viewFlag == true" v-on:click="use(item)" class="btn btn-primary">Use this</a>
                                                     <a v-if="viewFlag == true" v-on:click="enhance(item)" class="btn btn-primary">Clone and enhance</a>
                                                     <a v-on:click="cancelCharacter()" class="btn btn-danger">Cancel</a>
@@ -207,6 +209,9 @@
                 searchText: '',
                 cloneFlag: false,
                 saveDisabled: true,
+                nextDisabled: true,
+                nextFlag: false,
+                saveFlag: true,
                 character: {
                     name: null,
                     method_from: null,
@@ -487,6 +492,11 @@
                 switch (metadata) {
                     case 'method':
                         this.parentData = [];
+                        app.saveFlag = true;
+                        app.nextFlag = false;
+                        $('.unit').removeClass('back-median-green');
+                        //$('.btn.btn-success').removeAttr('disabled');
+                        app.nextDisabled = false;
                         /* this.parentData.push(this.character.method_from);
                         this.parentData.push(this.character.method_to); */
                         if (!app.character.method_from && !!prev_methodFrom) app.character.method_from = prev_methodFrom;
@@ -508,6 +518,10 @@
                     case 'unit':
                         this.parentData = this.character.unit;
                         this.currentMetadata = unit;
+                        $('.unit').addClass('back-median-green');
+                        $('.method').addClass('back-median-green');
+                        app.saveFlag = false;
+                        app.nextFlag = true;
                         break;
                     case 'semantics':
                         this.parentData = [];
@@ -520,16 +534,22 @@
                         this.currentMetadata = semantics;
                         break;
                     case 'creator':
+                        app.saveFlag = false;
+                        app.nextFlag = true;
                         this.parentData = this.character.username + ' via MR';//this.character.creator;
                         this.currentMetadata = creator;
                         break;
                     case 'usage':
                         this.parentData = this.character.usage;
                         this.currentMetadata = usage;
+                        app.saveFlag = false;
+                        app.nextFlag = true;
                         break;
                     case 'history':
                         this.parentData = this.character.history;
                         this.currentMetadata = history;
+                        app.saveFlag = false;
+                        app.nextFlag = true;
                         break;
                     default:
                         break;
@@ -592,6 +612,8 @@
             use(characterId) {
                 console.log('characterId', characterId);
                 var app = this;
+                app.saveFlag = false;
+                app.nextFlag = true;
                 let used_character_name = '';
                 sessionStorage.setItem('viewFlag', false);
                 for (var i = 0; i < app.arrayCharacters.length; i++) {
@@ -693,6 +715,8 @@
             },
             enhance(characterId) {
                 var app = this;
+                app.saveFlag = false;
+                app.nextFlag = true;
                 sessionStorage.setItem('viewFlag', false);
                 axios.get('/mr/individual/public/api/v1/character/' + characterId)
                     .then(function(resp) {
@@ -725,8 +749,30 @@
                     'type': 'Measurement Recorder'
                 });
             },
+            nextCharacter () {
+                var app = this;
+                app.show_flag = true;
+                var checkFields = true;
+                if ((this.character['method_as'] == null || this.character['method_as'] == '') &&
+                    (this.character['method_from'] == null || this.character['method_from'] == '') &&
+                    (this.character['method_to'] == null || this.character['method_to'] == '') &&
+                    (this.character['method_include'] == null || this.character['method_include'] == '') &&
+                    (this.character['method_exclude'] == null || this.character['method_exclude'] == '') &&
+                    (this.character['method_at'] == null || this.character['method_at'] == '')) {
+                    checkFields = false;
+                }
+                if(!checkFields) {
+                    return false;
+                }
+                app.showDetails('unit', null);
+                $('.unit').addClass('back-median-green');
+                app.nextFlag = true;
+                app.saveFlag = false;
+            },
             saveCharacter (currentMetadata = null) {
                 var app = this;
+                app.saveFlag = false;
+                app.nextFlag = true;
                 console.log('save character', this.character);
                 console.log('edit Flag', this.editFlag);
                 app.show_flag = true;
@@ -1459,7 +1505,7 @@
                     app.editFlag = false;
                     app.metadataFlag = "method";
                 } else {
-                    alert("The header name should contain 'of' or 'between' word.");
+                    //alert("The header name should contain 'of' or 'between' word.");
                     app.log('/mr/individual/public/api/v1/user-log', {
                         'user_id': app.user.id,
                         'action': 'new character',
@@ -1651,6 +1697,20 @@
                 } else {
                     this.saveDisabled = true;
                     console.log("disabled");
+                }
+            },
+            checkMsg() {
+                //if (this.value)
+                var app = this;
+                var tpArray = this.character.name.split(' ');
+                var tpFlag = false;
+                for (var i = 0; i < tpArray.length; i++) {
+                    if (tpArray[i] == 'of' || tpArray[i] == 'between') {
+                        tpFlag = true;
+                    }
+                }
+                if (tpFlag) {
+                    $('.ok-btn').removeClass('disabled');
                 }
             }
         },

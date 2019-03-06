@@ -625,6 +625,7 @@
                     app.needMoreGreen.include = false;
                     app.needMoreGreen.exclude = false;
                     app.needMoreGreen.at = false;
+                    app.nextDisabled = true;
 
                     var jsonLog = {
                         'user_id': app.childData[3].id,
@@ -686,6 +687,8 @@
                                 axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodTo)
                                     .then(function (resp) {
                                         console.log('search to resp', resp);
+                                        app.nextDisabled = false;
+                                        $('.btn.btn-success').removeAttr('disabled');
                                         for (var i = 0; i < resp.data.entries.length; i++) {
                                             if (resp.data.entries[i].score == 1) {
                                                 app.toTerm = resp.data.entries[i].term;
@@ -853,6 +856,7 @@
                                     'action_detail': 'term=' + jsonClass.term +' in "'+app.character_name+'"',
                                     'type': 'Measurement Recorder',
                                 };
+
                                 axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
                                     .then(function (resp) {
                                         console.log('user-log resp', resp);
@@ -884,6 +888,7 @@
                                     "examples": "tba",
                                     "logicDefinition": "measured_from some [" + app.methodFrom + "] and measured_to some [" + app.methodTo + "]"
                                 };
+
                                 if (app.methodFrom != null) {
                                     jsonClass.definition = jsonClass.definition + 'from [' + app.methodFrom + ']';
                                 }
@@ -907,6 +912,7 @@
                                 } else if (app.character_name.split(' ')[0] == 'width') {
                                     jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#width"
                                 }
+
                                 var jsonLog = {
                                     'user_id': app.childData[3].id,
                                     'action': 'In Method, add new term to ontology',

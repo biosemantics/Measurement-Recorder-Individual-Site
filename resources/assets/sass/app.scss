@@ -11,3 +11,10 @@
 div.dropdown div.item:first-child {
     font-weight: 600!important;
 }
+.character-modal .modal-header { display: none; }
+.character-modal .modal-footer { border-top: none; }
+@media screen and (min-width: 767px ){
+    .character-modal .modal-container {
+        width: 440px !important;
+    }
+}
