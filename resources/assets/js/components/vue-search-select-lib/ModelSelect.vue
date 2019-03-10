@@ -50,7 +50,7 @@
              @click.stop="selectItem(null)"
              @mousedown="mousedownItem"
         >
-          Nothing found, click here to create new character
+          Nothing found, click <strong class="text-info" style="font-size: 24px;font-color">here</strong> to create new character
         </div>
       </template>
     </div>

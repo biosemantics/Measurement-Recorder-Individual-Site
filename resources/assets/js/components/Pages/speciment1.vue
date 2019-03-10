@@ -4,7 +4,8 @@
             <div class="tab-pane" id="">
                 <form class="row" autocomplete="off">
                     <div class="col-md-4">
-                        Find or create character<br>Include 'of' or 'between' in character name, e.g., 'diameter of ball'.
+                        <!--Find or create character<br>Include 'of' or 'between' in character name, e.g., 'diameter of ball'.-->
+                        <strong style="font-size: 24px;">Search or Create Character</strong>
                     </div>
                     <div class="col-md-4">
                         <!--<input placeholder="Measure of Entity (e.g: length of leaf)" style="width: 100%;" v-model="character.name" name="text"/>-->
