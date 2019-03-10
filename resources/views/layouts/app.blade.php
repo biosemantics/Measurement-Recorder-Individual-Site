@@ -80,6 +80,6 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}?v=2019_03_10_2"></script>
+    <script src="{{ asset('js/app.js') }}?v=2019_03_10_3"></script>
 </body>
 </html>

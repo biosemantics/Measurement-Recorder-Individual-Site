@@ -32,7 +32,7 @@
              @click.stop="selectItem(null)"
              @mousedown="mousedownItem"
         >
-          Click <strong class="text-info" style="font-size: 24px;font-color">HERE</strong> to create a new character
+          Click <strong style="font-size: 24px;color: #3097D0;">HERE</strong> to create a new character
         </div>
       </template>
       <template v-for="(option, idx) in filteredOptions">
@@ -50,7 +50,7 @@
              @click.stop="selectItem(null)"
              @mousedown="mousedownItem"
         >
-          Nothing found, click <strong class="text-info" style="font-size: 24px;font-color">HERE</strong> to create new character
+          Nothing found, click <strong style="font-size: 24px;color: #3097D0;">HERE</strong> to create new character
         </div>
       </template>
     </div>
