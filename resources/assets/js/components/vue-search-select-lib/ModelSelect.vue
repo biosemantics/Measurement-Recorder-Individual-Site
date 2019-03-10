@@ -32,7 +32,7 @@
              @click.stop="selectItem(null)"
              @mousedown="mousedownItem"
         >
-          Click here to create a new character
+          Click <strong class="text-info" style="font-size: 24px;font-color">HERE</strong> to create a new character
         </div>
       </template>
       <template v-for="(option, idx) in filteredOptions">
