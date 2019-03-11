@@ -547,6 +547,16 @@
             noneOfAbove() {
                 var app = this;
                 app.noneMethod = true;
+                var jsonLog = {
+                    'user_id': app.childData[3].id,
+                    'action': 'click on "None of the above" for ' + app.character_name,
+                    'action_detail': '',
+                    'type': 'Measurement Recorder',
+                };
+                axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
+                    .then(function (resp) {
+                        console.log('user-log resp', resp);
+                    });
             },
             displayImageSection() {
                 var app = this;
@@ -651,7 +661,9 @@
                                     tempFlag = true;
                                 }
                             }
+                            //var axios_result = [];
                             if (app.methodFrom != null && app.methodFrom != '') {
+                                //axios_result['methodFrom'] = '';
                                 axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodFrom)
                                     .then(function (resp) {
                                         console.log('search from resp', resp);
@@ -666,6 +678,17 @@
                                             }
                                         }
                                         if (app.fromId == null) {
+                                            //axios_result['methodFrom'] = app.methodFrom;
+                                            var jsonLog = {
+                                                'user_id': app.childData[3].id,
+                                                'action': 'unmatched phrases ',
+                                                'action_detail': '"from" : ' + app.methodFrom,
+                                                'type': 'Measurement Recorder',
+                                            };
+                                            axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
+                                                .then(function (resp) {
+
+                                                });
                                             app.fromNeedMore = true;
                                             app.fromSynonyms = resp.data.entries;
                                             if (app.fromSynonyms.length == 0) {
@@ -681,9 +704,13 @@
                                                 }
                                             }
                                         }
+                                        // else {
+                                        //     axios_result['methodFrom'] = 'ok';
+                                        // }
                                     });
                             }
                             if (app.methodTo != null && app.methodTo != '') {
+                                //axios_result['methodTo'] = '';
                                 axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodTo)
                                     .then(function (resp) {
                                         console.log('search to resp', resp);
@@ -700,6 +727,17 @@
                                             }
                                         }
                                         if (app.toId == null) {
+                                            //axios_result['methodTo'] = app.methodTo;
+                                            var jsonLog = {
+                                                'user_id': app.childData[3].id,
+                                                'action': 'unmatched phrases ',
+                                                'action_detail': '"to" : ' + app.methodTo,
+                                                'type': 'Measurement Recorder',
+                                            };
+                                            axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
+                                                .then(function (resp) {
+
+                                                });
                                             app.toNeedMore = true;
                                             app.toSynonyms = resp.data.entries;
                                             if (app.toSynonyms.length == 0) {
@@ -715,9 +753,13 @@
                                                 }
                                             }
                                         }
+                                        // else {
+                                        //     axios_result['methodTo'] = 'ok';
+                                        // }
                                     });
                             }
                             if (app.methodInclude != null && app.methodInclude != '') {
+                                //axios_result['methodInclude'] = '';
                                 axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodInclude)
                                     .then(function (resp) {
                                         console.log('search include resp', resp);
@@ -732,6 +774,17 @@
                                             }
                                         }
                                         if (app.includeId == null) {
+                                            //axios_result['methodInclude'] = app.methodInclude;
+                                            var jsonLog = {
+                                                'user_id': app.childData[3].id,
+                                                'action': 'unmatched phrases ',
+                                                'action_detail': '"Include" : ' + app.methodInclude,
+                                                'type': 'Measurement Recorder',
+                                            };
+                                            axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
+                                                .then(function (resp) {
+
+                                                });
                                             app.includeNeedMore = true;
                                             app.includeSynonyms = resp.data.entries;
                                             if (app.includeSynonyms.length == 0) {
@@ -747,9 +800,13 @@
                                                 }
                                             }
                                         }
+                                        // else {
+                                        //     axios_result['methodInclude'] = "ok";
+                                        // }
                                     });
                             }
                             if (app.methodExclude != null && app.methodExclude != '') {
+                                //axios_result['methodExclude'] = '';
                                 axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodExclude)
                                     .then(function (resp) {
                                         console.log('search exclude resp', resp);
@@ -764,6 +821,17 @@
                                             }
                                         }
                                         if (app.excludeId == null) {
+                                            //axios_result['methodExclude'] = app.methodExclude;
+                                            var jsonLog = {
+                                                'user_id': app.childData[3].id,
+                                                'action': 'unmatched phrases ',
+                                                'action_detail': '"Exclude" : ' + app.methodExclude,
+                                                'type': 'Measurement Recorder',
+                                            };
+                                            axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
+                                                .then(function (resp) {
+
+                                                });
                                             app.excludeNeedMore = true;
                                             app.excludeSynonyms = resp.data.entries;
                                             if (app.excludeSynonyms.length == 0) {
@@ -779,9 +847,13 @@
                                                 }
                                             }
                                         }
+                                        // else {
+                                        //     axios_result['methodExclude'] = 'ok';
+                                        // }
                                     });
                             }
                             if (app.methodAt != null && app.methodAt != '') {
+                                //axios_result['methodAt'] = '';
                                 axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodAt)
                                     .then(function (resp) {
                                         console.log('search at resp', resp);
@@ -796,6 +868,17 @@
                                             }
                                         }
                                         if (app.atId == null) {
+                                            //axios_result['methodAt'] = app.methodAt;
+                                            var jsonLog = {
+                                                'user_id': app.childData[3].id,
+                                                'action': 'unmatched phrases ',
+                                                'action_detail': '"at" : ' + app.methodAt,
+                                                'type': 'Measurement Recorder',
+                                            };
+                                            axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
+                                                .then(function (resp) {
+
+                                                });
                                             app.atNeedMore = true;
                                             app.atSynonyms = resp.data.entries;
                                             if (app.atSynonyms.length == 0) {
@@ -811,8 +894,50 @@
                                                 }
                                             }
                                         }
+                                        // else {
+                                        //     axios_result['methodAt'] = 'ok';
+                                        // }
                                     });
                             }
+
+                            // Array.prototype.remove = function(val) {
+                            //     var index = this.indexOf(val);
+                            //     if (index > -1) {
+                            //         this.splice(index, 1);
+                            //     }
+                            // };
+
+                            // if (axios_result.length !== 0) {
+                            //     var getAllRespTimer = window.setInterval(getAllResp, 200);
+                            // }
+                            //
+                            // function getAllResp() {
+                            //     var axios_result_length = axios_result.length;
+                            //     var axios_result_all_ready = true;
+                            //     for (var i = 0;i < axios_result_length; i++) {
+                            //         if (axios_result[i] !== '') {
+                            //             if (axios_result[i] === 'ok') {
+                            //                 axios_result.remove(i);
+                            //             }
+                            //         } else {
+                            //             axios_result_all_ready = false;
+                            //         }
+                            //     }
+                            //     if (axios_result_all_ready === true) {
+                            //         window.clearInterval(getAllRespTimer);
+                            //         var jsonLog = {
+                            //             'user_id': app.childData[3].id,
+                            //             'action': 'unmatched phrases :',
+                            //             'action_detail': 'term=' + jsonClass.term +' in "'+app.character_name+'"',
+                            //             'type': 'Measurement Recorder',
+                            //         };
+                            //         axios.post('/mr/individual/public/api/v1/user-log', jsonLog)
+                            //             .then(function (resp) {
+                            //                 console.log('user-log resp', resp);
+                            //             });
+                            //     }
+                            // }
+
                             if (tempFlag == false) {
 
                                 var jsonClass = {

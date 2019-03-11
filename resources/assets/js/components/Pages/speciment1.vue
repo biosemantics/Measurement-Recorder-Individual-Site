@@ -616,6 +616,7 @@
                 app.saveFlag = false;
                 app.nextFlag = true;
                 let used_character_name = '';
+                let used_character_creator = '';
                 sessionStorage.setItem('viewFlag', false);
                 for (var i = 0; i < app.arrayCharacters.length; i++) {
                     if (app.arrayCharacters[i].id == characterId) {
@@ -686,13 +687,14 @@
                                         //app.addLastItemToDropdown();
                                     }); */
                         }
-                        used_character_name = app.arrayCharacters[i].name;
+                        used_character_name = app.arrayCharacters[i].name
+                        used_character_creator = app.arrayCharacters[i].creator;
                     }
                 }
                 app.log('/mr/individual/public/api/v1/user-log', {
                     'user_id': app.user.id,
                     'action': 'clicked the "Use This" button',
-                    'action_detail': used_character_name,
+                    'action_detail': 'name : ' + used_character_name + ",creator : " + used_character_creator,
                     'type': 'Measurement Recorder'
                 });
                 app.viewFlag = false;
@@ -743,12 +745,16 @@
                     .catch(function(resp) {
                         console.log('getCharacter error', resp);
                     });
-                app.log('/mr/individual/public/api/v1/user-log', {
-                    'user_id': app.user.id,
-                    'action': 'clicked the "Clone and Enhance" button',
-                    'action_detail': '',
-                    'type': 'Measurement Recorder'
-                });
+                for (var i = 0; i < app.arrayCharacters.length; i++) {
+                    if (app.arrayCharacters[i].id == characterId) {
+                        app.log('/mr/individual/public/api/v1/user-log', {
+                            'user_id': app.user.id,
+                            'action': 'clicked the "Clone and Enhance" button',
+                            'action_detail': 'name : ' + app.arrayCharacters[i].name + ",creator : " + app.arrayCharacters[i].creator,
+                            'type': 'Measurement Recorder'
+                        });
+                    }
+                }
             },
             nextCharacter () {
                 var app = this;
