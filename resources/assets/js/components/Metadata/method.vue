@@ -39,7 +39,7 @@
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">From:</label>
                     <input :disabled="viewFlag || edit_created_other" v-on:blur="userLog('From')" class="col-md-8" v-model="methodFrom"
-                        @keyup="saveMeasureItems" name="methodFrom"/>
+                           @keyup="saveMeasureItems" name="methodFrom"/>
                     <p v-if="fromId != null || greenTick.from == true" style="color: green;">&#10004;</p>
                     <a v-if="fromNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.from }"
                        v-on:mouseover="needMore('from')">Need info on new terms:</a>
@@ -245,7 +245,7 @@
                 childData: [],
                 character_name: null,
                 viewFlag: false,
-                edit_created_other: false, 
+                edit_created_other: false,
                 methodEntry: null,
                 noneMethod: false,
                 methodFrom: null,
@@ -635,7 +635,6 @@
                     app.needMoreGreen.include = false;
                     app.needMoreGreen.exclude = false;
                     app.needMoreGreen.at = false;
-                    app.nextDisabled = true;
 
                     var jsonLog = {
                         'user_id': app.childData[3].id,
@@ -714,8 +713,6 @@
                                 axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodTo)
                                     .then(function (resp) {
                                         console.log('search to resp', resp);
-                                        app.nextDisabled = false;
-                                        $('.btn.btn-success').removeAttr('disabled');
                                         for (var i = 0; i < resp.data.entries.length; i++) {
                                             if (resp.data.entries[i].score == 1) {
                                                 app.toTerm = resp.data.entries[i].term;
@@ -1088,7 +1085,7 @@
             app.methodInclude = app.childData[6];
             app.methodExclude = app.childData[7];
             app.methodAt = app.childData[8];
-            
+
             axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.character_name)
                 .then(function (resp) {
                     console.log('exp search resp', resp);
