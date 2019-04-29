@@ -23,6 +23,7 @@ Vue.use(VueRouter);
 export default Vue;
 
 
+
 export var router = new VueRouter({
     mode: 'history',
     routes: routes
