@@ -5,22 +5,23 @@
                 <form class="row" autocomplete="off">
                     <div class="col-md-4">
                         <!--Find or create character<br>Include 'of' or 'between' in character name, e.g., 'diameter of ball'.-->
-                        <strong style="font-size: 24px;">Search or Create Character</strong>
+                        <strong style="font-size: 17px;">Search or Create Character</strong>
                     </div>
                     <div class="col-md-4">
                         <!--<input placeholder="Measure of Entity (e.g: length of leaf)" style="width: 100%;" v-model="character.name" name="text"/>-->
                         <!--<list-select :list="arraySearch"-->
-                                     <!--option-value="code"-->
-                                     <!--option-text="name"-->
-                                     <!--:selected-item="item"-->
-                                     <!--placeholder="select item"-->
-                                     <!--@select="onSelect">-->
+                        <!--option-value="code"-->
+                        <!--option-text="name"-->
+                        <!--:selected-item="item"-->
+                        <!--placeholder="select item"-->
+                        <!--@select="onSelect">-->
                         <!--</list-select>-->
                         <model-select :options="arraySearch"
                                       v-model="item"
                                       placeholder="Type in here to find or create a character"
                                       @searchchange="printSearchText"
-                                      @select="onSelect">
+                                      @select="onSelect"
+                        >
                         </model-select>
                     </div>
                     <div class="col-md-4 text-center">
@@ -51,33 +52,46 @@
                                     <!-- Average and Deviation column end -->
 
                                     <th v-if="header.id >= 4" v-for="header in headers" style="min-width: 200px;">
-                                        <input class="th-input" v-bind:value="header.header" /> <!-- v-on:blur="saveItem($event, header)" -->
-                                        <a class="btn btn-add display-block" v-on:click="deleteHeader(header.id, header.header)"><span class="glyphicon glyphicon-remove"></span></a>
+                                        <input class="th-input" v-bind:value="header.header"/>
+                                        <!-- v-on:blur="saveItem($event, header)" -->
+                                        <a class="btn btn-add display-block"
+                                           v-on:click="deleteHeader(header.id, header.header)"><span
+                                                class="glyphicon glyphicon-remove"></span></a>
                                     </th>
                                     <th class="actions display-none" style="min-width: 250px;">
-                                        <input style="width: 50%;" id="new-header" class="th-input" v-model="newHeader.header" name="header" autofocus/>
-                                        <a class="btn btn-success btn-save" v-on:click="saveHeader()"><span class="glyphicon glyphicon-floppy-disk"></span></a>
-                                        <a class="btn btn-danger btn-cancel" v-on:click="cancelHeader()"><span class="glyphicon glyphicon-remove-circle"></span></a>
+                                        <input style="width: 50%;" id="new-header" class="th-input"
+                                               v-model="newHeader.header" name="header" autofocus/>
+                                        <a class="btn btn-success btn-save" v-on:click="saveHeader()"><span
+                                                class="glyphicon glyphicon-floppy-disk"></span></a>
+                                        <a class="btn btn-danger btn-cancel" v-on:click="cancelHeader()"><span
+                                                class="glyphicon glyphicon-remove-circle"></span></a>
                                     </th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr v-for="eachCharacter in characters" v-if="getCharacterUsingId(eachCharacter[0].character_id).show_flag == true">
+                                <tr v-for="eachCharacter in characters"
+                                    v-if="getCharacterUsingId(eachCharacter[0].character_id).show_flag == true">
                                     <!-- && getCharacterUsingId(eachCharacter[0].character_id).username == user.name -->
                                     <td class="text-center" v-if="item.header_id == 1" v-for="item in eachCharacter">
                                         <div>
                                             {{ item.value }} ({{ item.username }})<br> ({{ item.unit }})
-                                            <a class="btn" v-on:click="editCharacter(eachCharacter[eachCharacter.length - 2])"><span class="glyphicon glyphicon-edit"></span></a>
-                                            <a class="btn" v-on:click="deleteCharacter(eachCharacter[0].character_id)"><span class="glyphicon glyphicon-trash"></span></a>
+                                            <a class="btn"
+                                               v-on:click="editCharacter(eachCharacter[eachCharacter.length - 2])"><span
+                                                    class="glyphicon glyphicon-edit"></span></a>
+                                            <a class="btn"
+                                               v-on:click="deleteCharacter(eachCharacter[0].character_id)"><span
+                                                    class="glyphicon glyphicon-trash"></span></a>
 
                                         </div>
                                     </td>
-                                    <td class="text-center" v-if="item.header_id==0" v-for="item in eachCharacter" style="line-height: 45px;">
+                                    <td class="text-center" v-if="item.header_id==0" v-for="item in eachCharacter"
+                                        style="line-height: 45px;">
                                         {{ item.value }}
                                     </td>
 
                                     <td v-if="item.header_id >= 4" v-for="item in eachCharacter">
-                                        <input v-if="item.header_id >= 4" class="td-input" v-model="item.value" v-on:blur="saveItem($event, item)"/>
+                                        <input v-if="item.header_id >= 4" class="td-input" v-model="item.value"
+                                               v-on:blur="saveItem($event, item)"/>
                                     </td>
 
                                 </tr>
@@ -95,12 +109,34 @@
                                             Input the character name in the input box and click OK.
                                         </div>
                                         <div class="modal-body">
-                                            Character name:
-                                            <input autofocus v-model="character.name" v-on:input="checkMsg"/>
-                                            <P>Must include <span style="color: red;font-size: 14px;font-weight: bold;">'of'</span> or <span style="color: red;font-size: 14px;font-weight: bold;">'between'</span> in character name, e.g., 'diameter of ball'.</P>
+                                            Form character name:
+                                            <div>
+                                                <select v-model="firstCharacter">
+                                                    <option>length</option>
+                                                    <option>width</option>
+                                                    <option>depth</option>
+                                                    <option>diameter</option>
+                                                    <option>distance</option>
+                                                </select>
+                                                <select v-model="middleCharacter">
+                                                    <option>of</option>
+                                                    <option>between</option>
+                                                </select>
+                                                <input v-model="lastCharacter">
+
+                                                <!--<input autofocus v-model="character.name" v-on:input="checkMsg"/>-->
+                                                <P>Must include <span
+                                                        style="color: red;font-size: 14px;font-weight: bold;">'of'</span>
+                                                    or <span
+                                                            style="color: red;font-size: 14px;font-weight: bold;">'between'</span>
+                                                    in character name, e.g., 'diameter of ball'.</P>
+                                            </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <a class="btn btn-primary disabled ok-btn" v-on:click="storeCharacter()"> &nbsp;  &nbsp; OK  &nbsp;  &nbsp; </a>
+                                            <a class="btn btn-primary ok-btn"
+                                               v-bind:class="{ disabled: !firstCharacter || !middleCharacter || !lastCharacter }"
+                                               v-on:click="storeCharacter()">
+                                                &nbsp; &nbsp; OK &nbsp; &nbsp; </a>
                                             <a v-on:click="cancelNewCharacter()" class="btn btn-danger">Cancel</a>
                                         </div>
                                     </div>
@@ -115,7 +151,8 @@
                                     <div class="modal-container">
 
                                         <div class="modal-header">
-                                            <h3>Information about "{{ character.name }}" by {{ character.username }}</h3>
+                                            <h3>Information about "{{ character.name }}" by {{ character.username
+                                                }}</h3>
                                         </div>
 
                                         <div class="modal-body">
@@ -123,11 +160,22 @@
                                                 <div class="col-md-6 radial-menu">
                                                     <ul style="margin-left: auto; margin-right: auto;">
                                                         <li><a v-on:click="showDetails('', metadataFlag)"></a></li>
-                                                        <li class="method"><a v-on:click="showDetails('method', metadataFlag)">1. Method<br><span class="glyphicon glyphicon-edit"></span></a></li>
-                                                        <li class="unit"><a v-on:click="showDetails('unit', metadataFlag)">2. Unit<br><span class="glyphicon glyphicon-edit"></span></a></li>
-                                                        <li class="creator"><a v-on:click="showDetails('creator', metadataFlag)">Creator</a></li>
-                                                        <li><a v-on:click="showDetails('usage', metadataFlag)">Usage</a></li>
-                                                        <li><a v-on:click="showDetails('history', metadataFlag)">History</a></li>
+                                                        <li class="method"><a
+                                                                v-on:click="showDetails('method', metadataFlag)">1.
+                                                            Method<br><span class="glyphicon glyphicon-edit"></span></a>
+                                                        </li>
+                                                        <li class="unit"><a
+                                                                v-on:click="showDetails('unit', metadataFlag)">2.
+                                                            Unit<br><span class="glyphicon glyphicon-edit"></span></a>
+                                                        </li>
+                                                        <li class="creator"><a
+                                                                v-on:click="showDetails('creator', metadataFlag)">Creator</a>
+                                                        </li>
+                                                        <li><a v-on:click="showDetails('usage', metadataFlag)">Usage</a>
+                                                        </li>
+                                                        <li>
+                                                            <a v-on:click="showDetails('history', metadataFlag)">History</a>
+                                                        </li>
                                                         <li><a v-on:click="showDetails('', metadataFlag)"></a></li>
                                                         <li><a v-on:click="showDetails('', metadataFlag)"></a></li>
                                                         <li><a v-on:click="showDetails('', metadataFlag)"></a></li>
@@ -147,9 +195,12 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12 text-right" style="margin-top: 15px;">
-                                                    <a v-if="viewFlag == false" :disabled="saveDisabled == true" v-on:click="saveCharacter(metadataFlag)" class="btn btn-primary">Save</a>
-                                                    <a v-if="viewFlag == true" v-on:click="use(item)" class="btn btn-primary">Use this</a>
-                                                    <a v-if="viewFlag == true" v-on:click="enhance(item)" class="btn btn-primary">Clone and enhance</a>
+                                                    <a v-if="viewFlag == false" :disabled="saveDisabled == true"
+                                                       v-on:click="saveCharacter(metadataFlag)" class="btn btn-primary">Save</a>
+                                                    <a v-if="viewFlag == true" v-on:click="use(item)"
+                                                       class="btn btn-primary">Use this</a>
+                                                    <a v-if="viewFlag == true" v-on:click="enhance(item)"
+                                                       class="btn btn-primary">Clone and enhance</a>
                                                     <a v-on:click="cancelCharacter()" class="btn btn-danger">Cancel</a>
                                                 </div>
                                             </div>
@@ -163,7 +214,85 @@
                             </div>
                         </transition>
                     </div>
-
+                    <div v-if="confirmMethod" @close="confirmMethod = false">
+                        <transition name="modal">
+                            <div class="modal-mask character-modal">
+                                <div class="modal-wrapper">
+                                    <div class="modal-container">
+                                        <div class="modal-header">
+                                            Confirm Method
+                                        </div>
+                                        <div class="modal-body">
+                                            <div v-if="!character.method_as">
+                                                <div>
+                                                    Please read the method definition carefully. Is this what you would
+                                                    like
+                                                    to save?
+                                                </div>
+                                                <div v-if="character.method_from">
+                                                    From: {{ character.method_from }}
+                                                </div>
+                                                <div v-if="character.method_to">
+                                                    To: {{ character.method_to }}
+                                                </div>
+                                                <div v-if="character.method_include">
+                                                    Include: {{ character.method_include }}
+                                                </div>
+                                                <div v-if="character.method_exclude">
+                                                    Exclude: {{ character.method_exclude }}
+                                                </div>
+                                                <div v-if="character.method_at">
+                                                    At: {{ character.method_at }}
+                                                </div>
+                                            </div>
+                                            <div v-if="character.method_as">
+                                                <div>
+                                                    Please review the method definition carefully. Is this what you
+                                                    would like
+                                                    to save?
+                                                </div>
+                                                <div>
+                                                    <img class="img-method"
+                                                         style="width: 100%;"
+                                                         v-bind:src="'https://drive.google.com/uc?id=' + character.method_as.split('id=')[1].substring(0, character.method_as.split('id=')[1].length)"/>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a class="btn btn-primary ok-btn"
+                                                   v-on:click="methodConfirm()">
+                                                    &nbsp; &nbsp; Confirm &nbsp; &nbsp; </a>
+                                                <a v-on:click="cancelConfirmMethod()" class="btn btn-danger">Cancel</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </transition>
+                    </div>
+                    <div v-if="confirmUnit" @close="confirmUnit = false">
+                        <transition name="modal">
+                            <div class="modal-mask character-modal">
+                                <div class="modal-wrapper">
+                                    <div class="modal-container">
+                                        <div class="modal-header">
+                                            Confirm Unit
+                                        </div>
+                                        <div class="modal-body">
+                                            <div>
+                                                You've select {{ character.unit }} as the Unit for {{ character.name }}.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a class="btn btn-primary ok-btn"
+                                                   v-on:click="confirmSave(metadataFlag)">
+                                                    &nbsp; &nbsp; Confirm &nbsp; &nbsp; </a>
+                                                <a v-on:click="cancelConfirmUnit()" class="btn btn-danger">Cancel</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </transition>
+                    </div>
                 </form>
             </div>
         </div>
@@ -180,16 +309,18 @@
     import usage from '../../components/Metadata/usage.vue';
     import history from '../../components/Metadata/history.vue';
     import modal from '../../components/Pages/modal.vue';
+    import VTooltip from 'v-tooltip';
 
+    Vue.use(VTooltip);
     Vue.component('modal', modal);
 
     /* import { ModelSelect } from 'vue-search-select' */
-    import { ListSelect } from '../vue-search-select-lib'
-    import { ModelSelect } from '../vue-search-select-lib'
+    import {ListSelect} from '../vue-search-select-lib'
+    import {ModelSelect} from '../vue-search-select-lib'
     Vue.use({ListSelect});
     Vue.use({ModelSelect});
     /* import vSelect from 'vue-select';
-    Vue.component('v-select', vSelect); */
+     Vue.component('v-select', vSelect); */
 
     export default {
         props: [
@@ -197,9 +328,7 @@
         ],
         data: function () {
             return {
-                arraySearch: [
-
-                ],
+                arraySearch: [],
                 newCharacterFlag: false,
                 item: {
                     value: '',
@@ -252,6 +381,11 @@
                 term: null,
                 termValue: null,
                 arrayCharacters: [],
+                firstCharacter: '',
+                middleCharacter: '',
+                lastCharacter: '',
+                confirmMethod: false,
+                confirmUnit: false,
             }
         },
 
@@ -265,7 +399,7 @@
                 switch (this.metadataFlag) {
                     case 'method':
                         /* this.character.method_from = event[0];
-                        this.character.method_to = event[1]; */
+                         this.character.method_to = event[1]; */
                         this.character.method_as = event[0];
                         app.term = event[1];
                         app.termValue = event[2];
@@ -278,15 +412,15 @@
                         this.methodUpdateFlag = true;
                         console.log("method return", event);
                         /* var jsonRequest = {
-                            'user_id': app.user.id,
-                            'action': 'clicked method image for "' + app.character.name + '"',
-                            'type': 'Measurement Recorder',
-                            'action_detail': app.character.method_as
-                        };
-                        axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
-                            .then(function(resp) {
-                                console.log("userLog resp", resp);
-                            }); */
+                         'user_id': app.user.id,
+                         'action': 'clicked method image for "' + app.character.name + '"',
+                         'type': 'Measurement Recorder',
+                         'action_detail': app.character.method_as
+                         };
+                         axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
+                         .then(function(resp) {
+                         console.log("userLog resp", resp);
+                         }); */
                         break;
                     case 'unit':
                         this.character.unit = event;
@@ -299,7 +433,7 @@
                             'action_detail': 'unit=' + app.character.unit
                         };
                         axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
-                            .then(function(resp) {
+                            .then(function (resp) {
                                 console.log("userLog resp", resp);
                             });
                         break;
@@ -358,21 +492,25 @@
                                 app.character.username = app.user.name;
                             }
                         }
+                        console.log("app.user.name", app.user.name);
+                        console.log("app.character.username", app.character.username);
+                        console.log("app.character.username.indexOf(app.user.name)", app.character.username.indexOf(app.user.name));
                         if (app.character.username.indexOf(app.user.name) < 0) {
+
                             sessionStorage.setItem('edit_created_other', true);
                         } else {
                             sessionStorage.setItem('edit_created_other', false);
                         }
 
                         /* app.parentData = [];
-                        app.parentData.push(app.character.method_from);
-                        app.parentData.push(app.character.method_to);
-                        app.parentData[2] = app.character.method_as; */
+                         app.parentData.push(app.character.method_from);
+                         app.parentData.push(app.character.method_to);
+                         app.parentData[2] = app.character.method_as; */
                         switch (metadataFlag) {
                             case 'method':
                                 app.parentData = [];
                                 /* app.parentData.push(app.character.method_from);
-                                app.parentData.push(app.character.method_to); */
+                                 app.parentData.push(app.character.method_to); */
                                 app.parentData.push(app.character.method_as);
                                 app.parentData[3] = app.user;
                                 app.parentData[4] = app.character.method_from;
@@ -411,7 +549,7 @@
                             default:
                                 app.parentData = [];
                                 /* app.parentData.push(app.character.method_from);
-                                app.parentData.push(app.character.method_to); */
+                                 app.parentData.push(app.character.method_to); */
                                 app.parentData.push(app.character.method_as);
                                 app.parentData[3] = app.user;
                                 app.parentData[4] = app.character.method_from;
@@ -424,7 +562,7 @@
                                 break;
                         }
                         /* app.currentMetadata = metadataFlag;
-                        app.currentMetadata = null; */
+                         app.currentMetadata = null; */
                         app.detailsFlag = true;
                         localStorage.clear();
                         var jsonRequest = {
@@ -433,10 +571,10 @@
                             'type': 'Measurement Recorder'
                         };
                         axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
-                            .then(function(resp) {
+                            .then(function (resp) {
                                 console.log('userLog resp', resp);
                             })
-                            .catch(function(resp) {
+                            .catch(function (resp) {
                                 console.log('userLog error', resp);
                             });
                         axios.get("/mr/individual/public/api/v1/meta-log/" + character.character_id)
@@ -448,7 +586,7 @@
                                 }
                                 console.log("history", app.character.history);
 
-                                axios.get("/mr/individual/public/api/v1/character/usage/" + app.character.id)
+                                axios.get("/mr/individual/public/mr/individual/public/api/v1/character/usage/" + app.character.id)
                                     .then(function (resp) {
                                         console.log("usage resp", resp);
                                         app.character.usage = [];
@@ -477,9 +615,8 @@
                 const prev_methodInclude = localStorage.getItem('methodInclude');
                 const prev_methodExclude = localStorage.getItem('methodExclude');
                 const prev_methodAt = localStorage.getItem('methodAt');
-                if (metadata !== 'method' && !app.methodUpdateFlag && 
-                    (!!prev_methodFrom || !!prev_methodTo ||
-                    !!prev_methodInclude || !!prev_methodExclude || !!prev_methodAt)) {
+                if (metadata !== 'method' && !app.methodUpdateFlag &&
+                    (!!prev_methodFrom || !!prev_methodTo || !!prev_methodInclude || !!prev_methodExclude || !!prev_methodAt)) {
                     alert('Please check input by pressing CHECK button');
                     return;
                 }
@@ -490,7 +627,7 @@
                     case 'method':
                         this.parentData = [];
                         /* this.parentData.push(this.character.method_from);
-                        this.parentData.push(this.character.method_to); */
+                         this.parentData.push(this.character.method_to); */
                         if (!app.character.method_from && !!prev_methodFrom) app.character.method_from = prev_methodFrom;
                         if (!app.character.method_to && !!prev_methodTo) app.character.method_to = prev_methodTo;
                         if (!app.character.method_include && !!prev_methodInclude) app.character.method_include = prev_methodInclude;
@@ -537,43 +674,43 @@
                         break;
                 }
 
-             /*    if (previousMetadata != null) {
-                    var jsonRequest = {
-                        'user_id': app.user.id,
-                        'type': 'Measurement Recorder',
-                        'action': 'entered ' + previousMetadata + ' for "' + app.character.name + '"',
-                        'action_detail': ' '
-                    };
-                    console.log('previousMetadata', previousMetadata);
+                /*    if (previousMetadata != null) {
+                 var jsonRequest = {
+                 'user_id': app.user.id,
+                 'type': 'Measurement Recorder',
+                 'action': 'entered ' + previousMetadata + ' for "' + app.character.name + '"',
+                 'action_detail': ' '
+                 };
+                 console.log('previousMetadata', previousMetadata);
 
-                    switch(previousMetadata) {
-                        case '':
-                            break;
-                        case 'method':
-                            if (app.character.method_as != null) {
-                                jsonRequest.action_detail = jsonRequest.action_detail + 'As: ' + app.character.method_as + '; ';
-                            }
-                            if (app.character.method_from != null) {
-                                jsonRequest.action_detail = jsonRequest.action_detail + 'From: ' + app.character.method_from + '; ';
-                            }
-                            if (app.character.method_to != null) {
-                                jsonRequest.action_detail = jsonRequest.action_detail + 'To: ' + app.character.method_to + '; ';
-                            }
-                            break;
-                        case 'unit':
-                            jsonRequest.action_detail = app.character.unit;
-                            break;
-                        default:
-                            break;
-                    }
-                    axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
-                        .then(function(resp) {
-                            console.log('userLog resp', resp);
-                        })
-                        .catch(function(resp) {
-                            console.log('userLog error', resp);
-                        });
-                } */
+                 switch(previousMetadata) {
+                 case '':
+                 break;
+                 case 'method':
+                 if (app.character.method_as != null) {
+                 jsonRequest.action_detail = jsonRequest.action_detail + 'As: ' + app.character.method_as + '; ';
+                 }
+                 if (app.character.method_from != null) {
+                 jsonRequest.action_detail = jsonRequest.action_detail + 'From: ' + app.character.method_from + '; ';
+                 }
+                 if (app.character.method_to != null) {
+                 jsonRequest.action_detail = jsonRequest.action_detail + 'To: ' + app.character.method_to + '; ';
+                 }
+                 break;
+                 case 'unit':
+                 jsonRequest.action_detail = app.character.unit;
+                 break;
+                 default:
+                 break;
+                 }
+                 axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
+                 .then(function(resp) {
+                 console.log('userLog resp', resp);
+                 })
+                 .catch(function(resp) {
+                 console.log('userLog error', resp);
+                 });
+                 } */
 
                 if (metadata != '') {
                     var jsonRequest = {
@@ -582,10 +719,10 @@
                         'type': 'Measurement Recorder'
                     };
                     axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
-                        .then(function(resp) {
+                        .then(function (resp) {
                             console.log('userLog resp', resp);
                         })
-                        .catch(function(resp) {
+                        .catch(function (resp) {
                             console.log("userLog error", resp);
                         });
                 }
@@ -600,11 +737,11 @@
                 for (var i = 0; i < app.arrayCharacters.length; i++) {
                     if (app.arrayCharacters[i].id == characterId) {
                         /* var tempFlag = true;
-                        for (var j = 0; j < app.arrayCharacters.length; j++) {
-                            if (app.arrayCharacters[j].name == app.arrayCharacters[i].name && app.arrayCharacters[j].show_flag == true) {
-                                tempFlag = false;
-                            }
-                        } */
+                         for (var j = 0; j < app.arrayCharacters.length; j++) {
+                         if (app.arrayCharacters[j].name == app.arrayCharacters[i].name && app.arrayCharacters[j].show_flag == true) {
+                         tempFlag = false;
+                         }
+                         } */
                         if (app.arrayCharacters[i].show_flag) {
                             alert('The character is already exist!');
                             app.log('/mr/individual/public/api/v1/user-log', {
@@ -622,49 +759,49 @@
                                 show_flag: 1
                             });
                             /* axios.post('/mr/individual/public/api/v1/character/undelete', {
-                                    character_id: app.arrayCharacters[i].id
-                                }); */
-                                /* if (app.user.name == app.arrayCharacters[i].username)
-                                // app.arrayCharacters[i].username = app.user.name; */
-                                /* var tempObj = {
-                                    name: app.arrayCharacters[i].name,
-                                    method_from: app.arrayCharacters[i].method_from,
-                                    method_to: app.arrayCharacters[i].method_to,
-                                    method_as: app.arrayCharacters[i].method_as,
-                                    method_include: app.arrayCharacters[i].method_include,
-                                    method_exclude: app.arrayCharacters[i].method_exclude,
-                                    method_at: app.arrayCharacters[i].method_at,
-                                    unit: app.arrayCharacters[i].unit,
-                                    measure_semantic: app.arrayCharacters[i].measure_semantic,
-                                    entity_semantic: app.arrayCharacters[i].entity_semantic,
-                                    semantics: app.arrayCharacters[i].semantics,
-                                    creator: app.arrayCharacters[i].creator,
-                                    usage: [],
-                                    history: [],
-                                    username: app.arrayCharacters[i].username,
-                                    usage_count: 0,
-                                    show_flag: app.arrayCharacters[i].show_flag,
-                                };
-                                axios.post('/mr/individual/public/api/v1/character/create', tempObj)
-                                    .then(function(resp) {
-                                        console.log('use resp', resp);
-                                        app.characters = resp.data.characters;
-                                        app.arrayCharacters = resp.data.arrayCharacters;
-                                        for (var i = 0; i < app.characters.length; i++) {
-                                            app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
-                                            app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
-                                        }
-                                        app.arraySearch = [];
-                                        for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
-                                            var temp = {
+                             character_id: app.arrayCharacters[i].id
+                             }); */
+                            /* if (app.user.name == app.arrayCharacters[i].username)
+                             // app.arrayCharacters[i].username = app.user.name; */
+                            /* var tempObj = {
+                             name: app.arrayCharacters[i].name,
+                             method_from: app.arrayCharacters[i].method_from,
+                             method_to: app.arrayCharacters[i].method_to,
+                             method_as: app.arrayCharacters[i].method_as,
+                             method_include: app.arrayCharacters[i].method_include,
+                             method_exclude: app.arrayCharacters[i].method_exclude,
+                             method_at: app.arrayCharacters[i].method_at,
+                             unit: app.arrayCharacters[i].unit,
+                             measure_semantic: app.arrayCharacters[i].measure_semantic,
+                             entity_semantic: app.arrayCharacters[i].entity_semantic,
+                             semantics: app.arrayCharacters[i].semantics,
+                             creator: app.arrayCharacters[i].creator,
+                             usage: [],
+                             history: [],
+                             username: app.arrayCharacters[i].username,
+                             usage_count: 0,
+                             show_flag: app.arrayCharacters[i].show_flag,
+                             };
+                             axios.post('/mr/individual/public/api/v1/character/create', tempObj)
+                             .then(function(resp) {
+                             console.log('use resp', resp);
+                             app.characters = resp.data.characters;
+                             app.arrayCharacters = resp.data.arrayCharacters;
+                             for (var i = 0; i < app.characters.length; i++) {
+                             app.characters[i][app.characters[i].length - 1].unit = resp.data.arrayCharacters[i].unit;
+                             app.characters[i][app.characters[i].length - 1].username = resp.data.arrayCharacters[i].username;
+                             }
+                             app.arraySearch = [];
+                             for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
+                             var temp = {
 
-                                            };
-                                            temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
-                                            temp.value = resp.data.arrayCharacters[i].id;
-                                            app.arraySearch.push(temp);
-                                        }
-                                        //app.addLastItemToDropdown();
-                                    }); */
+                             };
+                             temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
+                             temp.value = resp.data.arrayCharacters[i].id;
+                             app.arraySearch.push(temp);
+                             }
+                             //app.addLastItemToDropdown();
+                             }); */
                         }
                         used_character_name = app.arrayCharacters[i].name
                         used_character_creator = app.arrayCharacters[i].creator;
@@ -681,27 +818,27 @@
                 app.detailsFlag = false;
 
                 /* axios.get('/mr/individual/public/api/v1/character/' + characterId)
-                    .then(function(resp) {
-                        console.log('getCharacter resp', resp);
-                        var newCharacter = resp.data;
-                        newCharacter.username = app.user.name;
-                        app.viewFlag = false;
-                        app.editFlag = false;
-                        app.character = newCharacter;
-                        app.saveCharacter();
+                 .then(function(resp) {
+                 console.log('getCharacter resp', resp);
+                 var newCharacter = resp.data;
+                 newCharacter.username = app.user.name;
+                 app.viewFlag = false;
+                 app.editFlag = false;
+                 app.character = newCharacter;
+                 app.saveCharacter();
 
-                    })
-                    .catch(function(resp) {
-                        console.log("getCharacter error", resp);
-                    }); */
+                 })
+                 .catch(function(resp) {
+                 console.log("getCharacter error", resp);
+                 }); */
             },
             enhance(characterId) {
                 var app = this;
-                app.saveFlag = false;
-                app.nextFlag = true;
+//                app.saveFlag = false;
+//                app.nextFlag = true;
                 sessionStorage.setItem('viewFlag', false);
                 axios.get('/mr/individual/public/api/v1/character/' + characterId)
-                    .then(function(resp) {
+                    .then(function (resp) {
                         console.log('getCharacter resp', resp);
                         var newCharacter = resp.data;
                         newCharacter.username = app.user.name;
@@ -721,7 +858,7 @@
                         }
                         /* app.editCharacter(app.character); */
                     })
-                    .catch(function(resp) {
+                    .catch(function (resp) {
                         console.log('getCharacter error', resp);
                     });
                 for (var i = 0; i < app.arrayCharacters.length; i++) {
@@ -737,11 +874,8 @@
             },
             saveCharacter (currentMetadata = null) {
                 var app = this;
-                app.saveFlag = false;
-                app.nextFlag = true;
                 console.log('save character', this.character);
                 console.log('edit Flag', this.editFlag);
-                app.show_flag = true;
                 var checkFields = true;
                 if ((this.character['method_as'] == null || this.character['method_as'] == '') &&
                     (this.character['method_from'] == null || this.character['method_from'] == '') &&
@@ -757,53 +891,250 @@
                 }
 
                 if (checkFields) {
-                    this.detailsFlag = false;
-                    this.updatedFlag = false;
-                    axios.get('/mr/individual/public/api/v1/character/all')
-                        .then(function (resp) {
-                            console.log('get name resp', resp);
-                            var checkName = true;
+                    app.confirmMethod = true;
+                } else {
+                    app.log('/mr/individual/public/api/v1/user-log', {
+                        'user_id': app.user.id,
+                        'action': 'Failed to save character',
+                        'action_detail': '',
+                        'abnormal_system_response': 'need to fill Method and Unit sections',
+                        'type': 'Measurement Recorder',
+                    });
+                    app.showDetails('unit', app.metadataFlag);
+//                    alert("You need to fill Method and Unit sections!");
+                }
+            },
+            methodConfirm() {
+                var app = this;
+                app.confirmMethod = false;
+                app.confirmUnit = true;
+            },
+            cancelConfirmMethod() {
+                var app = this;
+                app.confirmMethod = false;
+            },
+            cancelConfirmUnit() {
+                var app = this;
+                app.confirmUnit = false;
+            },
+            confirmSave(currentMetadata = null) {
+                var app = this;
+                app.confirmUnit = false;
+                app.saveFlag = false;
+                app.nextFlag = true;
+                app.show_flag = true;
+                app.detailsFlag = false;
+                app.updatedFlag = false;
+                axios.get('/mr/individual/public/api/v1/character/all')
+                    .then(function (resp) {
+                        console.log('get name resp', resp);
+                        var checkName = true;
 
-                            for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
-                                const character_creators = resp.data.arrayCharacters[i].username.split(';');
-                                if ((app.character.name == resp.data.arrayCharacters[i].name) && (character_creators.indexOf(app.character.username)>-1)) {
-                                    console.log('character username', app.character.username);
-                                    console.log('resp username', resp.data.arrayCharacters[i].username);
-                                    checkName = false;
-                                }
+                        for (var i = 0; i < resp.data.arrayCharacters.length; i++) {
+                            const character_creators = resp.data.arrayCharacters[i].username.split(';');
+                            if ((app.character.name == resp.data.arrayCharacters[i].name) && (character_creators.indexOf(app.character.username) > -1)) {
+                                console.log('character username', app.character.username);
+                                console.log('resp username', resp.data.arrayCharacters[i].username);
+                                checkName = false;
                             }
+                        }
 
-                            console.log("app.editFlag", app.editFlag);
+                        console.log("app.editFlag", app.editFlag);
 
-                            if (!app.editFlag && app.character.id) {
-                                delete app.character['id'];
+                        if (!app.editFlag && app.character.id) {
+                            delete app.character['id'];
+                        }
+                        if (checkName || app.editFlag) {
+                            var jsonUserLog = {
+                                'user_id': app.user.id,
+                                'type': 'Measurement Recorder',
+                                'action': 'entered method for "' + app.character.name + '"',
+                                'action_detail': ''
+                            };
+                            switch (currentMetadata) {
+                                case 'method':
+                                    if (app.character.method_as != null) {
+                                        jsonUserLog.action_detail = jsonUserLog.action_detail + 'As: ' + app.character.method_as + '; ';
+                                    }
+                                    break;
+                                case 'unit':
+                                    jsonUserLog.action_detail = app.character.unit;
+                                    break;
+                                case 'semantics':
+                                    jsonUserLog.action_detail = 'Measure: ' + app.character.measure_semantic + '; Entity: ' + app.character.entity_semantic;
+                                    break;
+                                default:
+                                    break;
                             }
-                            if (checkName || app.editFlag) {
-                                var jsonUserLog = {
-                                    'user_id': app.user.id,
-                                    'type': 'Measurement Recorder',
-                                    'action': 'entered method for "' + app.character.name + '"',
-                                    'action_detail': ''
-                                };
-                                switch (currentMetadata) {
-                                    case 'method':
-                                        if (app.character.method_as != null) {
-                                            jsonUserLog.action_detail = jsonUserLog.action_detail + 'As: ' + app.character.method_as + '; ';
+                            app.log('/mr/individual/public/api/v1/user-log', jsonUserLog);
+                            console.log('app.term', app.term);
+
+                            if (app.term == app.character.name) {
+                                axios.post('/mr/individual/public/api/v1/character/create', app.character)
+                                    .then(function (resp) {
+                                        console.log("resp", resp);
+                                        app.characters = resp.data.characters;
+                                        app.character = resp.data.character;
+                                        app.arrayCharacters = resp.data.arrayCharacters;
+                                        app.updateArraySearch();
+
+                                        if (app.editFlag) {
+                                            if (app.methodUpdateFlag) {
+                                                var jsonRequest = {};
+                                                jsonRequest.character_id = app.character.id;
+                                                jsonRequest.username = app.user.name;
+                                                jsonRequest.description = 'updated method';
+                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                    .then(function (resp) {
+                                                        console.log("update metalog", resp);
+                                                        if (app.unitUpdateFlag) {
+                                                            var jsonRequest = {};
+                                                            jsonRequest.character_id = app.character.id;
+                                                            jsonRequest.username = app.user.name;
+                                                            jsonRequest.description = 'updated unit';
+                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                                .then(function (resp) {
+                                                                    console.log("update metalog", resp);
+                                                                    if (app.semanticsUpdateFlag) {
+                                                                        var jsonRequest = {};
+                                                                        jsonRequest.character_id = app.character.id;
+                                                                        jsonRequest.username = app.user.name;
+                                                                        jsonRequest.description = 'updated semantics';
+                                                                        axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                                            .then(function (resp) {
+                                                                                console.log("update metalog", resp);
+                                                                                if (app.creatorUpdateFlag) {
+                                                                                    var jsonRequest = {};
+                                                                                    jsonRequest.character_id = app.character.id;
+                                                                                    jsonRequest.username = app.user.name;
+                                                                                    jsonRequest.description = 'updated creator';
+                                                                                    axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                                                        .then(function (resp) {
+                                                                                            console.log("update metalog", resp);
+                                                                                        })
+                                                                                        .catch(function (resp) {
+                                                                                            console.log('error', resp);
+                                                                                            alert('Error Occurred while meta logging.')
+                                                                                        });
+                                                                                }
+                                                                            })
+                                                                            .catch(function (resp) {
+                                                                                console.log('error', resp);
+                                                                                alert('Error Occurred while meta logging.')
+                                                                            });
+                                                                    }
+                                                                })
+                                                                .catch(function (resp) {
+                                                                    console.log('error', resp);
+                                                                    alert('Error Occurred while meta logging.')
+                                                                });
+                                                        }
+                                                    })
+                                                    .catch(function (resp) {
+                                                        console.log('error', resp);
+                                                        alert('Error Occurred while meta logging.')
+                                                    });
+                                            } else if (app.unitUpdateFlag) {
+                                                var jsonRequest = {};
+                                                jsonRequest.character_id = app.character.id;
+                                                jsonRequest.username = app.user.name;
+                                                jsonRequest.description = 'updated unit';
+                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                    .then(function (resp) {
+                                                        console.log("update metalog", resp);
+                                                        if (app.semanticsUpdateFlag) {
+                                                            var jsonRequest = {};
+                                                            jsonRequest.character_id = app.character.id;
+                                                            jsonRequest.username = app.user.name;
+                                                            jsonRequest.description = 'updated semantics';
+                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                                .then(function (resp) {
+                                                                    console.log("update metalog", resp);
+                                                                    if (app.creatorUpdateFlag) {
+                                                                        var jsonRequest = {};
+                                                                        jsonRequest.character_id = app.character.id;
+                                                                        jsonRequest.username = app.user.name;
+                                                                        jsonRequest.description = 'updated creator';
+                                                                        axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                                            .then(function (resp) {
+                                                                                console.log("update metalog", resp);
+                                                                            })
+                                                                            .catch(function (resp) {
+                                                                                console.log('error', resp);
+                                                                                alert('Error Occurred while meta logging.')
+                                                                            });
+                                                                    }
+                                                                })
+                                                                .catch(function (resp) {
+                                                                    console.log('error', resp);
+                                                                    alert('Error Occurred while meta logging.')
+                                                                });
+                                                        }
+                                                    })
+                                                    .catch(function (resp) {
+                                                        console.log('error', resp);
+                                                        alert('Error Occurred while meta logging.')
+                                                    });
+                                            } else if (app.creatorUpdateFlag) {
+                                                var jsonRequest = {};
+                                                jsonRequest.character_id = app.character.id;
+                                                jsonRequest.username = app.user.name;
+                                                jsonRequest.description = 'updated creator';
+                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                    .then(function (resp) {
+                                                        console.log("update metalog", resp);
+                                                    })
+                                                    .catch(function (resp) {
+                                                        console.log('error', resp);
+                                                        alert('Error Occurred while meta logging.')
+                                                    });
+                                            }
+                                        } else {
+                                            if (app.cloneFlag == true && !!app.item) {
+                                                axios.get('/mr/individual/public/api/v1/character/' + app.item)
+                                                    .then(function (resp) {
+                                                        var jsonRequest = {};
+                                                        jsonRequest.character_id = app.character.id;
+                                                        jsonRequest.username = '';
+                                                        jsonRequest.description = 'cloned by ' + resp.data.username;
+                                                        axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                            .then(function (resp) {
+                                                                console.log("create metalog", resp);
+                                                            })
+                                                            .catch(function (resp) {
+                                                                console.log('error', resp);
+                                                                alert('Error Occurred while meta logging.')
+                                                            });
+                                                    })
+                                                    .catch(function (resp) {
+                                                        console.log('getCharacter error', resp);
+                                                    });
+                                            } else {
+                                                var jsonRequest = {};
+                                                jsonRequest.character_id = app.character.id;
+                                                jsonRequest.username = app.user.name;
+                                                jsonRequest.description = 'created';
+                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                    .then(function (resp) {
+                                                        console.log("create metalog", resp);
+                                                    })
+                                                    .catch(function (resp) {
+                                                        console.log('error', resp);
+                                                        alert('Error Occurred while meta logging.')
+                                                    });
+                                            }
+
                                         }
-                                        break;
-                                    case 'unit':
-                                        jsonUserLog.action_detail = app.character.unit;
-                                        break;
-                                    case 'semantics':
-                                        jsonUserLog.action_detail = 'Measure: ' + app.character.measure_semantic + '; Entity: ' + app.character.entity_semantic;
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                app.log('/mr/individual/public/api/v1/user-log', jsonUserLog);
-                                console.log('app.term', app.term);
-
-                                if (app.term == app.character.name) {
+                                    })
+                                    .catch(function (resp) {
+                                        console.log(resp);
+                                        alert("Error Occured !");
+                                    });
+                            } else {
+                                if (app.term == null || app.term == '') {
+                                    if (app.cloneFlag && !!app.item) {
+                                        app.character.clone_id = app.item;
+                                    }
                                     axios.post('/mr/individual/public/api/v1/character/create', app.character)
                                         .then(function (resp) {
                                             console.log("resp", resp);
@@ -814,442 +1145,233 @@
 
                                             if (app.editFlag) {
                                                 if (app.methodUpdateFlag) {
-                                                    var jsonRequest = {
-
-                                                    };
+                                                    var jsonRequest = {};
                                                     jsonRequest.character_id = app.character.id;
                                                     jsonRequest.username = app.user.name;
                                                     jsonRequest.description = 'updated method';
                                                     axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                        .then(function(resp) {
+                                                        .then(function (resp) {
                                                             console.log("update metalog", resp);
                                                             if (app.unitUpdateFlag) {
-                                                                var jsonRequest = {
-
-                                                                };
+                                                                var jsonRequest = {};
                                                                 jsonRequest.character_id = app.character.id;
                                                                 jsonRequest.username = app.user.name;
                                                                 jsonRequest.description = 'updated unit';
                                                                 axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                    .then(function(resp) {
+                                                                    .then(function (resp) {
                                                                         console.log("update metalog", resp);
-                                                                        if (app.semanticsUpdateFlag) {
-                                                                            var jsonRequest = {
-
-                                                                            };
-                                                                            jsonRequest.character_id = app.character.id;
-                                                                            jsonRequest.username = app.user.name;
-                                                                            jsonRequest.description = 'updated semantics';
-                                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                                .then(function(resp) {
-                                                                                    console.log("update metalog", resp);
-                                                                                    if (app.creatorUpdateFlag) {
-                                                                                        var jsonRequest = {
-
-                                                                                        };
-                                                                                        jsonRequest.character_id = app.character.id;
-                                                                                        jsonRequest.username = app.user.name;
-                                                                                        jsonRequest.description = 'updated creator';
-                                                                                        axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                                            .then(function(resp) {
-                                                                                                console.log("update metalog", resp);
-                                                                                            })
-                                                                                            .catch(function(resp) {
-                                                                                                console.log('error', resp);
-                                                                                                alert('Error Occurred while meta logging.')
-                                                                                            });
-                                                                                    }
-                                                                                })
-                                                                                .catch(function(resp) {
-                                                                                    console.log('error', resp);
-                                                                                    alert('Error Occurred while meta logging.')
-                                                                                });
-                                                                        }
                                                                     })
-                                                                    .catch(function(resp) {
+                                                                    .catch(function (resp) {
                                                                         console.log('error', resp);
                                                                         alert('Error Occurred while meta logging.')
                                                                     });
                                                             }
                                                         })
-                                                        .catch(function(resp) {
+                                                        .catch(function (resp) {
                                                             console.log('error', resp);
                                                             alert('Error Occurred while meta logging.')
                                                         });
                                                 } else if (app.unitUpdateFlag) {
-                                                    var jsonRequest = {
-
-                                                    };
+                                                    var jsonRequest = {};
                                                     jsonRequest.character_id = app.character.id;
                                                     jsonRequest.username = app.user.name;
                                                     jsonRequest.description = 'updated unit';
                                                     axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                        .then(function(resp) {
-                                                            console.log("update metalog", resp);
-                                                            if (app.semanticsUpdateFlag) {
-                                                                var jsonRequest = {
-
-                                                                };
-                                                                jsonRequest.character_id = app.character.id;
-                                                                jsonRequest.username = app.user.name;
-                                                                jsonRequest.description = 'updated semantics';
-                                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                    .then(function(resp) {
-                                                                        console.log("update metalog", resp);
-                                                                        if (app.creatorUpdateFlag) {
-                                                                            var jsonRequest = {
-
-                                                                            };
-                                                                            jsonRequest.character_id = app.character.id;
-                                                                            jsonRequest.username = app.user.name;
-                                                                            jsonRequest.description = 'updated creator';
-                                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                                .then(function(resp) {
-                                                                                    console.log("update metalog", resp);
-                                                                                })
-                                                                                .catch(function(resp) {
-                                                                                    console.log('error', resp);
-                                                                                    alert('Error Occurred while meta logging.')
-                                                                                });
-                                                                        }
-                                                                    })
-                                                                    .catch(function(resp) {
-                                                                        console.log('error', resp);
-                                                                        alert('Error Occurred while meta logging.')
-                                                                    });
-                                                            }
-                                                        })
-                                                        .catch(function(resp) {
-                                                            console.log('error', resp);
-                                                            alert('Error Occurred while meta logging.')
-                                                        });
-                                                } else if (app.creatorUpdateFlag) {
-                                                    var jsonRequest = {
-
-                                                    };
-                                                    jsonRequest.character_id = app.character.id;
-                                                    jsonRequest.username = app.user.name;
-                                                    jsonRequest.description = 'updated creator';
-                                                    axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                        .then(function(resp) {
+                                                        .then(function (resp) {
                                                             console.log("update metalog", resp);
                                                         })
-                                                        .catch(function(resp) {
+                                                        .catch(function (resp) {
                                                             console.log('error', resp);
                                                             alert('Error Occurred while meta logging.')
                                                         });
                                                 }
                                             } else {
-                                                if (app.cloneFlag == true && !!app.item) {
+                                                if (app.cloneFlag == true) {
                                                     axios.get('/mr/individual/public/api/v1/character/' + app.item)
-                                                        .then(function(resp) {
-                                                            var jsonRequest = {
-
-                                                            };
+                                                        .then(function (resp) {
+                                                            var jsonRequest = {};
                                                             jsonRequest.character_id = app.character.id;
                                                             jsonRequest.username = '';
                                                             jsonRequest.description = 'cloned by ' + resp.data.username;
                                                             axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                .then(function(resp) {
+                                                                .then(function (resp) {
                                                                     console.log("create metalog", resp);
                                                                 })
-                                                                .catch(function(resp) {
+                                                                .catch(function (resp) {
                                                                     console.log('error', resp);
                                                                     alert('Error Occurred while meta logging.')
                                                                 });
                                                         })
-                                                        .catch(function(resp) {
+                                                        .catch(function (resp) {
                                                             console.log('getCharacter error', resp);
                                                         });
-                                                }  else {
-                                                    var jsonRequest = {
-
-                                                    };
+                                                } else {
+                                                    var jsonRequest = {};
                                                     jsonRequest.character_id = app.character.id;
                                                     jsonRequest.username = app.user.name;
                                                     jsonRequest.description = 'created';
                                                     axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                        .then(function(resp) {
+                                                        .then(function (resp) {
                                                             console.log("create metalog", resp);
                                                         })
-                                                        .catch(function(resp) {
+                                                        .catch(function (resp) {
                                                             console.log('error', resp);
                                                             alert('Error Occurred while meta logging.')
                                                         });
                                                 }
-
                                             }
                                         })
                                         .catch(function (resp) {
                                             console.log(resp);
                                             alert("Error Occured !");
                                         });
+
                                 } else {
-                                    if (app.term == null || app.term == '') {
-                                        if (app.cloneFlag && !!app.item) {
-                                            app.character.clone_id = app.item;
-                                        }
-                                        axios.post('/mr/individual/public/api/v1/character/create', app.character)
-                                            .then(function (resp) {
-                                                console.log("resp", resp);
-                                                app.characters = resp.data.characters;
-                                                app.character = resp.data.character;
-                                                app.arrayCharacters = resp.data.arrayCharacters;
-                                                app.updateArraySearch();
-
-                                                if (app.editFlag) {
-                                                    if (app.methodUpdateFlag) {
-                                                        var jsonRequest = {};
-                                                        jsonRequest.character_id = app.character.id;
-                                                        jsonRequest.username = app.user.name;
-                                                        jsonRequest.description = 'updated method';
-                                                        axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                            .then(function(resp) {
-                                                                console.log("update metalog", resp);
-                                                                if (app.unitUpdateFlag) {
-                                                                    var jsonRequest = {
-
-                                                                    };
-                                                                    jsonRequest.character_id = app.character.id;
-                                                                    jsonRequest.username = app.user.name;
-                                                                    jsonRequest.description = 'updated unit';
-                                                                    axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                        .then(function(resp) {
-                                                                            console.log("update metalog", resp);
-                                                                        })
-                                                                        .catch(function(resp) {
-                                                                            console.log('error', resp);
-                                                                            alert('Error Occurred while meta logging.')
-                                                                        });
-                                                                }
-                                                            })
-                                                            .catch(function(resp) {
-                                                                console.log('error', resp);
-                                                                alert('Error Occurred while meta logging.')
-                                                            });
-                                                    } else if (app.unitUpdateFlag) {
-                                                        var jsonRequest = {
-
-                                                        };
-                                                        jsonRequest.character_id = app.character.id;
-                                                        jsonRequest.username = app.user.name;
-                                                        jsonRequest.description = 'updated unit';
-                                                        axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                            .then(function(resp) {
-                                                                console.log("update metalog", resp);
-                                                            })
-                                                            .catch(function(resp) {
-                                                                console.log('error', resp);
-                                                                alert('Error Occurred while meta logging.')
-                                                            });
-                                                    }
-                                                } else {
-                                                    if (app.cloneFlag == true) {
-                                                        axios.get('/mr/individual/public/api/v1/character/' + app.item)
-                                                            .then(function(resp) {
-                                                                var jsonRequest = {
-
-                                                                };
-                                                                jsonRequest.character_id = app.character.id;
-                                                                jsonRequest.username = '';
-                                                                jsonRequest.description = 'cloned by ' + resp.data.username;
-                                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                    .then(function(resp) {
-                                                                        console.log("create metalog", resp);
-                                                                    })
-                                                                    .catch(function(resp) {
-                                                                        console.log('error', resp);
-                                                                        alert('Error Occurred while meta logging.')
-                                                                    });
-                                                            })
-                                                            .catch(function(resp) {
-                                                                console.log('getCharacter error', resp);
-                                                            });
-                                                    }  else {
-                                                        var jsonRequest = {};
-                                                        jsonRequest.character_id = app.character.id;
-                                                        jsonRequest.username = app.user.name;
-                                                        jsonRequest.description = 'created';
-                                                        axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                            .then(function(resp) {
-                                                                console.log("create metalog", resp);
-                                                            })
-                                                            .catch(function(resp) {
-                                                                console.log('error', resp);
-                                                                alert('Error Occurred while meta logging.')
-                                                            });
-                                                    }
-                                                }
+                                    var jsonEsynonym = {
+                                        user: app.user.name,
+                                        ontology: 'exp',
+                                        term: app.term,
+                                        classIRI: app.termValue
+                                    };
+                                    axios.post('http://shark.sbs.arizona.edu:8080/esynonym', jsonEsynonym)
+                                        .then(function (resp) {
+                                            console.log('esynonym resp', resp);
+                                            axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                                "user": app.user.name,
+                                                "ontology": 'exp'
                                             })
-                                            .catch(function (resp) {
-                                                console.log(resp);
-                                                alert("Error Occured !");
-                                            });
-                                            
-                                    } else {
-                                        var jsonEsynonym = {
-                                            user: app.user.name,
-                                            ontology: 'exp',
-                                            term: app.term,
-                                            classIRI: app.termValue
-                                        };
-                                        axios.post('http://shark.sbs.arizona.edu:8080/esynonym', jsonEsynonym)
-                                            .then(function(resp) {
-                                                console.log('esynonym resp', resp);
-                                                axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.user.name, "ontology": 'exp'})
-                                                    .then(function(resp) {
-                                                        console.log('save resp', resp);
-                                                    })
-                                                    .catch(function(resp) {
+                                                .then(function (resp) {
+                                                    console.log('save resp', resp);
+                                                })
+                                                .catch(function (resp) {
 
-                                                    });
-                                                axios.post('/mr/individual/public/api/v1/character/create', app.character)
-                                                    .then(function (resp) {
-                                                        console.log("resp", resp);
-                                                        app.characters = resp.data.characters;
-                                                        app.character = resp.data.character;
-                                                        app.arrayCharacters = resp.data.arrayCharacters;
-                                                        app.updateArraySearch();
+                                                });
+                                            axios.post('/mr/individual/public/api/v1/character/create', app.character)
+                                                .then(function (resp) {
+                                                    console.log("resp", resp);
+                                                    app.characters = resp.data.characters;
+                                                    app.character = resp.data.character;
+                                                    app.arrayCharacters = resp.data.arrayCharacters;
+                                                    app.updateArraySearch();
 
-                                                        if (app.editFlag) {
-                                                            if (app.methodUpdateFlag) {
-                                                                var jsonRequest = {
-
-                                                                };
-                                                                jsonRequest.character_id = app.character.id;
-                                                                jsonRequest.username = app.user.name;
-                                                                jsonRequest.description = 'updated method';
-                                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                    .then(function(resp) {
-                                                                        console.log("update metalog", resp);
-                                                                        if (app.unitUpdateFlag) {
-                                                                            var jsonRequest = {
-
-                                                                            };
-                                                                            jsonRequest.character_id = app.character.id;
-                                                                            jsonRequest.username = app.user.name;
-                                                                            jsonRequest.description = 'updated unit';
-                                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                                .then(function(resp) {
-                                                                                    console.log("update metalog", resp);
-                                                                                })
-                                                                                .catch(function(resp) {
-                                                                                    console.log('error', resp);
-                                                                                    alert('Error Occurred while meta logging.')
-                                                                                });
-                                                                        }
-                                                                    })
-                                                                    .catch(function(resp) {
-                                                                        console.log('error', resp);
-                                                                        alert('Error Occurred while meta logging.')
-                                                                    });
-                                                            } else if (app.unitUpdateFlag) {
-                                                                var jsonRequest = {
-
-                                                                };
-                                                                jsonRequest.character_id = app.character.id;
-                                                                jsonRequest.username = app.user.name;
-                                                                jsonRequest.description = 'updated unit';
-                                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                    .then(function(resp) {
-                                                                        console.log("update metalog", resp);
-                                                                    })
-                                                                    .catch(function(resp) {
-                                                                        console.log('error', resp);
-                                                                        alert('Error Occurred while meta logging.')
-                                                                    });
-                                                            } else if (app.creatorUpdateFlag) {
-                                                                var jsonRequest = {
-
-                                                                };
-                                                                jsonRequest.character_id = app.character.id;
-                                                                jsonRequest.username = app.user.name;
-                                                                jsonRequest.description = 'updated creator';
-                                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                    .then(function(resp) {
-                                                                        console.log("update metalog", resp);
-                                                                    })
-                                                                    .catch(function(resp) {
-                                                                        console.log('error', resp);
-                                                                        alert('Error Occurred while meta logging.')
-                                                                    });
-                                                            }
-                                                        } else {
-                                                            if (app.cloneFlag == true) {
-                                                                axios.get('/mr/individual/public/api/v1/character/' + app.item)
-                                                                    .then(function(resp) {
-                                                                        var jsonRequest = {
-
-                                                                        };
+                                                    if (app.editFlag) {
+                                                        if (app.methodUpdateFlag) {
+                                                            var jsonRequest = {};
+                                                            jsonRequest.character_id = app.character.id;
+                                                            jsonRequest.username = app.user.name;
+                                                            jsonRequest.description = 'updated method';
+                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                                .then(function (resp) {
+                                                                    console.log("update metalog", resp);
+                                                                    if (app.unitUpdateFlag) {
+                                                                        var jsonRequest = {};
                                                                         jsonRequest.character_id = app.character.id;
-                                                                        jsonRequest.username = '';
-                                                                        jsonRequest.description = 'cloned by ' + resp.data.username;
+                                                                        jsonRequest.username = app.user.name;
+                                                                        jsonRequest.description = 'updated unit';
                                                                         axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                            .then(function(resp) {
-                                                                                console.log("create metalog", resp);
+                                                                            .then(function (resp) {
+                                                                                console.log("update metalog", resp);
                                                                             })
-                                                                            .catch(function(resp) {
+                                                                            .catch(function (resp) {
                                                                                 console.log('error', resp);
                                                                                 alert('Error Occurred while meta logging.')
                                                                             });
-                                                                    })
-                                                                    .catch(function(resp) {
-                                                                        console.log('getCharacter error', resp);
-                                                                    });
-                                                            }  else {
-                                                                var jsonRequest = {
-
-                                                                };
-                                                                jsonRequest.character_id = app.character.id;
-                                                                jsonRequest.username = app.user.name;
-                                                                jsonRequest.description = 'created';
-                                                                axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
-                                                                    .then(function(resp) {
-                                                                        console.log("create metalog", resp);
-                                                                    })
-                                                                    .catch(function(resp) {
-                                                                        console.log('error', resp);
-                                                                        alert('Error Occurred while meta logging.')
-                                                                    });
-                                                            }
-
+                                                                    }
+                                                                })
+                                                                .catch(function (resp) {
+                                                                    console.log('error', resp);
+                                                                    alert('Error Occurred while meta logging.')
+                                                                });
+                                                        } else if (app.unitUpdateFlag) {
+                                                            var jsonRequest = {};
+                                                            jsonRequest.character_id = app.character.id;
+                                                            jsonRequest.username = app.user.name;
+                                                            jsonRequest.description = 'updated unit';
+                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                                .then(function (resp) {
+                                                                    console.log("update metalog", resp);
+                                                                })
+                                                                .catch(function (resp) {
+                                                                    console.log('error', resp);
+                                                                    alert('Error Occurred while meta logging.')
+                                                                });
+                                                        } else if (app.creatorUpdateFlag) {
+                                                            var jsonRequest = {};
+                                                            jsonRequest.character_id = app.character.id;
+                                                            jsonRequest.username = app.user.name;
+                                                            jsonRequest.description = 'updated creator';
+                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                                .then(function (resp) {
+                                                                    console.log("update metalog", resp);
+                                                                })
+                                                                .catch(function (resp) {
+                                                                    console.log('error', resp);
+                                                                    alert('Error Occurred while meta logging.')
+                                                                });
                                                         }
-                                                    })
-                                                    .catch(function (resp) {
-                                                        console.log(resp);
-                                                        alert("Error Occured !");
-                                                    });
-                                            })
-                                            .catch(function(resp) {
-                                                console.log('esysnoym error resp', resp);
-                                            });
-                                    }
+                                                    } else {
+                                                        if (app.cloneFlag == true) {
+                                                            axios.get('/mr/individual/public/api/v1/character/' + app.item)
+                                                                .then(function (resp) {
+                                                                    var jsonRequest = {};
+                                                                    jsonRequest.character_id = app.character.id;
+                                                                    jsonRequest.username = '';
+                                                                    jsonRequest.description = 'cloned by ' + resp.data.username;
+                                                                    axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                                        .then(function (resp) {
+                                                                            console.log("create metalog", resp);
+                                                                        })
+                                                                        .catch(function (resp) {
+                                                                            console.log('error', resp);
+                                                                            alert('Error Occurred while meta logging.')
+                                                                        });
+                                                                })
+                                                                .catch(function (resp) {
+                                                                    console.log('getCharacter error', resp);
+                                                                });
+                                                        } else {
+                                                            var jsonRequest = {};
+                                                            jsonRequest.character_id = app.character.id;
+                                                            jsonRequest.username = app.user.name;
+                                                            jsonRequest.description = 'created';
+                                                            axios.post('/mr/individual/public/api/v1/meta-log', jsonRequest)
+                                                                .then(function (resp) {
+                                                                    console.log("create metalog", resp);
+                                                                })
+                                                                .catch(function (resp) {
+                                                                    console.log('error', resp);
+                                                                    alert('Error Occurred while meta logging.')
+                                                                });
+                                                        }
 
+                                                    }
+                                                })
+                                                .catch(function (resp) {
+                                                    console.log(resp);
+                                                    alert("Error Occured !");
+                                                });
+                                        })
+                                        .catch(function (resp) {
+                                            console.log('esysnoym error resp', resp);
+                                        });
                                 }
 
-                                app.log('/mr/individual/public/api/v1/user-log', {
-                                    'user_id': app.user.id,
-                                    'action': 'clicked on Save for "' + app.character.name + '"',
-                                    'action_detail': app.character.name,
-                                    'type': 'Measurement Recorder'
-                                });
-                            } else {
-                                alert("You can not create new character with the same name of existing character !");
                             }
-                        })
-                        .catch(function (resp) {
-                            console.log(resp);
-                        });
-                } else {
-                    app.log('/mr/individual/public/api/v1/user-log', {
-                        'user_id': app.user.id,
-                        'action': 'Failed to save character',
-                        'action_detail': '',
-                        'abnormal_system_response': 'need to fill Method and Unit sections',
-                        'type': 'Measurement Recorder',
+
+                            app.log('/mr/individual/public/api/v1/user-log', {
+                                'user_id': app.user.id,
+                                'action': 'clicked on Save for "' + app.character.name + '"',
+                                'action_detail': app.character.name,
+                                'type': 'Measurement Recorder'
+                            });
+                        } else {
+
+                            alert("You can not create new character with the same name of existing character !");
+                        }
+                    })
+                    .catch(function (resp) {
+                        console.log(resp);
                     });
-                    alert("You need to fill Method and Unit sections!");
-                }
             },
             cancelCharacter () {
                 var app = this;
@@ -1265,15 +1387,15 @@
                     'type': 'Measurement Recorder'
                 };
                 axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
-                    .then(function(resp) {
+                    .then(function (resp) {
                         console.log('userLog resp', resp);
                     })
-                    .catch(function(resp) {
+                    .catch(function (resp) {
                         console.log('userLog error', resp);
                     });
                 this.character.name = '';
             },
-            addHeader: function() {
+            addHeader: function () {
                 /* $('.measure-table > thead > tr > th:last-child').before('<th></th>') */
                 $('th.actions.display-none').removeClass('display-none').addClass('display-block');
                 $('th.actions > .btn-add.display-block').removeClass('display-block').addClass('display-none');
@@ -1281,13 +1403,13 @@
                 var app = this;
                 app.newHeader.header = 'measurements';
             },
-            saveHeader: function() {
+            saveHeader: function () {
                 var app = this;
                 axios.get('/mr/individual/public/api/v1/character/all')
-                    .then(function(resp) {
+                    .then(function (resp) {
                         var headerData = resp.data.headers;
                         var tpFlag = true;
-                        for (var i = 0; i < headerData.length; i ++) {
+                        for (var i = 0; i < headerData.length; i++) {
                             if (app.newHeader.header == headerData[i].header) {
                                 tpFlag = false;
                             }
@@ -1326,7 +1448,7 @@
                                         .then(function (resp) {
                                             console.log('userLog resp', resp);
                                         })
-                                        .catch(function(resp) {
+                                        .catch(function (resp) {
                                             console.log('userLog error', resp);
                                         });
                                     app.newHeader.header = '';
@@ -1338,16 +1460,16 @@
                             alert("The header is already exist. Please check the header name.");
                         }
                     })
-                    .catch(function(resp) {
+                    .catch(function (resp) {
                         console.log("resp", resp);
                     });
 
             },
-            deleteHeader: function(headerId, headerName) {
+            deleteHeader: function (headerId, headerName) {
                 var app = this;
                 console.log("headerId", headerId);
                 axios.post('/mr/individual/public/api/v1/character/delete-header/' + headerId)
-                    .then(function(resp) {
+                    .then(function (resp) {
                         console.log('deleteHeader resp', resp);
                         app.headers = resp.data.headers;
                         app.characters = resp.data.characters;
@@ -1371,10 +1493,10 @@
                             'type': 'Measurement Recorder'
                         };
                         axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
-                            .then(function(resp) {
+                            .then(function (resp) {
                                 console.log('userLog resp', resp);
                             })
-                            .catch(function(resp) {
+                            .catch(function (resp) {
                                 console.log('userLog error', resp);
                             });
                         var totalSum = [];
@@ -1390,7 +1512,7 @@
                             averageValue[i] = 0;
                             deviationSum[i] = 0;
                             deviationValue[i] = 0;
-                            for (var j = 0; j < app.characters[i].length - 3; j++){
+                            for (var j = 0; j < app.characters[i].length - 3; j++) {
                                 if (app.characters[i][j].header_id > 3) {
                                     if (isNaN(parseFloat(app.characters[i][j].value)) == false) {
                                         headerCount[i]++;
@@ -1400,21 +1522,22 @@
                             }
                         }
                     })
-                    .catch(function(resp) {
+                    .catch(function (resp) {
                         console.log('error deleteHeader', resp);
                     });
             },
-            cancelHeader: function() {
+            cancelHeader: function () {
                 $('th.actions.display-block').removeClass('display-block').addClass('display-none');
                 $('th.actions > .btn-add.display-none').removeClass('display-none').addClass('display-block');
             },
-            swapComponent: function(component) {
+            swapComponent: function (component) {
                 this.currentComponent = component;
             },
             storeCharacter() {
                 var app = this;
+                app.character.name = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
                 if (!this.character.name) return;
-                var tpArray = this.character.name.split(' ');
+//                var tpArray = this.character.name.split(' ');
                 this.character.method_from = null;
                 this.character.method_to = null;
                 this.character.method_include = null;
@@ -1435,56 +1558,56 @@
                 this.creatorUpdateFlag = false;
                 this.newCharacterFlag = false;
 
-                var tpFlag = false;
-                for (var i = 0; i < tpArray.length; i++) {
-                    if (tpArray[i] == 'of' || tpArray[i] == 'between') {
-                        tpFlag = true;
-                    }
-                }
-                if (tpFlag) {
-                    var jsonRequest = {
-                        'user_id': app.user.id,
-                        'action': 'new character',
-                        'action_detail': app.character.name,
-                        'type': 'Measurement Recorder'
-                    };
-                    axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
-                        .then(function(resp) {
-                            console.log('userLog resp', resp);
-                        })
-                        .catch(function (resp) {
-                            console.log("userLog error", resp);
-                        });
-                    sessionStorage.setItem("characterName", this.character.name);
-                    console.log("detailsFlag", this.detailsFlag);
-                    app.parentData = [];
-                    app.parentData.push(app.character.method_as);
-                    app.parentData[3] = app.user;
-                    app.parentData[4] = app.character.method_from;
-                    app.parentData[5] = app.character.method_to;
-                    app.parentData[6] = app.character.method_include;
-                    app.parentData[7] = app.character.method_exclude;
-                    app.parentData[8] = app.character.method_at;
-                    app.currentMetadata = method;
-                    app.detailsFlag = true;
-                    localStorage.clear();
-                    app.editFlag = false;
-                    app.metadataFlag = "method";
-                } else {
-                    //alert("The header name should contain 'of' or 'between' word.");
-                    app.log('/mr/individual/public/api/v1/user-log', {
-                        'user_id': app.user.id,
-                        'action': 'new character',
-                        'type': 'Measurement Recorder',
-                        'abnormal_system_response': 'error: character name must contain "of"'
+//                var tpFlag = false;
+//                for (var i = 0; i < tpArray.length; i++) {
+//                    if (tpArray[i] == 'of' || tpArray[i] == 'between') {
+//                        tpFlag = true;
+//                    }
+//                }
+//                if (tpFlag) {
+                var jsonRequest = {
+                    'user_id': app.user.id,
+                    'action': 'new character',
+                    'action_detail': app.character.name,
+                    'type': 'Measurement Recorder'
+                };
+                axios.post('/mr/individual/public/api/v1/user-log', jsonRequest)
+                    .then(function (resp) {
+                        console.log('userLog resp', resp);
+                    })
+                    .catch(function (resp) {
+                        console.log("userLog error", resp);
                     });
-                }
+                sessionStorage.setItem("characterName", this.character.name);
+                console.log("detailsFlag", this.detailsFlag);
+                app.parentData = [];
+                app.parentData.push(app.character.method_as);
+                app.parentData[3] = app.user;
+                app.parentData[4] = app.character.method_from;
+                app.parentData[5] = app.character.method_to;
+                app.parentData[6] = app.character.method_include;
+                app.parentData[7] = app.character.method_exclude;
+                app.parentData[8] = app.character.method_at;
+                app.currentMetadata = method;
+                app.detailsFlag = true;
+                localStorage.clear();
+                app.editFlag = false;
+                app.metadataFlag = "method";
+//                } else {
+//                    //alert("The header name should contain 'of' or 'between' word.");
+//                    app.log('/mr/individual/public/api/v1/user-log', {
+//                        'user_id': app.user.id,
+//                        'action': 'new character',
+//                        'type': 'Measurement Recorder',
+//                        'abnormal_system_response': 'error: character name must contain "of"'
+//                    });
+//                }
 
             },
-            detailComponent: function(componentId) {
+            detailComponent: function (componentId) {
                 console.log("componentId", componentId);
             },
-            saveItem: function(event, item) {
+            saveItem: function (event, item) {
                 console.log('updated item', item);
                 var app = this;
                 if (item.value < 0) {
@@ -1537,7 +1660,7 @@
                         });
                 }
             },
-            deleteCharacter: function(character_id) {
+            deleteCharacter: function (character_id) {
                 var app = this;
                 console.log('character id to be deleted --->', character_id);
                 var tpData = {
@@ -1555,11 +1678,11 @@
                             return c.id == character_id
                         });
                         app.log('/mr/individual/public/api/v1/user-log', {
-                                'user_id': app.user.id,
-                                'action': 'Trashed "' + deleted_character.name + '"',
-                                'action_detail': deleted_character.name, 
-                                'type': 'Measurement Recorder'
-                            });
+                            'user_id': app.user.id,
+                            'action': 'Trashed "' + deleted_character.name + '"',
+                            'action_detail': deleted_character.name,
+                            'type': 'Measurement Recorder'
+                        });
 
                         app.actionLog.action_type = "delete";
                         app.actionLog.model_id = tpData.character_id;
@@ -1603,9 +1726,12 @@
 
                 if (tempFlag == false) {
                     app.character.name = item;
-                    app.newCharacterFlag= true;
+                    app.newCharacterFlag = true;
                 }
                 if (item === null) app.item = '';
+            },
+            onOverSelect(item) {
+                console.log('onOverSelect', item);
             },
             updateArraySearch() {
                 var app = this;
@@ -1615,25 +1741,41 @@
                     var temp = {};
                     temp.text = app.arrayCharacters[i].name + ' by ' + app.arrayCharacters[i].username + ' (' + app.arrayCharacters[i].usage_count + ')';
                     temp.value = app.arrayCharacters[i].id;
+                    temp.tooltip = '';
+                    if (app.arrayCharacters.method_from != null && app.arrayCharacters[i].method_from != '') {
+                        temp.tooltip = temp.tooltip + 'From: ' + app.arrayCharacters[i].method_from + ', ';
+                    }
+                    if (app.arrayCharacters[i].method_to != null && app.arrayCharacters[i].method_to != '') {
+                        temp.tooltip = temp.tooltip + 'To: ' + app.arrayCharacters[i].method_to + ', ';
+                    }
+                    if (app.arrayCharacters[i].method_include != null && app.arrayCharacters[i].method_include != '') {
+                        temp.tooltip = temp.tooltip + 'Include: ' + app.arrayCharacters[i].method_include + ', ';
+                    }
+                    if (app.arrayCharacters[i].method_exclude != null && app.arrayCharacters[i].method_exclude != '') {
+                        temp.tooltip = temp.tooltip + 'Exclude: ' + app.arrayCharacters[i].method_exclude + ', ';
+                    }
+                    if (app.arrayCharacters[i].method_at != null && app.arrayCharacters[i].method_at != '') {
+                        temp.tooltip = temp.tooltip + 'At: ' + app.arrayCharacters[i].method_at;
+                    }
                     app.arraySearch.push(temp);
                 }
             },
             /* addLastItemToDropdown() {
-                var app = this;
-                if (app.arraySearch.length == 0) {
-                    app.arraySearch.push({
-                        value: null,
-                        text: 'Click here to create a new character'
-                    });
-                }
-            }, */
+             var app = this;
+             if (app.arraySearch.length == 0) {
+             app.arraySearch.push({
+             value: null,
+             text: 'Click here to create a new character'
+             });
+             }
+             }, */
             log(url, logdata) {
                 axios.post(url, logdata)
                     .then(function (resp) {
                         console.log("successful log character !!!");
                     })
                     .catch(function (resp) {
-                        console.log('Logging Error'+url+': ', resp);
+                        console.log('Logging Error' + url + ': ', resp);
                     });
             },
             printSearchText (searchText) {
@@ -1644,11 +1786,11 @@
             },
             beforeunloadHandler() {
                 this.log('/mr/individual/public/api/v1/user-log', {
-                        'user_id': app.user.id,
-                        'action': 'close the page',
-                        'action_detail': '', 
-                        'type': 'Measurement Recorder'
-                    });
+                    'user_id': app.user.id,
+                    'action': 'close the page',
+                    'action_detail': '',
+                    'type': 'Measurement Recorder'
+                });
             },
             setSaveDisabled() {
                 if (((this.character.method_from != null && this.character.method_from != '') ||
@@ -1701,6 +1843,22 @@
                         var temp = {};
                         temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
                         temp.value = resp.data.arrayCharacters[i].id;
+                        temp.tooltip = '';
+                        if (resp.data.arrayCharacters[i].method_from != null && resp.data.arrayCharacters[i].method_from != '') {
+                            temp.tooltip = temp.tooltip + 'From: ' + resp.data.arrayCharacters[i].method_from + ', ';
+                        }
+                        if (resp.data.arrayCharacters[i].method_to != null && resp.data.arrayCharacters[i].method_to != '') {
+                            temp.tooltip = temp.tooltip + 'To: ' + resp.data.arrayCharacters[i].method_to + ', ';
+                        }
+                        if (resp.data.arrayCharacters[i].method_include != null && resp.data.arrayCharacters[i].method_include != '') {
+                            temp.tooltip = temp.tooltip + 'Include: ' + resp.data.arrayCharacters[i].method_include + ', ';
+                        }
+                        if (resp.data.arrayCharacters[i].method_exclude != null && resp.data.arrayCharacters[i].method_exclude != '') {
+                            temp.tooltip = temp.tooltip + 'Exclude: ' + resp.data.arrayCharacters[i].method_exclude + ', ';
+                        }
+                        if (resp.data.arrayCharacters[i].method_at != null && resp.data.arrayCharacters[i].method_at != '') {
+                            temp.tooltip = temp.tooltip + 'At: ' + resp.data.arrayCharacters[i].method_at;
+                        }
                         app.arraySearch.push(temp);
                     }
                 })
