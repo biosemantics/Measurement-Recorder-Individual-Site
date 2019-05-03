@@ -109,27 +109,24 @@
                                             Input the character name in the input box and click OK.
                                         </div>
                                         <div class="modal-body">
-                                            Form character name:
+                                            <b>Form character name:</b>
+                                            <br>
+                                            <br>
                                             <div>
-                                                <select v-model="firstCharacter">
+                                                <select v-model="firstCharacter" style="height: 26px;">
                                                     <option>length</option>
                                                     <option>width</option>
                                                     <option>depth</option>
                                                     <option>diameter</option>
                                                     <option>distance</option>
                                                 </select>
-                                                <select v-model="middleCharacter">
+                                                <select v-model="middleCharacter" style="height: 26px;">
                                                     <option>of</option>
                                                     <option>between</option>
                                                 </select>
                                                 <input v-model="lastCharacter">
 
                                                 <!--<input autofocus v-model="character.name" v-on:input="checkMsg"/>-->
-                                                <P>Must include <span
-                                                        style="color: red;font-size: 14px;font-weight: bold;">'of'</span>
-                                                    or <span
-                                                            style="color: red;font-size: 14px;font-weight: bold;">'between'</span>
-                                                    in character name, e.g., 'diameter of ball'.</P>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -195,7 +192,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12 text-right" style="margin-top: 15px;">
-                                                    <a v-if="viewFlag == false" :disabled="saveDisabled == true"
+                                                    <a v-if="viewFlag == false"
                                                        v-on:click="saveCharacter(metadataFlag)" class="btn btn-primary">Save</a>
                                                     <a v-if="viewFlag == true" v-on:click="use(item)"
                                                        class="btn btn-primary">Use this</a>
@@ -225,10 +222,11 @@
                                         <div class="modal-body">
                                             <div v-if="!character.method_as">
                                                 <div>
-                                                    Please read the method definition carefully. Is this what you would
+                                                    <b>Please review the method definition carefully. Is this what you would
                                                     like
-                                                    to save?
+                                                        to save for <i>{{ character.name }}</i>?</b>
                                                 </div>
+                                                <br>
                                                 <div v-if="character.method_from">
                                                     From: {{ character.method_from }}
                                                 </div>
@@ -247,9 +245,9 @@
                                             </div>
                                             <div v-if="character.method_as">
                                                 <div>
-                                                    Please review the method definition carefully. Is this what you
+                                                    <b>Please review the method definition carefully. Is this what you
                                                     would like
-                                                    to save?
+                                                        to save for <i>{{ character.name }}</i>?</b>
                                                 </div>
                                                 <div>
                                                     <img class="img-method"
@@ -279,11 +277,14 @@
                                         </div>
                                         <div class="modal-body">
                                             <div>
-                                                You've select {{ character.unit }} as the Unit for {{ character.name }}.
+                                                You've select <b>{{ character.unit }}</b> as the Unit for <i>{{ character.name }}</i>.
                                             </div>
                                             <div class="modal-footer">
-                                                <a class="btn btn-primary ok-btn"
+                                                <a v-if="!useFlag" class="btn btn-primary ok-btn"
                                                    v-on:click="confirmSave(metadataFlag)">
+                                                    &nbsp; &nbsp; Confirm &nbsp; &nbsp; </a>
+                                                <a v-if="useFlag" class="btn btn-primary ok-btn"
+                                                   v-on:click="confirmUse()">
                                                     &nbsp; &nbsp; Confirm &nbsp; &nbsp; </a>
                                                 <a v-on:click="cancelConfirmUnit()" class="btn btn-danger">Cancel</a>
                                             </div>
@@ -386,6 +387,7 @@
                 lastCharacter: '',
                 confirmMethod: false,
                 confirmUnit: false,
+                useFlag: false,
             }
         },
 
@@ -461,7 +463,6 @@
                         return app.arrayCharacters[i];
                     }
                 }
-
             },
             editCharacter (character, metadataFlag = '', editFlag = true) {
                 var app = this;
@@ -586,7 +587,7 @@
                                 }
                                 console.log("history", app.character.history);
 
-                                axios.get("/mr/individual/public/mr/individual/public/api/v1/character/usage/" + app.character.id)
+                                axios.get("/character/usage/" + app.character.id)
                                     .then(function (resp) {
                                         console.log("usage resp", resp);
                                         app.character.usage = [];
@@ -731,9 +732,9 @@
             use(characterId) {
                 console.log('characterId', characterId);
                 var app = this;
+                app.useFlag = true;
                 let used_character_name = '';
                 let used_character_creator = '';
-                sessionStorage.setItem('viewFlag', false);
                 for (var i = 0; i < app.arrayCharacters.length; i++) {
                     if (app.arrayCharacters[i].id == characterId) {
                         /* var tempFlag = true;
@@ -752,12 +753,17 @@
                                 'abnormal_system_response': 'Character already exist',
                             });
                         } else {
-                            app.arrayCharacters[i].show_flag = true;
-                            axios.post('/mr/individual/public/api/v1/character/set-charashow', {
-                                character_id: app.arrayCharacters[i].id,
-                                user_id: app.user.id,
-                                show_flag: 1
-                            });
+//                            app.arrayCharacters[i].show_flag = true;
+                            app.character = app.arrayCharacters[i];
+                            app.confirmMethod = true;
+                            console.log("app.arrayCharacters", app.arrayCharacters);
+                            console.log("app.arrayCharacters[i]", app.arrayCharacters[i]);
+                            console.log("app.character", app.character);
+//                            axios.post('/mr/individual/public/api/v1/character/set-charashow', {
+//                                character_id: app.arrayCharacters[i].id,
+//                                user_id: app.user.id,
+//                                show_flag: 1
+//                            });
                             /* axios.post('/mr/individual/public/api/v1/character/undelete', {
                              character_id: app.arrayCharacters[i].id
                              }); */
@@ -803,7 +809,7 @@
                              //app.addLastItemToDropdown();
                              }); */
                         }
-                        used_character_name = app.arrayCharacters[i].name
+                        used_character_name = app.arrayCharacters[i].name;
                         used_character_creator = app.arrayCharacters[i].creator;
                     }
                 }
@@ -813,9 +819,7 @@
                     'action_detail': 'name : ' + used_character_name + ",creator : " + used_character_creator,
                     'type': 'Measurement Recorder'
                 });
-                app.viewFlag = false;
-                app.editFlag = false;
-                app.detailsFlag = false;
+
 
                 /* axios.get('/mr/individual/public/api/v1/character/' + characterId)
                  .then(function(resp) {
@@ -832,8 +836,24 @@
                  console.log("getCharacter error", resp);
                  }); */
             },
+            confirmUse() {
+                var app = this;
+                sessionStorage.setItem('viewFlag', false);
+                console.log('app.character', app.character);
+                app.character.show_flag = true;
+                app.confirmUnit = false;
+                app.viewFlag = false;
+                app.editFlag = false;
+                app.detailsFlag = false;
+                axios.post('/mr/individual/public/api/v1/character/set-charashow', {
+                    character_id: app.character.id,
+                    user_id: app.user.id,
+                    show_flag: 1
+                });
+            },
             enhance(characterId) {
                 var app = this;
+                app.useFlag = false;
 //                app.saveFlag = false;
 //                app.nextFlag = true;
                 sessionStorage.setItem('viewFlag', false);
@@ -874,6 +894,7 @@
             },
             saveCharacter (currentMetadata = null) {
                 var app = this;
+                app.useFlag = false;
                 console.log('save character', this.character);
                 console.log('edit Flag', this.editFlag);
                 var checkFields = true;
@@ -1393,7 +1414,7 @@
                     .catch(function (resp) {
                         console.log('userLog error', resp);
                     });
-                this.character.name = '';
+//                this.character.name = '';
             },
             addHeader: function () {
                 /* $('.measure-table > thead > tr > th:last-child').before('<th></th>') */
@@ -1742,21 +1763,41 @@
                     temp.text = app.arrayCharacters[i].name + ' by ' + app.arrayCharacters[i].username + ' (' + app.arrayCharacters[i].usage_count + ')';
                     temp.value = app.arrayCharacters[i].id;
                     temp.tooltip = '';
-                    if (app.arrayCharacters.method_from != null && app.arrayCharacters[i].method_from != '') {
-                        temp.tooltip = temp.tooltip + 'From: ' + app.arrayCharacters[i].method_from + ', ';
+                    if (app.arrayCharacters[i].method_as != null && app.arrayCharacters[i].method_as != '') {
+                        temp.tooltip = "<img style='width: 170px;' src='" + "https://drive.google.com/uc?id=" + app.arrayCharacters[i].method_as.split('id=')[1].substring(0, app.arrayCharacters[i].method_as.split('id=')[1].length) + "'>";
+                    } else {
+                        if (app.arrayCharacters[i].method_from != null && app.arrayCharacters[i].method_from != '') {
+                            temp.tooltip = temp.tooltip + 'From: ' + app.arrayCharacters[i].method_from + ', ';
+                        }
+                        if (app.arrayCharacters[i].method_to != null && app.arrayCharacters[i].method_to != '') {
+                            temp.tooltip = temp.tooltip + 'To: ' + app.arrayCharacters[i].method_to + ', ';
+                        }
+                        if (app.arrayCharacters[i].method_include != null && app.arrayCharacters[i].method_include != '') {
+                            temp.tooltip = temp.tooltip + 'Include: ' + app.arrayCharacters[i].method_include + ', ';
+                        }
+                        if (app.arrayCharacters[i].method_exclude != null && app.arrayCharacters[i].method_exclude != '') {
+                            temp.tooltip = temp.tooltip + 'Exclude: ' + app.arrayCharacters[i].method_exclude + ', ';
+                        }
+                        if (app.arrayCharacters[i].method_at != null && app.arrayCharacters[i].method_at != '') {
+                            temp.tooltip = temp.tooltip + 'At: ' + app.arrayCharacters[i].method_at;
+                        }
                     }
-                    if (app.arrayCharacters[i].method_to != null && app.arrayCharacters[i].method_to != '') {
-                        temp.tooltip = temp.tooltip + 'To: ' + app.arrayCharacters[i].method_to + ', ';
-                    }
-                    if (app.arrayCharacters[i].method_include != null && app.arrayCharacters[i].method_include != '') {
-                        temp.tooltip = temp.tooltip + 'Include: ' + app.arrayCharacters[i].method_include + ', ';
-                    }
-                    if (app.arrayCharacters[i].method_exclude != null && app.arrayCharacters[i].method_exclude != '') {
-                        temp.tooltip = temp.tooltip + 'Exclude: ' + app.arrayCharacters[i].method_exclude + ', ';
-                    }
-                    if (app.arrayCharacters[i].method_at != null && app.arrayCharacters[i].method_at != '') {
-                        temp.tooltip = temp.tooltip + 'At: ' + app.arrayCharacters[i].method_at;
-                    }
+//                    temp.tooltip = "<img src='https://drive.google.com/uc?id=15KMqXgodz8sXDAIt2GnebFxHzbd5mfkQ'>";
+//                    if (app.arrayCharacters.method_from != null && app.arrayCharacters[i].method_from != '') {
+//                        temp.tooltip = temp.tooltip + 'From: ' + app.arrayCharacters[i].method_from + ', ';
+//                    }
+//                    if (app.arrayCharacters[i].method_to != null && app.arrayCharacters[i].method_to != '') {
+//                        temp.tooltip = temp.tooltip + 'To: ' + app.arrayCharacters[i].method_to + ', ';
+//                    }
+//                    if (app.arrayCharacters[i].method_include != null && app.arrayCharacters[i].method_include != '') {
+//                        temp.tooltip = temp.tooltip + 'Include: ' + app.arrayCharacters[i].method_include + ', ';
+//                    }
+//                    if (app.arrayCharacters[i].method_exclude != null && app.arrayCharacters[i].method_exclude != '') {
+//                        temp.tooltip = temp.tooltip + 'Exclude: ' + app.arrayCharacters[i].method_exclude + ', ';
+//                    }
+//                    if (app.arrayCharacters[i].method_at != null && app.arrayCharacters[i].method_at != '') {
+//                        temp.tooltip = temp.tooltip + 'At: ' + app.arrayCharacters[i].method_at;
+//                    }
                     app.arraySearch.push(temp);
                 }
             },
@@ -1844,20 +1885,24 @@
                         temp.text = resp.data.arrayCharacters[i].name + ' by ' + resp.data.arrayCharacters[i].username + ' (' + resp.data.arrayCharacters[i].usage_count + ')';
                         temp.value = resp.data.arrayCharacters[i].id;
                         temp.tooltip = '';
-                        if (resp.data.arrayCharacters[i].method_from != null && resp.data.arrayCharacters[i].method_from != '') {
-                            temp.tooltip = temp.tooltip + 'From: ' + resp.data.arrayCharacters[i].method_from + ', ';
-                        }
-                        if (resp.data.arrayCharacters[i].method_to != null && resp.data.arrayCharacters[i].method_to != '') {
-                            temp.tooltip = temp.tooltip + 'To: ' + resp.data.arrayCharacters[i].method_to + ', ';
-                        }
-                        if (resp.data.arrayCharacters[i].method_include != null && resp.data.arrayCharacters[i].method_include != '') {
-                            temp.tooltip = temp.tooltip + 'Include: ' + resp.data.arrayCharacters[i].method_include + ', ';
-                        }
-                        if (resp.data.arrayCharacters[i].method_exclude != null && resp.data.arrayCharacters[i].method_exclude != '') {
-                            temp.tooltip = temp.tooltip + 'Exclude: ' + resp.data.arrayCharacters[i].method_exclude + ', ';
-                        }
-                        if (resp.data.arrayCharacters[i].method_at != null && resp.data.arrayCharacters[i].method_at != '') {
-                            temp.tooltip = temp.tooltip + 'At: ' + resp.data.arrayCharacters[i].method_at;
+                        if (resp.data.arrayCharacters[i].method_as != null && resp.data.arrayCharacters[i].method_as != '') {
+                            temp.tooltip = "<img style='width: 170px;' src='" + "https://drive.google.com/uc?id=" + resp.data.arrayCharacters[i].method_as.split('id=')[1].substring(0, resp.data.arrayCharacters[i].method_as.split('id=')[1].length) + "'>";
+                        } else {
+                            if (resp.data.arrayCharacters[i].method_from != null && resp.data.arrayCharacters[i].method_from != '') {
+                                temp.tooltip = temp.tooltip + 'From: ' + resp.data.arrayCharacters[i].method_from + ', ';
+                            }
+                            if (resp.data.arrayCharacters[i].method_to != null && resp.data.arrayCharacters[i].method_to != '') {
+                                temp.tooltip = temp.tooltip + 'To: ' + resp.data.arrayCharacters[i].method_to + ', ';
+                            }
+                            if (resp.data.arrayCharacters[i].method_include != null && resp.data.arrayCharacters[i].method_include != '') {
+                                temp.tooltip = temp.tooltip + 'Include: ' + resp.data.arrayCharacters[i].method_include + ', ';
+                            }
+                            if (resp.data.arrayCharacters[i].method_exclude != null && resp.data.arrayCharacters[i].method_exclude != '') {
+                                temp.tooltip = temp.tooltip + 'Exclude: ' + resp.data.arrayCharacters[i].method_exclude + ', ';
+                            }
+                            if (resp.data.arrayCharacters[i].method_at != null && resp.data.arrayCharacters[i].method_at != '') {
+                                temp.tooltip = temp.tooltip + 'At: ' + resp.data.arrayCharacters[i].method_at;
+                            }
                         }
                         app.arraySearch.push(temp);
                     }
