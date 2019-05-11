@@ -408,7 +408,10 @@
                         app.needMoreGreen[app.currentSetting] = true;
                         app.modalFlag = false;
                         app.newTermDefinition = null;
-                        axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.childData[3].name, "ontology": 'exp'})
+                        axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                            //"user": app.childData[3].name,
+                            "user":'',
+                             "ontology": 'exp'})
                             .then(function (resp) {
                                 console.log('save resp', resp);
                             });
@@ -476,7 +479,10 @@
                                 app.greenTick[setting] = true;
                                 app.formViewFlag[setting] = false;
                                 app.needMoreGreen[setting] = true;
-                                axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.childData[3].name, "ontology": 'exp'})
+                                axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                    //"user": app.childData[3].name,
+                                    "user":'',
+                                    "ontology": 'exp'})
                                     .then(function (resp) {
                                         console.log('save resp', resp);
                                     });
@@ -505,7 +511,10 @@
                                 app.formViewFlag[setting] = false;
                                 app.needMoreGreen[setting] = true;
                             }
-                            axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.childData[3].name, "ontology": 'exp'})
+                            axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                               // "user": app.childData[3].name, 
+                               "user":'',
+                                "ontology": 'exp'})
                                 .then(function (resp) {
                                     console.log('save resp', resp);
                                 });
@@ -653,7 +662,8 @@
 
                     this.$emit('interface', this.childData); // handle data and give it back to parent by interface
 
-                    axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.character_name)
+                   // axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.character_name)
+                      axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.character_name)
                         .then(function (resp) {
                             console.log('search resp', resp);
                             var tempFlag = false;
@@ -665,8 +675,9 @@
                             //var axios_result = [];
                             if (app.methodFrom != null && app.methodFrom != '') {
                                 //axios_result['methodFrom'] = '';
-                                axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodFrom)
-                                    .then(function (resp) {
+                                //axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodFrom)
+                                 axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodFrom)
+                                  .then(function (resp) {
                                         console.log('search from resp', resp);
                                         for (var i = 0; i < resp.data.entries.length; i++) {
                                             if (resp.data.entries[i].score == 1) {
@@ -712,7 +723,8 @@
                             }
                             if (app.methodTo != null && app.methodTo != '') {
                                 //axios_result['methodTo'] = '';
-                                axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodTo)
+                               // axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodTo)
+                                axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodTo)
                                     .then(function (resp) {
                                         console.log('search to resp', resp);
                                         for (var i = 0; i < resp.data.entries.length; i++) {
@@ -759,8 +771,9 @@
                             }
                             if (app.methodInclude != null && app.methodInclude != '') {
                                 //axios_result['methodInclude'] = '';
-                                axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodInclude)
-                                    .then(function (resp) {
+                                //axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodInclude)
+                                 axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodInclude)
+                                   .then(function (resp) {
                                         console.log('search include resp', resp);
                                         for (var i = 0; i < resp.data.entries.length; i++) {
                                             if (resp.data.entries[i].score == 1) {
@@ -806,7 +819,8 @@
                             }
                             if (app.methodExclude != null && app.methodExclude != '') {
                                 //axios_result['methodExclude'] = '';
-                                axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodExclude)
+                                //axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodExclude)
+                                 axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodExclude)
                                     .then(function (resp) {
                                         console.log('search exclude resp', resp);
                                         for (var i = 0; i < resp.data.entries.length; i++) {
@@ -853,7 +867,8 @@
                             }
                             if (app.methodAt != null && app.methodAt != '') {
                                 //axios_result['methodAt'] = '';
-                                axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodAt)
+                                //axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodAt)
+                                 axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodAt)
                                     .then(function (resp) {
                                         console.log('search at resp', resp);
                                         for (var i = 0; i < resp.data.entries.length; i++) {
@@ -940,7 +955,8 @@
                             if (tempFlag == false) {
 
                                 var jsonClass = {
-                                    "user": app.childData[3].name,
+                                    //"user": app.childData[3].name,
+                                    "user":'',
                                     "ontology": 'exp',
                                     "term": app.character_name,
                                     "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#measurement",
@@ -989,7 +1005,8 @@
                                     .then(function (resp) {
                                         console.log('class resp', resp);
                                         axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                            "user": app.childData[3].name,
+                                            //"user": app.childData[3].name,
+                                            "user":'',
                                             "ontology": 'exp'
                                         })
                                             .then(function (resp) {
@@ -1001,7 +1018,8 @@
                                     });
                             } else {
                                 var jsonClass = {
-                                    "user": app.childData[3].name,
+                                    //"user": app.childData[3].name,
+                                    "user":'',
                                     "ontology": 'exp',
                                     "term": app.character_name + '(' + app.childData[3].name + ')',
                                     "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#measurement",
@@ -1051,7 +1069,8 @@
                                     .then(function (resp) {
                                         console.log('class resp', resp);
                                         axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                            "user": app.childData[3].name,
+                                            //"user": app.childData[3].name,
+                                            "user":'',
                                             "ontology": 'exp'
                                         })
                                             .then(function (resp) {
@@ -1088,8 +1107,9 @@
             app.methodExclude = app.childData[7];
             app.methodAt = app.childData[8];
 
-            axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.character_name)
-                .then(function (resp) {
+            //axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.character_name)
+             axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.character_name)
+               .then(function (resp) {
                     console.log('exp search resp', resp);
                     if (resp.data.entries.length > 0) {
                         app.methodEntry = resp.data.entries[0];
@@ -1112,7 +1132,8 @@
                         console.log('methodArray', app.methodArray);
                     }
                     if (app.methodFrom != null) {
-                        axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodFrom)
+                       // axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodFrom)
+                        axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodFrom)
                             .then(function (resp) {
                                 console.log('search from resp', resp);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
@@ -1128,7 +1149,8 @@
                             });
                     }
                     if (app.methodTo != null) {
-                        axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodTo)
+                        //axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodTo)
+                        axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodTo)
                             .then(function (resp) {
                                 console.log('search to resp', resp);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
@@ -1144,8 +1166,9 @@
                             });
                     }
                     if (app.methodInclude != null) {
-                        axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodInclude)
-                            .then(function (resp) {
+                        //axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodInclude)
+                         axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodInclude)
+                           .then(function (resp) {
                                 console.log('search to resp', resp);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
                                     if (resp.data.entries[i].score == 1) {
@@ -1160,7 +1183,8 @@
                             });
                     }
                     if (app.methodExclude != null) {
-                        axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodExclude)
+                        //axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodExclude)
+                        axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodExclude)
                             .then(function (resp) {
                                 console.log('search to resp', resp);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
@@ -1176,8 +1200,9 @@
                             });
                     }
                     if (app.methodAt != null) {
-                        axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodAt)
-                            .then(function (resp) {
+                        //axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodAt)
+                         axios.get('http://shark.sbs.arizona.edu:8080/exp/search?term=' + app.methodAt)
+                           .then(function (resp) {
                                 console.log('search to resp', resp);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
                                     if (resp.data.entries[i].score == 1) {
