@@ -1389,7 +1389,7 @@
                             });
                         } else {
 
-                            alert("You can not create new character with the same name of existing character !");
+                            alert("Character exists! You can find character with the same name in Search or Create Character, then Use or Clone it");
                         }
                     })
                     .catch(function (resp) {
