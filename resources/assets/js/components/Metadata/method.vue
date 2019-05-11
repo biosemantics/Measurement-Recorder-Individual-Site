@@ -386,7 +386,8 @@
                         console.log('user-log resp', resp);
                     });
                 var jsonRequest = {
-                    user: app.childData[3].name,
+                   // user: app.childData[3].name,
+                   user: '',
                     ontology: 'exp',
                     term: app.newTerm,
                     superclassIRI: "http://biosemantics.arizona.edu/ontology/exp#physical_entity",
@@ -419,7 +420,8 @@
                 console.log('value', value);
 
                 var jsonRequest = {
-                    user: app.childData[3].name,
+                    //user: app.childData[3].name,
+                    user: '',
                     ontology: 'exp',
                 };
                 var temp = value.resultAnnotations.filter(function (e) {

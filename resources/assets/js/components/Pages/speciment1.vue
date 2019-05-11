@@ -1249,7 +1249,8 @@
 
                                 } else {
                                     var jsonEsynonym = {
-                                        user: app.user.name,
+                                        //user: app.user.name,
+                                        user: '',
                                         ontology: 'exp',
                                         term: app.term,
                                         classIRI: app.termValue
@@ -1258,7 +1259,8 @@
                                         .then(function (resp) {
                                             console.log('esynonym resp', resp);
                                             axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                                "user": app.user.name,
+                                                //"user": app.user.name,
+                                                "user": '',
                                                 "ontology": 'exp'
                                             })
                                                 .then(function (resp) {
