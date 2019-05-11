@@ -1422,7 +1422,7 @@
                 $('th.actions > .btn-add.display-block').removeClass('display-block').addClass('display-none');
                 $('#new-header').focus();
                 var app = this;
-                app.newHeader.header = 'measurements';
+                app.newHeader.header = 'specimen number';
             },
             saveHeader: function () {
                 var app = this;
