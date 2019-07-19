@@ -242,6 +242,7 @@
     export default {
         data: function () {
             return {
+                shared: true,
                 childData: [],
                 character_name: null,
                 viewFlag: false,
@@ -410,7 +411,7 @@
                         app.newTermDefinition = null;
                         axios.post('http://shark.sbs.arizona.edu:8080/save', {
                             //"user": app.childData[3].name,
-                            "user":'',
+                            "user": shared? '' : app.childData[3].name,
                              "ontology": 'exp'})
                             .then(function (resp) {
                                 console.log('save resp', resp);
@@ -481,7 +482,7 @@
                                 app.needMoreGreen[setting] = true;
                                 axios.post('http://shark.sbs.arizona.edu:8080/save', {
                                     //"user": app.childData[3].name,
-                                    "user":'',
+                                    "user": shared? '' : app.childData[3].name,
                                     "ontology": 'exp'})
                                     .then(function (resp) {
                                         console.log('save resp', resp);
@@ -513,7 +514,7 @@
                             }
                             axios.post('http://shark.sbs.arizona.edu:8080/save', {
                                // "user": app.childData[3].name, 
-                               "user":'',
+                               "user": shared? '' : app.childData[3].name,
                                 "ontology": 'exp'})
                                 .then(function (resp) {
                                     console.log('save resp', resp);
@@ -956,7 +957,7 @@
 
                                 var jsonClass = {
                                     //"user": app.childData[3].name,
-                                    "user":'',
+                                    "user": shared? '' : app.childData[3].name,
                                     "ontology": 'exp',
                                     "term": app.character_name,
                                     "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#measurement",
@@ -1006,7 +1007,7 @@
                                         console.log('class resp', resp);
                                         axios.post('http://shark.sbs.arizona.edu:8080/save', {
                                             //"user": app.childData[3].name,
-                                            "user":'',
+                                            "user": shared? '' : app.childData[3].name,
                                             "ontology": 'exp'
                                         })
                                             .then(function (resp) {
@@ -1019,7 +1020,7 @@
                             } else {
                                 var jsonClass = {
                                     //"user": app.childData[3].name,
-                                    "user":'',
+                                    "user": shared? '' : app.childData[3].name,
                                     "ontology": 'exp',
                                     "term": app.character_name + '(' + app.childData[3].name + ')',
                                     "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#measurement",
@@ -1070,7 +1071,7 @@
                                         console.log('class resp', resp);
                                         axios.post('http://shark.sbs.arizona.edu:8080/save', {
                                             //"user": app.childData[3].name,
-                                            "user":'',
+                                            "user": shared? '' : app.childData[3].name,
                                             "ontology": 'exp'
                                         })
                                             .then(function (resp) {

@@ -339,6 +339,7 @@
                 searchText: '',
                 cloneFlag: false,
                 saveDisabled: true,
+                shared: true,
                 character: {
                     name: null,
                     method_from: null,
@@ -1260,7 +1261,7 @@
                                             console.log('esynonym resp', resp);
                                             axios.post('http://shark.sbs.arizona.edu:8080/save', {
                                                 //"user": app.user.name,
-                                                "user": '',
+                                                "user": shared? '' : app.user.name,
                                                 "ontology": 'exp'
                                             })
                                                 .then(function (resp) {
